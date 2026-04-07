@@ -1,0 +1,14 @@
+{
+  "name": "anytokens",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "db:migrate": "cd backend && npx prisma migrate dev",
+    "db:seed": "cd backend && npx prisma db seed"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

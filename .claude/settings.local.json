@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(npm install:*)",
+      "Bash(mkdir -p backend)",
+      "Bash(npm init:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx create-next-app@14 frontend --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)",
+      "Bash(npx shadcn@latest:*)",
+      "Bash(npx next:*)",
+      "Bash(npx shadcn-ui@0.9.4 init -y)"
+    ]
+  }
+}
