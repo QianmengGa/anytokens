@@ -55,6 +55,19 @@ model User {
   @@map("users")
 }
 
+// 邮箱验证码表
+model EmailVerification {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([email, code])
+  @@map("email_verifications")
+}
+
 // API 密钥表
 model ApiKey {
   id         String    @id @default(uuid())

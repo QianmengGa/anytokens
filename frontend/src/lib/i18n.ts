@@ -5,18 +5,23 @@ import { create } from 'zustand';
 import { locales, type LocaleKey, type Translations } from '@/locales';
 
 // 支持的语言列表
-export const SUPPORTED_LOCALES: { key: LocaleKey; label: string; flag: string }[] = [
-  { key: 'zh-CN', label: '简体中文', flag: '🇨🇳' },
-  { key: 'zh-TW', label: '繁體中文', flag: '🇹🇼' },
-  { key: 'en', label: 'English', flag: '🇺🇸' },
-  { key: 'ja', label: '日本語', flag: '🇯🇵' },
-  { key: 'ko', label: '한국어', flag: '🇰🇷' },
-  { key: 'ms', label: 'Bahasa Melayu', flag: '🇲🇾' },
-  { key: 'th', label: 'ภาษาไทย', flag: '🇹🇭' },
-  { key: 'es', label: 'Español', flag: '🇪🇸' },
-  { key: 'fr', label: 'Français', flag: '🇫🇷' },
-  { key: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { key: 'ru', label: 'Русский', flag: '🇷🇺' },
+// Twemoji CDN 国旗图片（Windows 不渲染 emoji 国旗，用图片兼容所有平台）
+function twemoji(codepoint: string) {
+  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/${codepoint}.svg`;
+}
+
+export const SUPPORTED_LOCALES: { key: LocaleKey; label: string; flag: string; code: string }[] = [
+  { key: 'zh-CN', label: '简体中文', flag: twemoji('1f1e8-1f1f3'), code: 'CN' },
+  { key: 'zh-TW', label: '繁體中文', flag: twemoji('1f1f9-1f1fc'), code: 'TW' },
+  { key: 'en', label: 'English', flag: twemoji('1f1fa-1f1f8'), code: 'US' },
+  { key: 'ja', label: '日本語', flag: twemoji('1f1ef-1f1f5'), code: 'JP' },
+  { key: 'ko', label: '한국어', flag: twemoji('1f1f0-1f1f7'), code: 'KR' },
+  { key: 'ms', label: 'Bahasa Melayu', flag: twemoji('1f1f2-1f1fe'), code: 'MY' },
+  { key: 'th', label: 'ภาษาไทย', flag: twemoji('1f1f9-1f1ed'), code: 'TH' },
+  { key: 'es', label: 'Español', flag: twemoji('1f1ea-1f1f8'), code: 'ES' },
+  { key: 'fr', label: 'Français', flag: twemoji('1f1eb-1f1f7'), code: 'FR' },
+  { key: 'de', label: 'Deutsch', flag: twemoji('1f1e9-1f1ea'), code: 'DE' },
+  { key: 'ru', label: 'Русский', flag: twemoji('1f1f7-1f1fa'), code: 'RU' },
 ];
 
 const STORAGE_KEY = 'anytokens-locale';

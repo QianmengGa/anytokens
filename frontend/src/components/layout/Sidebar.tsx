@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import {
   LayoutDashboard,
   Key,
@@ -11,24 +12,25 @@ import {
   Shield,
 } from 'lucide-react';
 
-// 导航菜单项
-const navItems = [
-  { href: '/dashboard', label: '概览', icon: LayoutDashboard },
-  { href: '/api-keys', label: 'API 密钥', icon: Key },
-  { href: '/billing', label: '账单', icon: CreditCard },
-  { href: '/chat', label: '聊天', icon: MessageSquare },
-];
-
-const adminItems = [
-  { href: '/admin', label: '管理后台', icon: Shield },
-];
-
 interface SidebarProps {
   role?: string;
 }
 
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
+  const { t } = useI18n();
+
+  // 导航菜单项
+  const navItems = [
+    { href: '/dashboard', label: t.sidebar_overview, icon: LayoutDashboard },
+    { href: '/api-keys', label: t.sidebar_api_keys, icon: Key },
+    { href: '/billing', label: t.sidebar_billing, icon: CreditCard },
+    { href: '/chat', label: t.sidebar_chat, icon: MessageSquare },
+  ];
+
+  const adminItems = [
+    { href: '/admin', label: t.sidebar_admin, icon: Shield },
+  ];
 
   const items = role === 'ADMIN' ? [...navItems, ...adminItems] : navItems;
 

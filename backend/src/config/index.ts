@@ -18,4 +18,7 @@ export const config = {
 
   // CORS
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+
+  // Resend 邮件服务
+  resendApiKey: process.env.RESEND_API_KEY || '',
 };

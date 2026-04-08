@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Navbar } from '@/components/layout/Navbar';
+import { useI18n } from '@/lib/i18n';
 
 // 仪表盘布局 — 需要认证
 export default function DashboardLayout({
@@ -14,6 +15,7 @@ export default function DashboardLayout({
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { t } = useI18n();
 
   // 未登录时跳转到登录页
   useEffect(() => {
@@ -25,7 +27,7 @@ export default function DashboardLayout({
   if (status === 'loading' || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">加载中...</p>
+        <p className="text-muted-foreground">{t.loading}</p>
       </div>
     );
   }

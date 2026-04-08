@@ -1,15 +1,64 @@
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../config/database.js';
 import { config } from '../config/index.js';
 import { Errors } from '../utils/errors.js';
+import { emailService } from './email.service.js';
 
 // 注册赠送金额（美元）
 const SIGNUP_BONUS = 0.5;
+// 验证码有效期（分钟）
+const CODE_EXPIRE_MINUTES = 10;
+// 发送间隔（秒）
+const CODE_COOLDOWN_SECONDS = 60;
 
 class AuthService {
-  // 用户注册
-  async register(email: string, password: string, name?: string) {
+  // 发送验证码
+  async sendCode(email: string) {
+    // 检查 60 秒冷却
+    const recent = await prisma.emailVerification.findFirst({
+      where: {
+        email,
+        createdAt: { gt: new Date(Date.now() - CODE_COOLDOWN_SECONDS * 1000) },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (recent) {
+      throw Errors.tooMany('发送太频繁，请 60 秒后重试');
+    }
+
+    // 生成 6 位数字验证码
+    const code = crypto.randomInt(100000, 999999).toString();
+    const expiresAt = new Date(Date.now() + CODE_EXPIRE_MINUTES * 60 * 1000);
+
+    // 存入数据库
+    await prisma.emailVerification.create({
+      data: { email, code, expiresAt },
+    });
+
+    // 发送邮件
+    await emailService.sendVerificationCode(email, code);
+
+    return { message: '验证码已发送' };
+  }
+
+  // 用户注册（带验证码校验）
+  async register(email: string, password: string, code: string, name?: string) {
+    // 校验验证码
+    const verification = await prisma.emailVerification.findFirst({
+      where: {
+        email,
+        code,
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!verification) {
+      throw Errors.badRequest('验证码无效或已过期');
+    }
+
     // 检查邮箱是否已注册
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
@@ -26,8 +75,14 @@ class AuthService {
     // 哈希密码
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // 创建用户并赠送初始余额
+    // 创建用户并赠送初始余额，同时标记验证码已使用
     const user = await prisma.$transaction(async (tx) => {
+      // 标记验证码已使用
+      await tx.emailVerification.update({
+        where: { id: verification.id },
+        data: { used: true },
+      });
+
       const newUser = await tx.user.create({
         data: {
           email,

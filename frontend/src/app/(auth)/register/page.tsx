@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -8,32 +8,75 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useI18n } from '@/lib/i18n';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [name, setName] = useState('');
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sendingCode, setSendingCode] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [codeSent, setCodeSent] = useState(false);
 
+  // 倒计时逻辑
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  // 发送验证码
+  const handleSendCode = useCallback(async () => {
+    if (!email || countdown > 0) return;
+    setError('');
+    setSendingCode(true);
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/send-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.code !== 0) {
+        setError(data.message || t.reg_sending);
+        return;
+      }
+
+      setCodeSent(true);
+      setCountdown(60);
+    } catch (err) {
+      console.error('发送验证码异常:', err);
+      setError(t.reg_sending);
+    } finally {
+      setSendingCode(false);
+    }
+  }, [email, countdown, t]);
+
+  // 提交注册
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      // 调用后端注册接口
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, ...(name ? { name } : {}) }),
+        body: JSON.stringify({ email, password, code, ...(name ? { name } : {}) }),
       });
 
       const data = await res.json();
 
       if (!res.ok || data.code !== 0) {
-        setError(data.message || '注册失败');
+        setError(data.message || t.reg_loading);
         return;
       }
 
@@ -45,14 +88,13 @@ export default function RegisterPage() {
       });
 
       if (result?.error) {
-        // 注册成功但自动登录失败，跳转登录页
         router.push('/login');
       } else {
         router.push('/dashboard');
       }
     } catch (err) {
       console.error('注册异常:', err);
-      setError(err instanceof Error ? err.message : '注册失败，请重试');
+      setError(err instanceof Error ? err.message : t.reg_loading);
     } finally {
       setLoading(false);
     }
@@ -62,8 +104,8 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/50">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">注册 Anytokens</CardTitle>
-          <CardDescription>注册即送 $0.50 免费额度</CardDescription>
+          <CardTitle className="text-2xl">{t.reg_title}</CardTitle>
+          <CardDescription>{t.reg_desc}</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -72,33 +114,70 @@ export default function RegisterPage() {
                 {error}
               </div>
             )}
+
+            {/* 邮箱 + 发送验证码 */}
             <div className="space-y-2">
-              <Label htmlFor="name">用户名</Label>
+              <Label htmlFor="email">{t.reg_email}</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0 whitespace-nowrap"
+                  disabled={!email || countdown > 0 || sendingCode}
+                  onClick={handleSendCode}
+                >
+                  {sendingCode ? t.reg_sending : countdown > 0 ? `${countdown}s` : t.reg_send_code}
+                </Button>
+              </div>
+            </div>
+
+            {/* 验证码 */}
+            <div className="space-y-2">
+              <Label htmlFor="code">{t.reg_code}</Label>
+              <Input
+                id="code"
+                type="text"
+                inputMode="numeric"
+                placeholder={t.reg_code_placeholder}
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                required
+                maxLength={6}
+              />
+              {codeSent && !error && (
+                <p className="text-xs text-muted-foreground">{t.reg_code_sent} {email}</p>
+              )}
+            </div>
+
+            {/* 用户名 */}
+            <div className="space-y-2">
+              <Label htmlFor="name">{t.reg_name}</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="你的名字"
+                placeholder={t.reg_name_placeholder}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+
+            {/* 密码 */}
             <div className="space-y-2">
-              <Label htmlFor="email">邮箱</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">密码</Label>
+              <Label htmlFor="password">{t.reg_password}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="至少 6 位"
+                placeholder={t.reg_password_placeholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -107,13 +186,13 @@ export default function RegisterPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? '注册中...' : '免费注册'}
+            <Button type="submit" className="w-full" disabled={loading || code.length !== 6}>
+              {loading ? t.reg_loading : t.reg_submit}
             </Button>
             <p className="text-sm text-muted-foreground">
-              已有账号？{' '}
+              {t.reg_has_account}{' '}
               <Link href="/login" className="text-primary hover:underline">
-                登录
+                {t.reg_login_link}
               </Link>
             </p>
           </CardFooter>

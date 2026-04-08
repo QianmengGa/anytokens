@@ -12,18 +12,22 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { LogOut, User, Wallet } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export function Navbar() {
   const { data: session } = useSession();
+  const { t } = useI18n();
   const user = session?.user;
 
   return (
     <header className="flex h-16 items-center justify-between border-b bg-card px-6">
       <div className="flex items-center gap-4">
-        <h2 className="text-lg font-semibold">AI Token 中转平台</h2>
+        <h2 className="text-lg font-semibold">{t.navbar_title}</h2>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {/* 余额显示 */}
         {user && (
           <Badge variant="secondary" className="gap-1 px-3 py-1">
@@ -31,6 +35,12 @@ export function Navbar() {
             ${user.balance || '0.00'}
           </Badge>
         )}
+
+        {/* 语言切换 */}
+        <LanguageSwitcher />
+
+        {/* 主题切换 */}
+        <ThemeToggle />
 
         {/* 用户菜单 */}
         <DropdownMenu>
@@ -53,12 +63,12 @@ export function Navbar() {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
-              个人设置
+              {t.navbar_settings}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/login' })}>
               <LogOut className="mr-2 h-4 w-4" />
-              退出登录
+              {t.navbar_logout}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

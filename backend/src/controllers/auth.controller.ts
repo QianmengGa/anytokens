@@ -4,10 +4,16 @@ import { authService } from '../services/auth.service.js';
 import { success } from '../utils/response.js';
 import type { AuthRequest } from '../types/index.js';
 
+// 发送验证码参数校验
+const sendCodeSchema = z.object({
+  email: z.string().email('邮箱格式不正确'),
+});
+
 // 注册参数校验
 const registerSchema = z.object({
   email: z.string().email('邮箱格式不正确'),
   password: z.string().min(6, '密码至少 6 位').max(100),
+  code: z.string().length(6, '验证码为 6 位数字'),
   name: z.string().min(1, '名称不能为空').max(50).optional(),
 });
 
@@ -17,11 +23,22 @@ const loginSchema = z.object({
   password: z.string().min(1, '密码不能为空'),
 });
 
+// 发送验证码
+export async function sendCode(req: Request, res: Response, next: NextFunction) {
+  try {
+    const body = sendCodeSchema.parse(req.body);
+    const result = await authService.sendCode(body.email);
+    return success(res, result, '验证码已发送');
+  } catch (err) {
+    next(err);
+  }
+}
+
 // 用户注册
 export async function register(req: Request, res: Response, next: NextFunction) {
   try {
     const body = registerSchema.parse(req.body);
-    const result = await authService.register(body.email, body.password, body.name);
+    const result = await authService.register(body.email, body.password, body.code, body.name);
     return success(res, result, '注册成功', 201);
   } catch (err) {
     next(err);

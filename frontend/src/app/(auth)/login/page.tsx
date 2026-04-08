@@ -8,9 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useI18n } from '@/lib/i18n';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,12 +31,12 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError('邮箱或密码错误');
+        setError(t.login_error);
       } else {
         router.push('/dashboard');
       }
     } catch {
-      setError('登录失败，请重试');
+      setError(t.login_error);
     } finally {
       setLoading(false);
     }
@@ -44,8 +46,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/50">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">登录 Anytokens</CardTitle>
-          <CardDescription>输入邮箱和密码登录你的账号</CardDescription>
+          <CardTitle className="text-2xl">{t.login_title}</CardTitle>
+          <CardDescription>{t.login_desc}</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -55,7 +57,7 @@ export default function LoginPage() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">邮箱</Label>
+              <Label htmlFor="email">{t.login_email}</Label>
               <Input
                 id="email"
                 type="email"
@@ -66,11 +68,11 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">密码</Label>
+              <Label htmlFor="password">{t.login_password}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="输入密码"
+                placeholder={t.login_password_placeholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -79,12 +81,12 @@ export default function LoginPage() {
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? '登录中...' : '登录'}
+              {loading ? t.login_loading : t.login_submit}
             </Button>
             <p className="text-sm text-muted-foreground">
-              还没有账号？{' '}
+              {t.login_no_account}{' '}
               <Link href="/register" className="text-primary hover:underline">
-                免费注册
+                {t.login_register_link}
               </Link>
             </p>
           </CardFooter>
