@@ -27,7 +27,7 @@ export default function RegisterPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email, password, ...(name ? { name } : {}) }),
       });
 
       const data = await res.json();
@@ -50,8 +50,9 @@ export default function RegisterPage() {
       } else {
         router.push('/dashboard');
       }
-    } catch {
-      setError('注册失败，请重试');
+    } catch (err) {
+      console.error('注册异常:', err);
+      setError(err instanceof Error ? err.message : '注册失败，请重试');
     } finally {
       setLoading(false);
     }

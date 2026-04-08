@@ -1,26 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma/client.js';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { config } from './index.js';
 import { logger } from '../utils/logger.js';
 
-// Prisma 客户端单例
-const prisma = new PrismaClient({
-  log: config.isDev
-    ? [
-        { emit: 'event', level: 'query' },
-        { emit: 'event', level: 'error' },
-      ]
-    : [{ emit: 'event', level: 'error' }],
-});
-
-// 开发环境记录查询日志
-if (config.isDev) {
-  prisma.$on('query', (e) => {
-    logger.debug(`Prisma Query: ${e.query} (${e.duration}ms)`);
-  });
-}
-
-prisma.$on('error', (e) => {
-  logger.error('Prisma Error:', e);
-});
+// 使用 Prisma 7.x adapter 模式连接 PostgreSQL
+const adapter = new PrismaPg({ connectionString: config.databaseUrl });
+const prisma = new PrismaClient({ adapter });
 
 export { prisma };

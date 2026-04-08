@@ -16,6 +16,13 @@ class AuthService {
       throw Errors.conflict('该邮箱已被注册');
     }
 
+    // 如果提供了用户名，检查唯一性
+    const finalName = name || email.split('@')[0];
+    const nameCheck = await prisma.user.findMany({ where: { name: finalName }, take: 1 });
+    if (nameCheck.length > 0) {
+      throw Errors.conflict('该用户名已被使用');
+    }
+
     // 哈希密码
     const passwordHash = await bcrypt.hash(password, 12);
 
@@ -25,7 +32,7 @@ class AuthService {
         data: {
           email,
           passwordHash,
-          name: name || email.split('@')[0],
+          name: finalName,
           balance: SIGNUP_BONUS,
         },
       });

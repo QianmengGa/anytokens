@@ -1,7 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Navbar } from '@/components/layout/Navbar';
 
@@ -12,8 +13,16 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (status === 'loading') {
+  // 未登录时跳转到登录页
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login');
+    }
+  }, [status, router]);
+
+  if (status === 'loading' || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-muted-foreground">加载中...</p>
@@ -21,13 +30,9 @@ export default function DashboardLayout({
     );
   }
 
-  if (!session) {
-    redirect('/login');
-  }
-
   return (
     <div className="flex h-screen">
-      <Sidebar role={session.user?.role} />
+      <Sidebar role={(session.user as any)?.role} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Navbar />
         <main className="flex-1 overflow-auto p-6">{children}</main>

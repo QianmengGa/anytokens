@@ -11,13 +11,19 @@ export const metadata: Metadata = {
   description: '统一 AI API 中转服务，支持 OpenAI、Claude、Gemini、DeepSeek 等主流模型',
 };
 
+// 防止主题闪烁的内联脚本（在 React 水合前执行）
+const themeScript = `(function(){try{var t=localStorage.getItem('anytokens-theme')||'system';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.classList.toggle('dark',d)}catch(e){}})()`;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh">
+    <html lang="zh" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <QueryProvider>{children}</QueryProvider>
