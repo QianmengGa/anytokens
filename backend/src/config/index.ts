@@ -33,6 +33,10 @@ export const config = {
   stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
 
+  // NOWPayments 加密货币支付
+  nowpaymentsApiKey: process.env.NOWPAYMENTS_API_KEY || '',
+  nowpaymentsIpnSecret: process.env.NOWPAYMENTS_IPN_SECRET || '',
+
   // 管理员邮箱
   adminEmail: process.env.ADMIN_EMAIL || '',
 };

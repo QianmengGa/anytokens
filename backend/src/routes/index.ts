@@ -7,6 +7,7 @@ import userRouter from './user.js';
 import playgroundRouter from './playground.js';
 import adminRouter from './admin.js';
 import paymentRouter from './payment.js';
+import cryptoPaymentRouter from './crypto-payment.js';
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.use('/user', userRouter);
 router.use('/playground', playgroundRouter);
 router.use('/admin', adminRouter);
 router.use('/payment', paymentRouter);
+router.use('/crypto-payment', cryptoPaymentRouter);
 router.use(proxyRouter);
 
 export default router;

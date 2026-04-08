@@ -1,11 +1,14 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth.js';
-import { updateProfile, sendEmailCode, updateEmail, updatePassword, getSpendingLimits, updateSpendingLimits } from '../controllers/user.controller.js';
+import { getDashboardStats, updateProfile, sendEmailCode, updateEmail, updatePassword, getSpendingLimits, updateSpendingLimits } from '../controllers/user.controller.js';
 
 const userRouter = Router();
 
 // 所有 user 路由需要认证
 userRouter.use(authenticate as any);
+
+// GET /user/dashboard-stats — Dashboard 统计数据
+userRouter.get('/dashboard-stats', getDashboardStats as any);
 
 // PATCH /user/profile — 更新个人资料（用户名/电话）
 userRouter.patch('/profile', updateProfile as any);

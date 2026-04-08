@@ -29,6 +29,16 @@ const spendingLimitsSchema = z.object({
   maxPerMonth: z.number().min(0.01).max(100000).nullable().optional(),
 });
 
+// Dashboard 统计
+export async function getDashboardStats(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const result = await userService.getDashboardStats(req.user!.id);
+    return success(res, result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 // 更新个人资料
 export async function updateProfile(req: AuthRequest, res: Response, next: NextFunction) {
   try {

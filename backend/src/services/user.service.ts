@@ -11,6 +11,35 @@ const CODE_EXPIRE_MINUTES = 10;
 const CODE_COOLDOWN_SECONDS = 60;
 
 class UserService {
+  // Dashboard 统计数据
+  async getDashboardStats(userId: string) {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const [user, apiKeyCount, todayCalls, monthCalls, totalSpent] = await Promise.all([
+      prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { balance: true },
+      }),
+      prisma.apiKey.count({ where: { userId } }),
+      prisma.usageLog.count({ where: { userId, createdAt: { gte: todayStart } } }),
+      prisma.usageLog.count({ where: { userId, createdAt: { gte: monthStart } } }),
+      prisma.usageLog.aggregate({
+        where: { userId },
+        _sum: { cost: true },
+      }),
+    ]);
+
+    return {
+      balance: user.balance.toString(),
+      apiKeyCount,
+      todayCalls,
+      monthCalls,
+      totalSpent: (totalSpent._sum.cost ?? 0).toString(),
+    };
+  }
+
   // 更新个人资料（用户名/电话）
   async updateProfile(userId: string, data: { name?: string; phone?: string }) {
     if (data.name !== undefined) {

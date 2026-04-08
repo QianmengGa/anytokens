@@ -1,22 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { useI18n } from '@/lib/i18n';
 import { api } from '@/lib/api';
 import {
   Wallet,
   CreditCard,
-  MessageCircle,
   Check,
   CheckCircle,
   XCircle,
   Loader2,
+  Copy,
+  Clock,
+  ExternalLink,
 } from 'lucide-react';
 
 const AMOUNTS = [5, 10, 20, 50, 100, 200, 500];
@@ -31,15 +40,24 @@ const PAYMENT_METHODS = [
     id: 'usdt',
     icon: () => <span className="text-lg font-bold">₮</span>,
     label: 'USDT',
-    sublabel: 'TRC20 / ERC20 / BEP20',
+    sublabel: 'TRC20',
   },
   {
     id: 'usdc',
     icon: () => <span className="text-lg font-bold">$</span>,
     label: 'USDC',
-    sublabel: 'TRC20 / ERC20 / BEP20',
+    sublabel: 'TRC20',
   },
 ];
+
+// 加密货币支付信息
+interface CryptoPaymentInfo {
+  paymentId: string;
+  payAddress: string;
+  payAmount: string;
+  payCurrency: string;
+  transactionId: string;
+}
 
 export default function BillingPage() {
   const { t } = useI18n();
@@ -53,13 +71,18 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // 加密货币支付弹窗
+  const [cryptoInfo, setCryptoInfo] = useState<CryptoPaymentInfo | null>(null);
+  const [cryptoDialogOpen, setCryptoDialogOpen] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [cryptoStatus, setCryptoStatus] = useState<string>('waiting');
+
   const finalAmount = selectedAmount ?? (customAmount ? Number(customAmount) : 0);
 
   // 检查 URL 参数显示支付结果
   const isSuccess = searchParams.get('success') === 'true';
   const isCanceled = searchParams.get('canceled') === 'true';
 
-  // 支付结果提示 3 秒后自动清除 URL 参数
   useEffect(() => {
     if (isSuccess || isCanceled) {
       const timer = setTimeout(() => {
@@ -68,6 +91,44 @@ export default function BillingPage() {
       return () => clearTimeout(timer);
     }
   }, [isSuccess, isCanceled]);
+
+  // 轮询加密货币支付状态
+  useEffect(() => {
+    if (!cryptoInfo || !cryptoDialogOpen) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await api.get(`/crypto-payment/status/${cryptoInfo.paymentId}`);
+        const status = res.data.data.paymentStatus;
+        setCryptoStatus(status);
+
+        if (status === 'finished' || status === 'confirmed') {
+          clearInterval(interval);
+          // 延迟关闭弹窗，显示成功状态
+          setTimeout(() => {
+            setCryptoDialogOpen(false);
+            setCryptoInfo(null);
+            window.location.href = '/billing?success=true';
+          }, 2000);
+        }
+      } catch {
+        // 查询失败不中断轮询
+      }
+    }, 15000); // 每 15 秒查询
+
+    return () => clearInterval(interval);
+  }, [cryptoInfo, cryptoDialogOpen]);
+
+  // 复制到剪贴板
+  const copyToClipboard = useCallback(async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(field);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      // fallback
+    }
+  }, []);
 
   // 处理充值
   const handlePayment = async () => {
@@ -82,22 +143,29 @@ export default function BillingPage() {
       return;
     }
 
-    // 目前只支持 Stripe
-    if (selectedMethod !== 'stripe') {
-      setError('USDT/USDC 支付即将上线，请先使用信用卡支付');
-      return;
-    }
-
     setLoading(true);
     try {
-      const res = await api.post('/payment/create-checkout-session', {
-        amount: finalAmount,
-      });
-      const { url } = res.data.data;
-      if (url) {
-        window.location.href = url;
+      if (selectedMethod === 'stripe') {
+        // Stripe 信用卡支付
+        const res = await api.post('/payment/create-checkout-session', {
+          amount: finalAmount,
+        });
+        const { url } = res.data.data;
+        if (url) {
+          window.location.href = url;
+        } else {
+          setError(t.billing_error);
+        }
       } else {
-        setError(t.billing_error);
+        // 加密货币支付 (USDT / USDC)
+        const res = await api.post('/crypto-payment/create', {
+          amount: finalAmount,
+          currency: selectedMethod.toUpperCase(),
+        });
+        const data = res.data.data as CryptoPaymentInfo;
+        setCryptoInfo(data);
+        setCryptoStatus('waiting');
+        setCryptoDialogOpen(true);
       }
     } catch (err: any) {
       const msg = err.response?.data?.message || t.billing_error;
@@ -105,6 +173,27 @@ export default function BillingPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // 支付状态显示文本
+  const statusText = (status: string) => {
+    switch (status) {
+      case 'waiting': return t.crypto_status_waiting;
+      case 'confirming': return t.crypto_status_confirming;
+      case 'confirmed': return t.crypto_status_confirmed;
+      case 'sending': return t.crypto_status_sending;
+      case 'partially_paid': return t.crypto_status_partial;
+      case 'finished': return t.crypto_status_finished;
+      case 'failed': return t.crypto_status_failed;
+      case 'expired': return t.crypto_status_expired;
+      default: return status;
+    }
+  };
+
+  const statusColor = (status: string) => {
+    if (status === 'finished' || status === 'confirmed') return 'text-green-500';
+    if (status === 'failed' || status === 'expired') return 'text-red-500';
+    return 'text-amber-500';
   };
 
   return (
@@ -201,7 +290,6 @@ export default function BillingPage() {
           <div className="grid gap-3 sm:grid-cols-3">
             {PAYMENT_METHODS.map((method) => {
               const Icon = method.icon;
-              const isAvailable = method.id === 'stripe';
               return (
                 <button
                   key={method.id}
@@ -210,7 +298,7 @@ export default function BillingPage() {
                     selectedMethod === method.id
                       ? 'border-primary bg-primary/5'
                       : 'border-border hover:border-primary/50 hover:bg-accent'
-                  } ${!isAvailable ? 'opacity-60' : ''}`}
+                  }`}
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
                     <Icon className="h-5 w-5" />
@@ -223,11 +311,6 @@ export default function BillingPage() {
                   </div>
                   {selectedMethod === method.id && (
                     <Check className="ml-auto h-5 w-5 text-primary" />
-                  )}
-                  {!isAvailable && (
-                    <Badge variant="secondary" className="absolute right-2 top-2 text-[10px]">
-                      Coming Soon
-                    </Badge>
                   )}
                 </button>
               );
@@ -285,6 +368,89 @@ export default function BillingPage() {
           <p className="text-muted-foreground">{t.billing_no_history}</p>
         </CardContent>
       </Card>
+
+      {/* 加密货币支付弹窗 */}
+      <Dialog open={cryptoDialogOpen} onOpenChange={setCryptoDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t.crypto_dialog_title}</DialogTitle>
+            <DialogDescription>{t.crypto_dialog_desc}</DialogDescription>
+          </DialogHeader>
+
+          {cryptoInfo && (
+            <div className="space-y-4">
+              {/* 支付状态 */}
+              <div className="flex items-center justify-between rounded-lg bg-muted p-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{t.crypto_status}</span>
+                </div>
+                <span className={`text-sm font-medium ${statusColor(cryptoStatus)}`}>
+                  {statusText(cryptoStatus)}
+                </span>
+              </div>
+
+              {/* 支付金额 */}
+              <div className="space-y-1">
+                <label className="text-xs text-muted-foreground">{t.crypto_pay_amount}</label>
+                <div className="flex items-center gap-2 rounded-lg border p-3">
+                  <span className="flex-1 font-mono text-lg font-bold">
+                    {cryptoInfo.payAmount} {cryptoInfo.payCurrency.toUpperCase()}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(cryptoInfo.payAmount, 'amount')}
+                  >
+                    {copied === 'amount' ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              {/* 收款地址 */}
+              <div className="space-y-1">
+                <label className="text-xs text-muted-foreground">{t.crypto_pay_address}</label>
+                <div className="flex items-center gap-2 rounded-lg border p-3">
+                  <span className="flex-1 break-all font-mono text-xs">
+                    {cryptoInfo.payAddress}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(cryptoInfo.payAddress, 'address')}
+                  >
+                    {copied === 'address' ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              {/* 等值 USD */}
+              <div className="rounded-lg bg-muted/50 p-3 text-center text-sm text-muted-foreground">
+                ≈ ${finalAmount.toFixed(2)} USD
+              </div>
+
+              {/* 提示 */}
+              <div className="space-y-2 rounded-lg border border-amber-500/30 bg-amber-50/50 p-3 text-xs text-muted-foreground dark:bg-amber-950/20">
+                <p>{t.crypto_notice_1}</p>
+                <p>{t.crypto_notice_2}</p>
+              </div>
+
+              {/* 在 NOWPayments 查看 */}
+              <div className="text-center">
+                <a
+                  href={`https://nowpayments.io/payment/?iid=${cryptoInfo.paymentId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  {t.crypto_view_on_nowpayments}
+                </a>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
