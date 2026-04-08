@@ -25,7 +25,7 @@ interface ChatCompletionRequest {
 
 class ProxyService {
   // 处理 chat/completions 请求
-  async handleChatCompletion(apiKey: string, body: ChatCompletionRequest, res: Response) {
+  async handleChatCompletion(apiKey: string, body: ChatCompletionRequest, res: Response, clientIp?: string) {
     const startTime = Date.now();
 
     // 1. 验证 API Key
@@ -79,27 +79,23 @@ class ProxyService {
     };
 
     // 5. 转发请求
+    const ctx: RequestContext = {
+      userId,
+      apiKeyId: keyRecord.id,
+      model: modelConfig.displayName,
+      modelConfig,
+      startTime,
+      clientIp,
+    };
     if (body.stream) {
-      await this.handleStream(upstreamUrl, upstreamHeaders, upstreamBody, res, {
-        userId,
-        apiKeyId: keyRecord.id,
-        model: modelConfig.displayName,
-        modelConfig,
-        startTime,
-      });
+      await this.handleStream(upstreamUrl, upstreamHeaders, upstreamBody, res, ctx);
     } else {
-      await this.handleNonStream(upstreamUrl, upstreamHeaders, upstreamBody, res, {
-        userId,
-        apiKeyId: keyRecord.id,
-        model: modelConfig.displayName,
-        modelConfig,
-        startTime,
-      });
+      await this.handleNonStream(upstreamUrl, upstreamHeaders, upstreamBody, res, ctx);
     }
   }
 
   // Playground 专用：使用已验证的 Key 记录（跳过 bcrypt 验证）
-  async handleChatCompletionWithKey(keyRecord: any, body: ChatCompletionRequest, res: Response) {
+  async handleChatCompletionWithKey(keyRecord: any, body: ChatCompletionRequest, res: Response, clientIp?: string) {
     const startTime = Date.now();
     const userId = keyRecord.userId;
     const userBalance = Number(keyRecord.user.balance);
@@ -144,12 +140,13 @@ class ProxyService {
       'Authorization': `Bearer ${config.siliconflowApiKey}`,
     };
 
-    const ctx = {
+    const ctx: RequestContext = {
       userId,
       apiKeyId: keyRecord.id,
       model: modelConfig.displayName,
       modelConfig,
       startTime,
+      clientIp,
     };
 
     if (body.stream) {
@@ -348,6 +345,7 @@ class ProxyService {
             cost: totalCost,
             latencyMs,
             status: 'success',
+            clientIp: ctx.clientIp || null,
           },
         });
       });
@@ -419,6 +417,7 @@ class ProxyService {
           latencyMs: Date.now() - ctx.startTime,
           status,
           errorMessage,
+          clientIp: ctx.clientIp || null,
         },
       });
     } catch (err) {
@@ -434,6 +433,7 @@ interface RequestContext {
   model: string;
   modelConfig: ReturnType<typeof resolveModel> & {};
   startTime: number;
+  clientIp?: string;
 }
 
 export const proxyService = new ProxyService();

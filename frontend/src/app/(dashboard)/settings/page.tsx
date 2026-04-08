@@ -10,6 +10,7 @@ import { Check, AlertCircle } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
+import { PasswordStrength, isPasswordStrong } from '@/components/PasswordStrength';
 
 // 提取错误信息
 function getErrMsg(err: unknown): string {
@@ -167,6 +168,10 @@ export default function SettingsPage() {
   const [pwdMsg, setPwdMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const handleChangePwd = async () => {
+    if (!isPasswordStrong(newPwd)) {
+      setPwdMsg({ type: 'error', text: t.pwd_too_weak });
+      return;
+    }
     if (newPwd !== confirmPwd) {
       setPwdMsg({ type: 'error', text: t.settings_password_mismatch });
       return;
@@ -279,14 +284,15 @@ export default function SettingsPage() {
           <Separator />
           <div className="space-y-2">
             <Label>{t.settings_new_password}</Label>
-            <Input type="password" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} minLength={6} />
+            <Input type="password" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} minLength={8} />
+            <PasswordStrength password={newPwd} />
           </div>
           <div className="space-y-2">
             <Label>{t.settings_confirm_password}</Label>
             <Input type="password" value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} />
           </div>
           {pwdMsg && <Msg {...pwdMsg} />}
-          <Button onClick={handleChangePwd} disabled={pwdLoading || !oldPwd || !newPwd || !confirmPwd}>
+          <Button onClick={handleChangePwd} disabled={pwdLoading || !oldPwd || !newPwd || !confirmPwd || !isPasswordStrong(newPwd)}>
             {t.settings_change_password}
           </Button>
         </CardContent>

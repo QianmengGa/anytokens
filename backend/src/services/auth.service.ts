@@ -5,6 +5,7 @@ import { prisma } from '../config/database.js';
 import { config } from '../config/index.js';
 import { Errors } from '../utils/errors.js';
 import { emailService } from './email.service.js';
+import { validatePasswordStrength } from '../utils/password.js';
 
 // 注册赠送金额（美元）
 const SIGNUP_BONUS = 0.5;
@@ -12,6 +13,10 @@ const SIGNUP_BONUS = 0.5;
 const CODE_EXPIRE_MINUTES = 10;
 // 发送间隔（秒）
 const CODE_COOLDOWN_SECONDS = 60;
+// 密码重置验证码有效期（分钟）
+const RESET_CODE_EXPIRE_MINUTES = 10;
+// 密码重置发送冷却（秒）
+const RESET_COOLDOWN_SECONDS = 60;
 
 class AuthService {
   // 发送验证码
@@ -44,7 +49,7 @@ class AuthService {
   }
 
   // 用户注册（带验证码校验）
-  async register(email: string, password: string, code: string, name?: string) {
+  async register(email: string, password: string, code: string, name?: string, ip?: string) {
     // 校验验证码
     const verification = await prisma.emailVerification.findFirst({
       where: {
@@ -72,6 +77,9 @@ class AuthService {
       throw Errors.conflict('该用户名已被使用');
     }
 
+    // 校验密码强度
+    validatePasswordStrength(password);
+
     // 哈希密码
     const passwordHash = await bcrypt.hash(password, 12);
 
@@ -89,6 +97,9 @@ class AuthService {
           passwordHash,
           name: finalName,
           balance: SIGNUP_BONUS,
+          registerIp: ip || null,
+          lastLoginIp: ip || null,
+          lastLoginAt: new Date(),
         },
       });
 
@@ -137,8 +148,8 @@ class AuthService {
   }
 
   // 用户登录
-  async login(email: string, password: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
+  async login(email: string, password: string, ip?: string) {
+    let user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       throw Errors.unauthorized('邮箱或密码错误');
     }
@@ -151,6 +162,17 @@ class AuthService {
     if (!isValid) {
       throw Errors.unauthorized('邮箱或密码错误');
     }
+
+    // 如果是管理员邮箱但角色不是 ADMIN，自动升级
+    const updateData: any = { lastLoginAt: new Date() };
+    if (ip) updateData.lastLoginIp = ip;
+    if (config.adminEmail && email === config.adminEmail && user.role !== 'ADMIN') {
+      updateData.role = 'ADMIN';
+    }
+    user = await prisma.user.update({
+      where: { id: user.id },
+      data: updateData,
+    });
 
     const token = this.signToken(user.id, user.email, user.role);
 
@@ -189,6 +211,92 @@ class AuthService {
       ...user,
       balance: user.balance.toString(),
     };
+  }
+
+  // 忘记密码 — 发送验证码
+  async forgotPassword(email: string) {
+    // 检查用户是否存在
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // 为防止枚举攻击，不暴露用户是否存在
+      return { message: '如果该邮箱已注册，验证码已发送' };
+    }
+
+    if (!user.isActive) {
+      return { message: '如果该邮箱已注册，验证码已发送' };
+    }
+
+    // 检查 60 秒冷却
+    const recent = await prisma.passwordReset.findFirst({
+      where: {
+        email,
+        createdAt: { gt: new Date(Date.now() - RESET_COOLDOWN_SECONDS * 1000) },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (recent) {
+      throw Errors.tooMany('发送太频繁，请 60 秒后重试');
+    }
+
+    // 生成 6 位数字验证码
+    const code = crypto.randomInt(100000, 999999).toString();
+    const token = code; // 复用 token 字段存储验证码
+    const expiresAt = new Date(Date.now() + RESET_CODE_EXPIRE_MINUTES * 60 * 1000);
+
+    // 存入数据库
+    await prisma.passwordReset.create({
+      data: { email, token, expiresAt },
+    });
+
+    // 发送验证码邮件
+    await emailService.sendPasswordResetCode(email, code);
+
+    return { message: '如果该邮箱已注册，验证码已发送' };
+  }
+
+  // 重置密码（通过邮箱 + 验证码）
+  async resetPassword(email: string, code: string, newPassword: string) {
+    // 查找有效的重置记录
+    const resetRecord = await prisma.passwordReset.findFirst({
+      where: {
+        email,
+        token: code,
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!resetRecord) {
+      throw Errors.badRequest('验证码无效或已过期');
+    }
+
+    // 查找用户
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw Errors.notFound('用户不存在');
+    }
+
+    // 校验密码强度
+    validatePasswordStrength(newPassword);
+
+    // 哈希新密码并更新
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+
+    await prisma.$transaction(async (tx) => {
+      // 标记验证码已使用
+      await tx.passwordReset.update({
+        where: { id: resetRecord.id },
+        data: { used: true },
+      });
+
+      // 更新用户密码
+      await tx.user.update({
+        where: { id: user.id },
+        data: { passwordHash },
+      });
+    });
+
+    return { message: '密码已重置，请使用新密码登录' };
   }
 
   // 签发 JWT

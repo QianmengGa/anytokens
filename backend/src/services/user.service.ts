@@ -3,6 +3,7 @@ import { prisma } from '../config/database.js';
 import { Errors } from '../utils/errors.js';
 import { emailService } from './email.service.js';
 import crypto from 'crypto';
+import { validatePasswordStrength } from '../utils/password.js';
 
 // 验证码有效期（分钟）
 const CODE_EXPIRE_MINUTES = 10;
@@ -151,6 +152,15 @@ class UserService {
     if (!isValid) {
       throw Errors.badRequest('旧密码不正确');
     }
+
+    // 检查新密码不能与旧密码相同
+    const isSame = await bcrypt.compare(newPassword, user.passwordHash);
+    if (isSame) {
+      throw Errors.badRequest('新密码不能与当前密码相同');
+    }
+
+    // 校验密码强度
+    validatePasswordStrength(newPassword);
 
     const passwordHash = await bcrypt.hash(newPassword, 12);
     await prisma.user.update({

@@ -12,7 +12,7 @@ const sendCodeSchema = z.object({
 // 注册参数校验
 const registerSchema = z.object({
   email: z.string().email('邮箱格式不正确'),
-  password: z.string().min(6, '密码至少 6 位').max(100),
+  password: z.string().min(8, '密码至少 8 位').max(100),
   code: z.string().length(6, '验证码为 6 位数字'),
   name: z.string().min(1, '名称不能为空').max(50).optional(),
 });
@@ -34,11 +34,19 @@ export async function sendCode(req: Request, res: Response, next: NextFunction) 
   }
 }
 
+// 提取客户端 IP
+function getClientIp(req: Request): string {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (typeof forwarded === 'string') return forwarded.split(',')[0].trim();
+  return req.ip || '';
+}
+
 // 用户注册
 export async function register(req: Request, res: Response, next: NextFunction) {
   try {
     const body = registerSchema.parse(req.body);
-    const result = await authService.register(body.email, body.password, body.code, body.name);
+    const ip = getClientIp(req);
+    const result = await authService.register(body.email, body.password, body.code, body.name, ip);
     return success(res, result, '注册成功', 201);
   } catch (err) {
     next(err);
@@ -49,8 +57,43 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const body = loginSchema.parse(req.body);
-    const result = await authService.login(body.email, body.password);
+    const ip = getClientIp(req);
+    const result = await authService.login(body.email, body.password, ip);
     return success(res, result, '登录成功');
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 忘记密码参数校验
+const forgotPasswordSchema = z.object({
+  email: z.string().email('邮箱格式不正确'),
+});
+
+// 重置密码参数校验
+const resetPasswordSchema = z.object({
+  email: z.string().email('邮箱格式不正确'),
+  code: z.string().length(6, '验证码为 6 位数字'),
+  password: z.string().min(8, '密码至少 8 位').max(100),
+});
+
+// 忘记密码
+export async function forgotPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const body = forgotPasswordSchema.parse(req.body);
+    const result = await authService.forgotPassword(body.email);
+    return success(res, result, result.message);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 重置密码
+export async function resetPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const body = resetPasswordSchema.parse(req.body);
+    const result = await authService.resetPassword(body.email, body.code, body.password);
+    return success(res, result, result.message);
   } catch (err) {
     next(err);
   }

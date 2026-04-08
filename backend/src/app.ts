@@ -9,6 +9,9 @@ import routes from './routes/index.js';
 
 const app = express();
 
+// 信任反向代理（获取真实 IP）
+app.set('trust proxy', true);
+
 // 安全头
 app.use(helmet());
 

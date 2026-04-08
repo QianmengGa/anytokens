@@ -18,6 +18,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useI18n } from '@/lib/i18n';
 import { COUNTRY_CODES, getDefaultCountry } from '@/lib/country-codes';
+import { PasswordStrength, isPasswordStrong } from '@/components/PasswordStrength';
 
 type RegMode = 'email' | 'phone';
 
@@ -332,12 +333,13 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
               />
+              <PasswordStrength password={password} />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={loading || code.length !== 6}>
+            <Button type="submit" className="w-full" disabled={loading || code.length !== 6 || !isPasswordStrong(password)}>
               {loading ? t.reg_loading : t.reg_submit}
             </Button>
             <p className="text-sm text-muted-foreground">

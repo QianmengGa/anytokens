@@ -65,6 +65,25 @@ export const authOptions: NextAuthOptions = {
         token.balance = (user as any).balance;
         token.accessToken = (user as any).accessToken;
       }
+
+      // 每次 token 刷新时从后端同步最新用户信息（角色、余额等）
+      if (token.accessToken) {
+        try {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+            headers: { Authorization: `Bearer ${token.accessToken}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.code === 0 && data.data) {
+              token.role = data.data.role;
+              token.balance = data.data.balance;
+            }
+          }
+        } catch {
+          // 网络错误时保留旧值
+        }
+      }
+
       return token;
     },
     // 将信息暴露给客户端 session

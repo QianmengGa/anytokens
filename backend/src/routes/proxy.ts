@@ -24,8 +24,12 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response, next: 
       throw Errors.badRequest('缺少 messages 参数');
     }
 
+    // 提取客户端 IP
+    const forwarded = req.headers['x-forwarded-for'];
+    const clientIp = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : (req.ip || '');
+
     // 交给 proxyService 处理（流式响应由 service 直接写入 res）
-    await proxyService.handleChatCompletion(apiKey, req.body, res);
+    await proxyService.handleChatCompletion(apiKey, req.body, res, clientIp);
   } catch (err) {
     // 流式响应已发送 header 后不能再用 errorHandler
     if (res.headersSent) {

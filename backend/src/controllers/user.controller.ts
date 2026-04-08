@@ -16,7 +16,7 @@ const emailSchema = z.object({
 
 const passwordSchema = z.object({
   oldPassword: z.string().min(1, '请输入旧密码'),
-  newPassword: z.string().min(6, '新密码至少 6 位').max(100),
+  newPassword: z.string().min(8, '新密码至少 8 位').max(100),
 });
 
 const sendCodeSchema = z.object({

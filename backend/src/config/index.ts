@@ -19,10 +19,16 @@ export const config = {
   // CORS
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
 
+  // 前端地址（用于拼接重置密码链接等）
+  frontendUrl: process.env.FRONTEND_URL || process.env.CORS_ORIGIN || 'http://localhost:3000',
+
   // Resend 邮件服务
   resendApiKey: process.env.RESEND_API_KEY || '',
 
   // 硅基流动（SiliconFlow）
   siliconflowApiKey: process.env.SILICONFLOW_API_KEY || '',
   siliconflowBaseUrl: process.env.SILICONFLOW_BASE_URL || 'https://api.siliconflow.cn/v1',
+
+  // 管理员邮箱
+  adminEmail: process.env.ADMIN_EMAIL || '',
 };
