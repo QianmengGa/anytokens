@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { useI18n } from '@/lib/i18n';
 import {
   Users, Infinity, ShieldCheck, HeadsetIcon, FileText, Activity, Check,
@@ -38,18 +36,7 @@ export default function EnterprisePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* 导航栏 */}
-      <nav className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-sm">
-        <div className="flex h-16 w-full items-center justify-between px-4">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            <span className="text-primary">Any</span>
-            <span className="text-muted-foreground">tokens</span>
-          </Link>
-          <div className="flex items-center gap-1.5">
-            <LanguageSwitcher />
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
+      <PublicNavbar />
 
       {/* Hero */}
       <section className="border-b border-border/40 py-20 text-center">

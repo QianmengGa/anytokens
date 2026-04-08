@@ -26,7 +26,7 @@ export function Sidebar({ role }: SidebarProps) {
   const navItems = [
     { href: '/dashboard', label: t.sidebar_overview, icon: LayoutDashboard },
     { href: '/api-keys', label: t.sidebar_api_keys, icon: Key },
-    { href: '/billing', label: t.sidebar_billing, icon: CreditCard },
+    { href: '/billing', label: t.sidebar_billing_recharge, icon: CreditCard },
     { href: '/chat', label: t.sidebar_chat, icon: MessageSquare },
     { href: '/playground', label: t.sidebar_playground, icon: FlaskConical },
     { href: '/settings', label: t.sidebar_settings, icon: Settings },

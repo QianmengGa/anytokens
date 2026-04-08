@@ -13,8 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { useI18n } from '@/lib/i18n';
 import { Search, ExternalLink, Check, X, Zap } from 'lucide-react';
 import { aiApps, type AiApp, type AppCategory } from '@/data/ai-apps';
@@ -79,18 +78,7 @@ export default function AppsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* 导航栏 */}
-      <nav className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-sm">
-        <div className="flex h-16 w-full items-center justify-between px-4">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            <span className="text-primary">Any</span>
-            <span className="text-muted-foreground">tokens</span>
-          </Link>
-          <div className="flex items-center gap-1.5">
-            <LanguageSwitcher />
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
+      <PublicNavbar />
 
       {/* 标题 + 搜索 */}
       <section className="border-b border-border/40 py-12">

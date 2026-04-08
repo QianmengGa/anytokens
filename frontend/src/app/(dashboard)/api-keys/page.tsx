@@ -24,8 +24,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, Copy, Check, Trash2, Key, Eye, AlertCircle, X } from 'lucide-react';
+import { Plus, Copy, Check, Trash2, Key, Eye, AlertCircle, X, Wallet } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import Link from 'next/link';
 import { api } from '@/lib/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -187,6 +188,20 @@ export default function ApiKeysPage() {
           )}
         </div>
       )}
+
+      {/* 余额不足提示 */}
+      <Link href="/billing" className="block">
+        <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3 transition-colors hover:bg-primary/10">
+          <Wallet className="h-5 w-5 text-primary" />
+          <div className="flex-1">
+            <span className="text-sm font-medium">{t.billing_low_balance}</span>
+            <span className="ml-2 text-sm text-muted-foreground">{t.billing_low_balance_desc}</span>
+          </div>
+          <Button size="sm" variant="outline" className="shrink-0">
+            {t.billing_recharge}
+          </Button>
+        </div>
+      </Link>
 
       {/* 页头 */}
       <div className="flex items-center justify-between">

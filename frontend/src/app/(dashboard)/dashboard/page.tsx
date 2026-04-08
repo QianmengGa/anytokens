@@ -1,8 +1,10 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wallet, Key, Activity, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Wallet, Key, Activity, Zap, Plus } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 
 // 仪表盘概览页
@@ -24,7 +26,15 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${user?.balance || '0.00'}</div>
-            <p className="text-xs text-muted-foreground">USD</p>
+            <div className="mt-2 flex items-center gap-2">
+              <p className="text-xs text-muted-foreground">USD</p>
+              <Link href="/billing">
+                <Button size="sm" variant="outline" className="h-7 gap-1 text-xs">
+                  <Plus className="h-3 w-3" />
+                  {t.billing_recharge}
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
 
