@@ -9,7 +9,7 @@ export function authenticate(req: AuthRequest, _res: Response, next: NextFunctio
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw Errors.unauthorized('缺少认证令牌');
+    return next(Errors.unauthorized('缺少认证令牌'));
   }
 
   const token = authHeader.substring(7);
@@ -29,14 +29,14 @@ export function authenticate(req: AuthRequest, _res: Response, next: NextFunctio
 
     next();
   } catch {
-    throw Errors.unauthorized('认证令牌无效或已过期');
+    return next(Errors.unauthorized('认证令牌无效或已过期'));
   }
 }
 
 // 管理员权限验证中间件
 export function requireAdmin(req: AuthRequest, _res: Response, next: NextFunction) {
   if (!req.user || req.user.role !== 'ADMIN') {
-    throw Errors.forbidden('需要管理员权限');
+    return next(Errors.forbidden('需要管理员权限'));
   }
   next();
 }

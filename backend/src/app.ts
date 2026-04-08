@@ -27,7 +27,7 @@ app.use(express.json({ limit: '10mb' }));
 // 请求日志
 app.use(requestLogger);
 
-// API 路由挂载（统一 /api/v1 前缀）
+// API 路由挂载（统一 /api/v1 前缀）— 包含 auth, keys 等模块
 app.use('/api/v1', routes);
 
 // 404 处理
