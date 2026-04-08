@@ -29,6 +29,10 @@ export const config = {
   siliconflowApiKey: process.env.SILICONFLOW_API_KEY || '',
   siliconflowBaseUrl: process.env.SILICONFLOW_BASE_URL || 'https://api.siliconflow.cn/v1',
 
+  // Stripe 支付
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
+
   // 管理员邮箱
   adminEmail: process.env.ADMIN_EMAIL || '',
 };

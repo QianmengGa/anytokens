@@ -24,6 +24,9 @@ app.use(cors({
 // 压缩响应
 app.use(compression());
 
+// Stripe Webhook 需要原始请求体（必须在 express.json 之前）
+app.use('/api/v1/payment/webhook', express.raw({ type: 'application/json' }));
+
 // 解析 JSON 请求体
 app.use(express.json({ limit: '10mb' }));
 

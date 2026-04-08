@@ -27,6 +27,7 @@
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0",
     "resend": "^6.10.0",
+    "stripe": "^22.0.1",
     "uuid": "^13.0.0",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0",
