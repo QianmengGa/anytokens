@@ -311,3 +311,33 @@
 
 \- \*\*⚠️ Gemini 免费额度需确认 Google 条款是否允许转售\*\*
 
+# Anytokens 开发规则
+
+## 常见错误，每次修改后必须检查
+
+1. **CSS/Tailwind 不生效**
+   - 修改完必须重启前端服务
+   - 确认 postcss.config.js 存在且包含 tailwindcss 和 autoprefixer
+   - 确认 globals.css 有 @tailwind base/components/utilities
+
+2. **接口不存在**
+   - 新建路由文件后必须在 index.ts 里挂载
+   - 格式：app.use('/api/v1/xxx', xxxRouter)
+
+3. **Hydration Error**
+   - 语言切换等客户端状态用 useEffect + mounted 处理
+   - 加 suppressHydrationWarning 属性
+
+4. **端口被占用**
+   - 用 npx kill-port 3000 清理后再启动
+
+5. **每次修改完必须**
+   - 检查相关文件避免冲突
+   - 重启对应服务（前端/后端）
+   - 测试功能是否正常
+
+## 开发原则
+- 新功能开发前先检查现有文件
+- 每完成一个功能立即 git commit
+- 路由文件创建后必须挂载到 index.ts
+

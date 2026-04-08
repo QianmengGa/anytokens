@@ -106,6 +106,18 @@ class AuthService {
         },
       });
 
+      // 自动创建默认 API Key
+      const rawKey = 'sk-any-' + crypto.randomBytes(48).toString('base64url').slice(0, 48);
+      const keyHash = await bcrypt.hash(rawKey, 10);
+      await tx.apiKey.create({
+        data: {
+          userId: newUser.id,
+          name: '默认密钥',
+          keyHash,
+          keyPrefix: rawKey.slice(0, 12),
+        },
+      });
+
       return newUser;
     });
 
@@ -162,6 +174,7 @@ class AuthService {
         id: true,
         email: true,
         name: true,
+        phone: true,
         role: true,
         balance: true,
         createdAt: true,

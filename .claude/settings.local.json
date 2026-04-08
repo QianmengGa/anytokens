@@ -10,7 +10,30 @@
       "Bash(npx create-next-app@14 frontend --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)",
       "Bash(npx shadcn@latest:*)",
       "Bash(npx next:*)",
-      "Bash(npx shadcn-ui@0.9.4 init -y)"
+      "Bash(npx shadcn-ui@0.9.4 init -y)",
+      "WebSearch",
+      "Bash(timeout 5 npx tsx src/index.ts)",
+      "Bash(curl:*)",
+      "Bash(cat C:/projects/anytokens/backend/logs/error-*.log)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(npx tsx:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(python -m json.tool)",
+      "Bash(netstat -ano)",
+      "Bash(tasklist //FI \"PID eq 26184\")",
+      "Bash(tasklist /FI \"PID eq 26184\")",
+      "Bash(taskkill /PID 26184 /F)",
+      "Bash(taskkill /PID 26184 /T /F)",
+      "Bash(wmic process:*)",
+      "Bash(powershell:*)",
+      "Bash(rm:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(node -e ':*)",
+      "Bash(PGPASSWORD=anytokens psql:*)",
+      "Bash(docker exec anytokens-postgres-1:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

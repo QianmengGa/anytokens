@@ -33,7 +33,7 @@ export default function LoginPage() {
       if (result?.error) {
         setError(t.login_error);
       } else {
-        router.push('/dashboard');
+        router.push('/');
       }
     } catch {
       setError(t.login_error);

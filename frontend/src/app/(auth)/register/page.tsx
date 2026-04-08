@@ -8,20 +8,49 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useI18n } from '@/lib/i18n';
+import { COUNTRY_CODES, getDefaultCountry } from '@/lib/country-codes';
+
+type RegMode = 'email' | 'phone';
 
 export default function RegisterPage() {
   const router = useRouter();
   const { t } = useI18n();
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
+
+  // 注册方式切换
+  const [mode, setMode] = useState<RegMode>('email');
+
+  // 共用状态
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [sendingCode, setSendingCode] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [codeSent, setCodeSent] = useState(false);
+
+  // 邮箱模式
+  const [email, setEmail] = useState('');
+
+  // 手机号模式
+  const [countryCode, setCountryCode] = useState('');
+  const [phone, setPhone] = useState('');
+
+  // 初始化默认国家
+  useEffect(() => {
+    const defaultCode = getDefaultCountry();
+    const country = COUNTRY_CODES.find((c) => c.code === defaultCode);
+    if (country) setCountryCode(country.code);
+  }, []);
 
   // 倒计时逻辑
   useEffect(() => {
@@ -30,35 +59,51 @@ export default function RegisterPage() {
     return () => clearTimeout(timer);
   }, [countdown]);
 
+  // 切换模式时重置
+  const switchMode = (m: RegMode) => {
+    setMode(m);
+    setCode('');
+    setError('');
+    setCodeSent(false);
+    setCountdown(0);
+  };
+
   // 发送验证码
   const handleSendCode = useCallback(async () => {
-    if (!email || countdown > 0) return;
+    if (countdown > 0) return;
     setError('');
     setSendingCode(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/send-code`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || data.code !== 0) {
-        setError(data.message || t.reg_sending);
-        return;
+      if (mode === 'email') {
+        if (!email) return;
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/send-code`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        if (!res.ok || data.code !== 0) {
+          setError(data.message || 'Failed');
+          return;
+        }
+      } else {
+        // 手机号模式：预留接口，暂用 console.log 模拟
+        if (!phone) return;
+        const country = COUNTRY_CODES.find((c) => c.code === countryCode);
+        const fullPhone = `${country?.dial || ''}${phone}`;
+        console.log(`[SMS] 发送验证码到 ${fullPhone}（模拟）`);
+        // TODO: 接入真实短信服务
       }
-
       setCodeSent(true);
       setCountdown(60);
     } catch (err) {
       console.error('发送验证码异常:', err);
-      setError(t.reg_sending);
+      setError('Network error');
     } finally {
       setSendingCode(false);
     }
-  }, [email, countdown, t]);
+  }, [email, phone, countryCode, countdown, mode]);
 
   // 提交注册
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,6 +112,13 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      if (mode === 'phone') {
+        // 手机号注册暂未接入后端，提示用户
+        setError('Phone registration is coming soon. Please use email.');
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -90,7 +142,7 @@ export default function RegisterPage() {
       if (result?.error) {
         router.push('/login');
       } else {
-        router.push('/dashboard');
+        router.push('/');
       }
     } catch (err) {
       console.error('注册异常:', err);
@@ -99,6 +151,8 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
+
+  const selectedCountry = COUNTRY_CODES.find((c) => c.code === countryCode);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/50">
@@ -115,49 +169,146 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* 邮箱 + 发送验证码 */}
-            <div className="space-y-2">
-              <Label htmlFor="email">{t.reg_email}</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="shrink-0 whitespace-nowrap"
-                  disabled={!email || countdown > 0 || sendingCode}
-                  onClick={handleSendCode}
-                >
-                  {sendingCode ? t.reg_sending : countdown > 0 ? `${countdown}s` : t.reg_send_code}
-                </Button>
-              </div>
+            {/* 选项卡切换 */}
+            <div className="flex rounded-lg border p-1">
+              <button
+                type="button"
+                className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  mode === 'email'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                onClick={() => switchMode('email')}
+              >
+                {t.reg_tab_email}
+              </button>
+              <button
+                type="button"
+                className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  mode === 'phone'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                onClick={() => switchMode('phone')}
+              >
+                {t.reg_tab_phone}
+              </button>
             </div>
 
-            {/* 验证码 */}
-            <div className="space-y-2">
-              <Label htmlFor="code">{t.reg_code}</Label>
-              <Input
-                id="code"
-                type="text"
-                inputMode="numeric"
-                placeholder={t.reg_code_placeholder}
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                required
-                maxLength={6}
-              />
-              {codeSent && !error && (
-                <p className="text-xs text-muted-foreground">{t.reg_code_sent} {email}</p>
-              )}
-            </div>
+            {/* 邮箱模式 */}
+            {mode === 'email' && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="email">{t.reg_email}</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0 whitespace-nowrap"
+                      disabled={!email || countdown > 0 || sendingCode}
+                      onClick={handleSendCode}
+                    >
+                      {sendingCode ? t.reg_sending : countdown > 0 ? `${countdown}s` : t.reg_send_code}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="code">{t.reg_code}</Label>
+                  <Input
+                    id="code"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder={t.reg_code_placeholder}
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    required
+                    maxLength={6}
+                  />
+                  {codeSent && !error && (
+                    <p className="text-xs text-muted-foreground">{t.reg_code_sent} {email}</p>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* 手机号模式 */}
+            {mode === 'phone' && (
+              <>
+                <div className="space-y-2">
+                  <Label>{t.reg_phone}</Label>
+                  <div className="flex gap-2">
+                    <Select value={countryCode} onValueChange={setCountryCode}>
+                      <SelectTrigger className="w-[140px] shrink-0">
+                        <SelectValue>
+                          {selectedCountry
+                            ? `${selectedCountry.flag} ${selectedCountry.dial}`
+                            : 'Select'}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <ScrollArea className="h-[300px]">
+                          {COUNTRY_CODES.map((c) => (
+                            <SelectItem key={c.code} value={c.code}>
+                              {c.flag} {c.dial} {c.name}
+                            </SelectItem>
+                          ))}
+                        </ScrollArea>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      type="tel"
+                      placeholder={t.reg_phone_placeholder}
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value.replace(/[^\d\s-]/g, ''))}
+                      required
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>{t.reg_sms_code}</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder={t.reg_code_placeholder}
+                      value={code}
+                      onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      required
+                      maxLength={6}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0 whitespace-nowrap"
+                      disabled={!phone || countdown > 0 || sendingCode}
+                      onClick={handleSendCode}
+                    >
+                      {sendingCode ? t.reg_sending : countdown > 0 ? `${countdown}s` : t.reg_send_sms}
+                    </Button>
+                  </div>
+                  {codeSent && !error && (
+                    <p className="text-xs text-muted-foreground">
+                      {t.reg_sms_sent} {selectedCountry?.dial}{phone}
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
 
             {/* 用户名 */}
             <div className="space-y-2">

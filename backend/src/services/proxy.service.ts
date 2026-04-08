@@ -6,6 +6,11 @@ import { keysService } from './keys.service.js';
 import { Errors } from '../utils/errors.js';
 import { logger } from '../utils/logger.js';
 
+// 赠送余额单次调用费用上限（美元）
+const BONUS_CALL_LIMIT = 0.10;
+// 赠送余额阈值：余额 <= 此值视为仅有赠送余额
+const BONUS_BALANCE_THRESHOLD = 0.50;
+
 // OpenAI 兼容请求体
 interface ChatCompletionRequest {
   model: string;
@@ -37,6 +42,22 @@ class ProxyService {
     // 3. 检查余额（免费模型跳过）
     if (!modelConfig.free && userBalance <= 0) {
       throw Errors.forbidden('余额不足，请先充值');
+    }
+
+    // 3.5 赠送余额单次调用限制
+    if (!modelConfig.free && userBalance <= BONUS_BALANCE_THRESHOLD) {
+      const maxTok = body.max_tokens || 4096;
+      const estimated = calculateCost(modelConfig, maxTok, maxTok);
+      if (estimated.totalCost > BONUS_CALL_LIMIT) {
+        throw Errors.forbidden('单次调用超出免费额度限制，请充值后使用高费用模型');
+      }
+    }
+
+    // 3.6 用户消费限额检查
+    if (!modelConfig.free) {
+      const maxTok = body.max_tokens || 4096;
+      const estimated = calculateCost(modelConfig, maxTok, maxTok);
+      await this.checkSpendingLimits(userId, estimated.totalCost);
     }
 
     // 4. 构建上游请求
@@ -74,6 +95,67 @@ class ProxyService {
         modelConfig,
         startTime,
       });
+    }
+  }
+
+  // Playground 专用：使用已验证的 Key 记录（跳过 bcrypt 验证）
+  async handleChatCompletionWithKey(keyRecord: any, body: ChatCompletionRequest, res: Response) {
+    const startTime = Date.now();
+    const userId = keyRecord.userId;
+    const userBalance = Number(keyRecord.user.balance);
+
+    const modelConfig = resolveModel(body.model);
+    if (!modelConfig) {
+      throw Errors.badRequest(`不支持的模型: ${body.model}`);
+    }
+
+    if (!modelConfig.free && userBalance <= 0) {
+      throw Errors.forbidden('余额不足，请先充值');
+    }
+
+    // 赠送余额单次调用限制
+    if (!modelConfig.free && userBalance <= BONUS_BALANCE_THRESHOLD) {
+      const maxTok = body.max_tokens || 4096;
+      const estimated = calculateCost(modelConfig, maxTok, maxTok);
+      if (estimated.totalCost > BONUS_CALL_LIMIT) {
+        throw Errors.forbidden('单次调用超出免费额度限制，请充值后使用高费用模型');
+      }
+    }
+
+    // 用户消费限额检查
+    if (!modelConfig.free) {
+      const maxTok = body.max_tokens || 4096;
+      const estimated = calculateCost(modelConfig, maxTok, maxTok);
+      await this.checkSpendingLimits(userId, estimated.totalCost);
+    }
+
+    const upstreamUrl = `${config.siliconflowBaseUrl}/chat/completions`;
+    const upstreamBody = {
+      model: modelConfig.upstreamModel,
+      messages: body.messages,
+      stream: body.stream ?? false,
+      ...(body.temperature !== undefined && { temperature: body.temperature }),
+      ...(body.max_tokens !== undefined && { max_tokens: body.max_tokens }),
+      ...(body.top_p !== undefined && { top_p: body.top_p }),
+    };
+
+    const upstreamHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${config.siliconflowApiKey}`,
+    };
+
+    const ctx = {
+      userId,
+      apiKeyId: keyRecord.id,
+      model: modelConfig.displayName,
+      modelConfig,
+      startTime,
+    };
+
+    if (body.stream) {
+      await this.handleStream(upstreamUrl, upstreamHeaders, upstreamBody, res, ctx);
+    } else {
+      await this.handleNonStream(upstreamUrl, upstreamHeaders, upstreamBody, res, ctx);
     }
   }
 
@@ -272,6 +354,53 @@ class ProxyService {
     } catch (err) {
       // 计费失败不影响已返回的响应，仅记录错误
       logger.error('计费/日志记录失败:', err);
+    }
+  }
+
+  // 检查用户消费限额
+  private async checkSpendingLimits(userId: string, estimatedCost: number) {
+    if (estimatedCost <= 0) return;
+
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { maxPerRequest: true, maxPerDay: true, maxPerMonth: true },
+    });
+
+    // 单次限额
+    const maxReq = user.maxPerRequest ? Number(user.maxPerRequest) : null;
+    if (maxReq !== null && estimatedCost > maxReq) {
+      throw Errors.forbidden(`单次调用预估费用 $${estimatedCost.toFixed(4)} 超出限额 $${maxReq.toFixed(2)}`);
+    }
+
+    // 日限额
+    const maxDay = user.maxPerDay ? Number(user.maxPerDay) : null;
+    if (maxDay !== null) {
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const todaySpent = await prisma.usageLog.aggregate({
+        where: { userId, createdAt: { gte: todayStart }, status: 'success' },
+        _sum: { cost: true },
+      });
+      const spent = Number(todaySpent._sum.cost || 0);
+      if (spent + estimatedCost > maxDay) {
+        throw Errors.forbidden(`今日消费 $${spent.toFixed(4)} + 预估 $${estimatedCost.toFixed(4)} 将超出日限额 $${maxDay.toFixed(2)}`);
+      }
+    }
+
+    // 月限额
+    const maxMonth = user.maxPerMonth ? Number(user.maxPerMonth) : null;
+    if (maxMonth !== null) {
+      const monthStart = new Date();
+      monthStart.setDate(1);
+      monthStart.setHours(0, 0, 0, 0);
+      const monthSpent = await prisma.usageLog.aggregate({
+        where: { userId, createdAt: { gte: monthStart }, status: 'success' },
+        _sum: { cost: true },
+      });
+      const spent = Number(monthSpent._sum.cost || 0);
+      if (spent + estimatedCost > maxMonth) {
+        throw Errors.forbidden(`本月消费 $${spent.toFixed(4)} + 预估 $${estimatedCost.toFixed(4)} 将超出月限额 $${maxMonth.toFixed(2)}`);
+      }
     }
   }
 
