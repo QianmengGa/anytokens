@@ -50,8 +50,8 @@ services:
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
-      CORS_ORIGIN: ${CORS_ORIGIN:-https://anytokens.com}
-      FRONTEND_URL: ${FRONTEND_URL:-https://anytokens.com}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://anytokens.net}
+      FRONTEND_URL: ${FRONTEND_URL:-https://anytokens.net}
     networks:
       - internal
 
@@ -61,9 +61,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.anytokens.com/api/v1}
-        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-https://api.anytokens.com}
-        NEXTAUTH_URL: ${NEXTAUTH_URL:-https://anytokens.com}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.anytokens.net/api/v1}
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-https://api.anytokens.net}
+        NEXTAUTH_URL: ${NEXTAUTH_URL:-https://anytokens.net}
         NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
     restart: always
     depends_on:
