@@ -29,6 +29,14 @@ export const config = {
   siliconflowApiKey: process.env.SILICONFLOW_API_KEY || '',
   siliconflowBaseUrl: process.env.SILICONFLOW_BASE_URL || 'https://api.siliconflow.cn/v1',
 
+  // Google Gemini（OpenAI 兼容端点）
+  googleApiKey: process.env.GOOGLE_API_KEY || '',
+  googleBaseUrl: process.env.GOOGLE_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta/openai',
+
+  // Groq（OpenAI 兼容端点）
+  groqApiKey: process.env.GROQ_API_KEY || '',
+  groqBaseUrl: process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1',
+
   // Stripe 支付
   stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',

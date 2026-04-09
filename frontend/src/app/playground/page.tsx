@@ -26,6 +26,7 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 
 // 支持的模型列表
 const MODELS = [
+  // SiliconFlow
   { id: 'deepseek-v3', label: 'DeepSeek V3', free: false },
   { id: 'deepseek-r1', label: 'DeepSeek R1', free: false },
   { id: 'qwen2.5-72b', label: 'Qwen2.5 72B', free: false },
@@ -33,6 +34,12 @@ const MODELS = [
   { id: 'qwen3-8b', label: 'Qwen3 8B', free: true },
   { id: 'glm-4-9b', label: 'GLM-4 9B', free: true },
   { id: 'deepseek-r1-7b', label: 'DeepSeek R1 7B', free: true },
+  // Google Gemini
+  { id: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro', free: false },
+  { id: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash', free: true },
+  // Groq
+  { id: 'llama3-70b', label: 'Llama3 70B (Groq)', free: false },
+  { id: 'mixtral-8x7b', label: 'Mixtral 8x7B (Groq)', free: false },
 ];
 
 interface ApiKeyItem {

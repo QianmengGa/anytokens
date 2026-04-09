@@ -1,7 +1,6 @@
 import type { Response } from 'express';
 import { prisma } from '../config/database.js';
-import { config } from '../config/index.js';
-import { resolveModel, calculateCost } from '../config/models.js';
+import { resolveModel, calculateCost, getProviderConfig } from '../config/models.js';
 import { keysService } from './keys.service.js';
 import { Errors } from '../utils/errors.js';
 import { logger } from '../utils/logger.js';
@@ -60,8 +59,9 @@ class ProxyService {
       await this.checkSpendingLimits(userId, estimated.totalCost);
     }
 
-    // 4. 构建上游请求
-    const upstreamUrl = `${config.siliconflowBaseUrl}/chat/completions`;
+    // 4. 构建上游请求（根据供应商动态路由）
+    const providerCfg = getProviderConfig(modelConfig.provider);
+    const upstreamUrl = `${providerCfg.baseUrl}/chat/completions`;
     const upstreamBody = {
       model: modelConfig.upstreamModel,
       messages: body.messages,
@@ -75,7 +75,7 @@ class ProxyService {
 
     const upstreamHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.siliconflowApiKey}`,
+      'Authorization': `Bearer ${providerCfg.apiKey}`,
     };
 
     // 5. 转发请求
@@ -125,7 +125,8 @@ class ProxyService {
       await this.checkSpendingLimits(userId, estimated.totalCost);
     }
 
-    const upstreamUrl = `${config.siliconflowBaseUrl}/chat/completions`;
+    const providerCfg = getProviderConfig(modelConfig.provider);
+    const upstreamUrl = `${providerCfg.baseUrl}/chat/completions`;
     const upstreamBody = {
       model: modelConfig.upstreamModel,
       messages: body.messages,
@@ -137,7 +138,7 @@ class ProxyService {
 
     const upstreamHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.siliconflowApiKey}`,
+      'Authorization': `Bearer ${providerCfg.apiKey}`,
     };
 
     const ctx: RequestContext = {
