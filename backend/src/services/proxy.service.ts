@@ -81,6 +81,8 @@ class ProxyService {
       userId,
       apiKeyId: keyRecord.id,
       teamId: (keyRecord as any).teamId || undefined,
+      resellerSubAccountId: (keyRecord as any).subAccountId || undefined,
+      resellerPriceMarkup: (keyRecord as any).priceMarkup || undefined,
       model: modelResult.displayName,
       modelConfig: primaryProvider,
       startTime,
@@ -332,7 +334,31 @@ class ProxyService {
     try {
       await prisma.$transaction(async (tx) => {
         if (totalCost > 0) {
-          if (ctx.teamId) {
+          if (ctx.resellerSubAccountId) {
+            // Reseller 子账户 Key → 从子账户余额扣费（带加价）
+            const markedUpCost = totalCost * (ctx.resellerPriceMarkup || 1);
+            await tx.resellerSubAccount.update({
+              where: { id: ctx.resellerSubAccountId },
+              data: { balance: { decrement: markedUpCost } },
+            });
+            // Reseller 本身按批发价从余额扣
+            await tx.user.update({
+              where: { id: ctx.userId },
+              data: { balance: { decrement: totalCost } },
+            });
+            await tx.transaction.create({
+              data: {
+                userId: ctx.userId,
+                type: 'USAGE',
+                amount: totalCost,
+                balanceBefore: 0,
+                balanceAfter: 0,
+                status: 'COMPLETED',
+                paymentMethod: 'SYSTEM',
+                description: `[Reseller] API 调用: ${ctx.model} (${totalTokens} tokens, 子账户扣 $${markedUpCost.toFixed(6)})`,
+              },
+            });
+          } else if (ctx.teamId) {
             // 团队 Key → 从团队余额扣费
             const team = await tx.team.findUniqueOrThrow({ where: { id: ctx.teamId } });
             const balanceBefore = Number(team.balance);
@@ -495,6 +521,8 @@ interface RequestContext {
   userId: string;
   apiKeyId: string;
   teamId?: string;
+  resellerSubAccountId?: string;
+  resellerPriceMarkup?: number;
   model: string;
   modelConfig: ProviderOption;
   startTime: number;

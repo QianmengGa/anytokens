@@ -14,6 +14,7 @@ import {
   Settings,
   Users,
   ScrollText,
+  Building2,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -32,6 +33,7 @@ export function Sidebar({ role }: SidebarProps) {
     { href: '/chat', label: t.sidebar_chat, icon: MessageSquare },
     { href: '/team', label: t.sidebar_team, icon: Users },
     { href: '/audit', label: t.sidebar_audit, icon: ScrollText },
+    { href: '/reseller', label: t.sidebar_reseller, icon: Building2 },
     { href: '/playground', label: t.sidebar_playground, icon: FlaskConical },
     { href: '/settings', label: t.sidebar_settings, icon: Settings },
   ];

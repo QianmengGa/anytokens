@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { prisma } from '../config/database.js';
 import { Errors } from '../utils/errors.js';
+import { resellerService } from './reseller.service.js';
 
 // API Key 前缀
 const KEY_PREFIX = 'sk-any-';
@@ -168,6 +169,29 @@ class KeysService {
 
   // 通过原始 Key 验证并返回 Key 信息（供中转路由使用）
   async verifyKey(rawKey: string) {
+    // Reseller 子账户 Key（sk-res-xxxxx）→ 特殊处理
+    if (rawKey.startsWith('sk-res-')) {
+      const resellerKey = await resellerService.verifyResellerKey(rawKey);
+      if (resellerKey) {
+        // 伪装为普通 key record 格式，让 proxy.service 正常处理
+        return {
+          id: resellerKey.id,
+          userId: resellerKey.subAccount.resellerId,
+          teamId: null,
+          user: {
+            id: resellerKey.subAccount.resellerId,
+            balance: resellerKey.subAccount.balance,
+            isActive: true,
+          },
+          // Reseller 专用标记
+          isResellerKey: true,
+          subAccountId: resellerKey.subAccount.id,
+          resellerId: resellerKey.subAccount.resellerId,
+          priceMarkup: Number(resellerKey.subAccount.priceMarkup),
+        } as any;
+      }
+    }
+
     // 团队 Key 前缀 13 位（sk-team-xxxxx），个人 Key 前缀 12 位（sk-any-xxxxx）
     const isTeamKey = rawKey.startsWith('sk-team-');
     const prefix = rawKey.slice(0, isTeamKey ? 13 : 12);

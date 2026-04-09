@@ -9,6 +9,7 @@ datasource db {
 // 用户角色
 enum Role {
   USER
+  RESELLER
   ADMIN
 }
 
@@ -251,4 +252,62 @@ model AuditLog {
   @@index([action, createdAt])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// Reseller 申请状态
+enum ResellerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Reseller 申请表
+model ResellerApplication {
+  id            String         @id @default(uuid())
+  userId        String         @unique @map("user_id")
+  companyName   String         @map("company_name")
+  monthlyUsage  String         @map("monthly_usage")  // 预计月用量
+  description   String         @db.Text               // 用途说明
+  status        ResellerStatus @default(PENDING)
+  reviewNote    String?        @map("review_note")    // 管理员审核备注
+  reviewedAt    DateTime?      @map("reviewed_at")
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("reseller_applications")
+}
+
+// Reseller 子账户表
+model ResellerSubAccount {
+  id           String   @id @default(uuid())
+  resellerId   String   @map("reseller_id")      // Reseller 用户 ID
+  name         String
+  email        String?
+  balance      Decimal  @default(0) @db.Decimal(12, 6)  // 子账户余额（由 Reseller 分配）
+  priceMarkup  Decimal  @default(1.5) @db.Decimal(4, 2) @map("price_markup") // 加价倍率（1.5 = 加价 50%）
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  apiKeys      ResellerApiKey[]
+
+  @@index([resellerId])
+  @@map("reseller_sub_accounts")
+}
+
+// Reseller 子账户 API Key
+model ResellerApiKey {
+  id           String    @id @default(uuid())
+  subAccountId String    @map("sub_account_id")
+  resellerId   String    @map("reseller_id")
+  name         String    @default("Default Key")
+  keyHash      String    @unique @map("key_hash")
+  keyPrefix    String    @map("key_prefix")
+  isActive     Boolean   @default(true) @map("is_active")
+  lastUsedAt   DateTime? @map("last_used_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  subAccount ResellerSubAccount @relation(fields: [subAccountId], references: [id])
+
+  @@map("reseller_api_keys")
 }
