@@ -106,6 +106,7 @@ console.log(r.choices[0].message.content);
 | 36 | Mobile responsive optimization — hamburger menu, sidebar drawer, responsive layouts | 2026-04-10 |
 | 37 | SiliconFlow balance monitor — hourly check, email + Webhook alert when below threshold | 2026-04-10 |
 | 38 | Expanded model catalog — 6 new models via SiliconFlow (Llama 3.3, Qwen 2.5 Coder, Mistral 7B, Yi-Lightning etc.) | 2026-04-10 |
+| 39 | Model pricing audit — fixed gemini-flash loss, replaced OpenAI special APIs with SiliconFlow, +20% margin on Groq models | 2026-04-10 |
 <!-- /COMPLETED_FEATURES -->
 
 ---

@@ -18,7 +18,7 @@ export async function fetchSiliconFlowBalance(): Promise<number | null> {
       headers: { Authorization: `Bearer ${config.siliconflowApiKey}` },
     });
     const data = await res.json() as any;
-    const balance = parseFloat(data.data?.balance ?? data.balance ?? '0');
+    const balance = parseFloat(data.data?.totalBalance ?? data.data?.balance ?? '0');
     lastBalance = balance;
     lastCheckedAt = new Date().toISOString();
     return balance;

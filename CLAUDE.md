@@ -269,6 +269,8 @@
 \- \[x] SiliconFlow 余额监控：每小时自动检查，低于阈值触发邮件 + Webhook 告警
 \- \[x] 模型扩充：新增 6 个模型（llama-3.3-70b / llama-3.1-8b / qwen2.5-coder-32b / qwen3-32b / yi-lightning / mistral-7b）
 \- \[x] 注意：不直接接入 OpenAI/Anthropic API（违反其转售条款），通过 SiliconFlow 合法代理
+\- \[x] 定价修正：gemini-1.5-flash 修复亏损定价，OpenAI Embeddings/Images/TTS 全部迁移至 SiliconFlow（规避转售条款），Groq 模型加价 20%
+\- \[x] 注意：tts-1-hd 暂留 OpenAI，待 SiliconFlow 高清 TTS 上线后替换
 \- \[ ] 推广计划
 
 

@@ -40,34 +40,34 @@ export interface ExtraModelPricing {
 
 export const EMBEDDING_MODELS: Record<string, ExtraModelPricing> = {
   'text-embedding-3-small': {
-    provider: 'openai', upstreamModel: 'text-embedding-3-small',
-    billingUnit: 'token', pricePerUnit: 0.02 / 1_000_000, // $0.02/1M tokens
+    provider: 'siliconflow', upstreamModel: 'BAAI/bge-m3',
+    billingUnit: 'token', pricePerUnit: 0, // SiliconFlow 免费
   },
   'text-embedding-3-large': {
-    provider: 'openai', upstreamModel: 'text-embedding-3-large',
-    billingUnit: 'token', pricePerUnit: 0.13 / 1_000_000, // $0.13/1M tokens
+    provider: 'siliconflow', upstreamModel: 'BAAI/bge-large-zh-v1.5',
+    billingUnit: 'token', pricePerUnit: 0, // SiliconFlow 免费
   },
 };
 
 export const IMAGE_MODELS: Record<string, ExtraModelPricing> = {
   'dall-e-3': {
-    provider: 'openai', upstreamModel: 'dall-e-3',
-    billingUnit: 'image', pricePerUnit: 0.04, // $0.04/张 (1024x1024)
+    provider: 'siliconflow', upstreamModel: 'black-forest-labs/FLUX.1-schnell',
+    billingUnit: 'image', pricePerUnit: 0, // SiliconFlow 免费
   },
   'dall-e-3-hd': {
-    provider: 'openai', upstreamModel: 'dall-e-3',
-    billingUnit: 'image', pricePerUnit: 0.08, // $0.08/张 (1024x1792 HD)
+    provider: 'siliconflow', upstreamModel: 'black-forest-labs/FLUX.1-dev',
+    billingUnit: 'image', pricePerUnit: 0.035, // $0.035/张
   },
 };
 
 export const TTS_MODELS: Record<string, ExtraModelPricing> = {
   'tts-1': {
-    provider: 'openai', upstreamModel: 'tts-1',
-    billingUnit: 'character', pricePerUnit: 15.0 / 1_000_000, // $15/1M chars
+    provider: 'siliconflow', upstreamModel: 'fishaudio/fish-speech-1.5',
+    billingUnit: 'character', pricePerUnit: 0, // SiliconFlow 免费
   },
   'tts-1-hd': {
     provider: 'openai', upstreamModel: 'tts-1-hd',
-    billingUnit: 'character', pricePerUnit: 30.0 / 1_000_000, // $30/1M chars
+    billingUnit: 'character', pricePerUnit: 30.0 / 1_000_000, // $30/1M chars — TODO: 替换为 SiliconFlow（暂无高清TTS）
   },
 };
 
@@ -185,14 +185,14 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   },
   'gemini-1.5-flash': {
     providers: [
-      { provider: 'google', upstreamModel: 'gemini-1.5-flash', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 7 },
+      { provider: 'google', upstreamModel: 'gemini-1.5-flash', inputPrice: 0.075, outputPrice: 1.20, qualityScore: 7 },
     ],
   },
 
   // === Llama3 70B（Groq 快 + SiliconFlow 备用）===
   'llama3-70b': {
     providers: [
-      { provider: 'groq', upstreamModel: 'llama3-70b-8192', inputPrice: 0.59, outputPrice: 0.79, qualityScore: 8 },
+      { provider: 'groq', upstreamModel: 'llama3-70b-8192', inputPrice: 0.71, outputPrice: 0.95, qualityScore: 8 }, // Groq 原价 $0.59/$0.79 + 20% 加价
       { provider: 'siliconflow', upstreamModel: 'meta-llama/Meta-Llama-3-70B-Instruct', inputPrice: 0.84, outputPrice: 0.84, qualityScore: 8 },
     ],
   },
@@ -200,7 +200,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === Mixtral（Groq 快 + SiliconFlow 备用）===
   'mixtral-8x7b': {
     providers: [
-      { provider: 'groq', upstreamModel: 'mixtral-8x7b-32768', inputPrice: 0.24, outputPrice: 0.24, qualityScore: 7 },
+      { provider: 'groq', upstreamModel: 'mixtral-8x7b-32768', inputPrice: 0.29, outputPrice: 0.29, qualityScore: 7 }, // Groq 原价 $0.24/$0.24 + 20% 加价
       { provider: 'siliconflow', upstreamModel: 'mistralai/Mixtral-8x7B-Instruct-v0.1', inputPrice: 0.42, outputPrice: 0.42, qualityScore: 7 },
     ],
   },
