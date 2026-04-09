@@ -165,8 +165,10 @@ model ApiKey {
   keyHash    String    @unique @map("key_hash")
   keyPrefix  String    @map("key_prefix") // 明文前缀，如 "sk-any-xxxx"
   isActive   Boolean   @default(true) @map("is_active")
-  rateLimit  Int       @default(60) @map("rate_limit") // 每分钟请求数
-  expiresAt  DateTime? @map("expires_at")
+  rateLimit    Int?      @default(60) @map("rate_limit")    // 每分钟请求数，null=不限制
+  dailyLimit   Int?      @map("daily_limit")                // 每日最大请求数，null=不限制
+  monthlyLimit Int?      @map("monthly_limit")              // 每月最大请求数，null=不限制
+  expiresAt    DateTime? @map("expires_at")
   lastUsedAt DateTime? @map("last_used_at")
   createdAt  DateTime  @default(now()) @map("created_at")
 

@@ -99,8 +99,8 @@ console.log(r.choices[0].message.content);
 | 29 | status.anytokens.net SSL fix — independent certificate for status subdomain | 2026-04-10 |
 | 30 | Pricing page — `/pricing` with plan comparison + detailed model pricing tables | 2026-04-10 |
 | 31 | Email notifications — welcome / topup receipt / low balance / team invite (Resend) | 2026-04-10 |
-| 32 | Privacy Policy page — `/privacy`, 12 sections, bilingual (zh/en), GDPR-style | 2026-04-10 |
-| 33 | Terms of Service page — `/terms`, 15 sections, bilingual (zh/en), legal compliance | 2026-04-10 |
+| 32 | Privacy Policy + Terms of Service — /privacy + /terms, bilingual EN/ZH, Stripe-compliant | 2026-04-10 |
+| 33 | API Key rate limiting — per-minute/daily/monthly caps, Redis counters, dashboard UI | 2026-04-10 |
 <!-- /COMPLETED_FEATURES -->
 
 ---
@@ -109,7 +109,6 @@ console.log(r.choices[0].message.content);
 
 <!-- TODO -->
 - [ ] Marketing & growth plan — SEO, social media, partnerships
-- [ ] Rate limit per API Key (configurable in dashboard)
 - [ ] Webhook notifications for users (balance events)
 - [ ] More AI providers (Anthropic, OpenAI direct, Mistral)
 - [ ] File upload in chat (PDF / images)

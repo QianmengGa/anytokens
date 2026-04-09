@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, Copy, Check, Trash2, Key, Eye, AlertCircle, X, Wallet } from 'lucide-react';
+import { Plus, Copy, Check, Trash2, Key, Eye, AlertCircle, X, Wallet, ChevronDown, ChevronUp, Settings2 } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 import { api } from '@/lib/api';
@@ -35,10 +35,24 @@ interface ApiKey {
   id: string;
   name: string;
   keyPrefix: string;
-  rateLimit: number;
+  rateLimit: number | null;
+  dailyLimit: number | null;
+  monthlyLimit: number | null;
   expiresAt: string | null;
   lastUsedAt: string | null;
   createdAt: string;
+}
+
+// 速率限制用量数据
+interface RateLimitUsage {
+  currentMinute: number;
+  currentDay: number;
+  currentMonth: number;
+  limits: {
+    rateLimit: number | null;
+    dailyLimit: number | null;
+    monthlyLimit: number | null;
+  };
 }
 
 // 用量数据类型
@@ -275,6 +289,9 @@ export default function ApiKeysPage() {
                       {t.keys_delete}
                     </Button>
                   </div>
+
+                  {/* 速率限制面板 */}
+                  <RateLimitPanel keyData={key} />
                 </div>
               ))}
             </div>
@@ -489,6 +506,153 @@ export default function ApiKeysPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+// ====== 速率限制面板组件 ======
+
+function ProgressBar({ value, max, label }: { value: number; max: number | null; label: string }) {
+  if (max === null) return null;
+  const pct = Math.min((value / max) * 100, 100);
+  const color = pct >= 90 ? 'bg-red-500' : pct >= 70 ? 'bg-yellow-500' : 'bg-primary';
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <span className="font-mono">{value.toLocaleString()} / {max.toLocaleString()}</span>
+      </div>
+      <div className="h-1.5 w-full rounded-full bg-muted">
+        <div className={`h-1.5 rounded-full transition-all ${color}`} style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function RateLimitPanel({ keyData }: { keyData: ApiKey }) {
+  const { t } = useI18n();
+  const queryClient = useQueryClient();
+  const [expanded, setExpanded] = useState(false);
+  const [perMin, setPerMin] = useState(keyData.rateLimit?.toString() ?? '');
+  const [perDay, setPerDay] = useState(keyData.dailyLimit?.toString() ?? '');
+  const [perMonth, setPerMonth] = useState(keyData.monthlyLimit?.toString() ?? '');
+
+  // 同步外部数据变化
+  useEffect(() => {
+    setPerMin(keyData.rateLimit?.toString() ?? '');
+    setPerDay(keyData.dailyLimit?.toString() ?? '');
+    setPerMonth(keyData.monthlyLimit?.toString() ?? '');
+  }, [keyData.rateLimit, keyData.dailyLimit, keyData.monthlyLimit]);
+
+  // 获取用量计数器（展开时每 30 秒刷新）
+  const { data: usage } = useQuery<RateLimitUsage>({
+    queryKey: ['rate-limit-usage', keyData.id],
+    queryFn: async () => {
+      const res = await api.get(`/keys/${keyData.id}/rate-limit-usage`);
+      return res.data.data;
+    },
+    enabled: expanded,
+    refetchInterval: expanded ? 30000 : false,
+  });
+
+  // 保存限制
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const body = {
+        rateLimit: perMin === '' ? null : Number(perMin),
+        dailyLimit: perDay === '' ? null : Number(perDay),
+        monthlyLimit: perMonth === '' ? null : Number(perMonth),
+      };
+      await api.put(`/keys/${keyData.id}/rate-limit`, body);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['api-keys'] });
+      queryClient.invalidateQueries({ queryKey: ['rate-limit-usage', keyData.id] });
+    },
+  });
+
+  const hasLimits = keyData.rateLimit !== null || keyData.dailyLimit !== null || keyData.monthlyLimit !== null;
+
+  return (
+    <div className="w-full border-t border-border/40 pt-3">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex w-full items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <Settings2 className="h-3.5 w-3.5" />
+        <span className="font-medium">{t.keys_rate_limit}</span>
+        {hasLimits && (
+          <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+            {[keyData.rateLimit && `${keyData.rateLimit}/min`, keyData.dailyLimit && `${keyData.dailyLimit}/day`, keyData.monthlyLimit && `${keyData.monthlyLimit}/mo`].filter(Boolean).join(' · ')}
+          </Badge>
+        )}
+        <span className="ml-auto">
+          {expanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        </span>
+      </button>
+
+      {expanded && (
+        <div className="mt-3 space-y-4">
+          {/* 输入框 */}
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs">{t.keys_rate_per_min}</Label>
+              <Input
+                type="number"
+                placeholder={t.keys_rate_unlimited}
+                value={perMin}
+                onChange={(e) => setPerMin(e.target.value)}
+                min={1}
+                max={10000}
+                className="h-8 text-sm"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs">{t.keys_rate_per_day}</Label>
+              <Input
+                type="number"
+                placeholder={t.keys_rate_unlimited}
+                value={perDay}
+                onChange={(e) => setPerDay(e.target.value)}
+                min={1}
+                max={1000000}
+                className="h-8 text-sm"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs">{t.keys_rate_per_month}</Label>
+              <Input
+                type="number"
+                placeholder={t.keys_rate_unlimited}
+                value={perMonth}
+                onChange={(e) => setPerMonth(e.target.value)}
+                min={1}
+                max={10000000}
+                className="h-8 text-sm"
+              />
+            </div>
+          </div>
+
+          <Button
+            size="sm"
+            onClick={() => saveMutation.mutate()}
+            disabled={saveMutation.isPending}
+            className="h-7 px-3 text-xs"
+          >
+            {saveMutation.isPending ? t.keys_rate_saving : t.keys_rate_save}
+          </Button>
+
+          {/* 用量进度条 */}
+          {usage && (usage.limits.rateLimit !== null || usage.limits.dailyLimit !== null || usage.limits.monthlyLimit !== null) && (
+            <div className="space-y-2 rounded-lg border border-border/60 bg-muted/30 p-3">
+              <p className="text-xs font-medium text-muted-foreground">{t.keys_rate_current}</p>
+              <ProgressBar value={usage.currentMinute} max={usage.limits.rateLimit} label={t.keys_rate_per_min} />
+              <ProgressBar value={usage.currentDay} max={usage.limits.dailyLimit} label={t.keys_rate_per_day} />
+              <ProgressBar value={usage.currentMonth} max={usage.limits.monthlyLimit} label={t.keys_rate_per_month} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

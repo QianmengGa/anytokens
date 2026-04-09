@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth.js';
-import { createKey, listKeys, deleteKey, getKeyUsage } from '../controllers/keys.controller.js';
+import { createKey, listKeys, deleteKey, getKeyUsage, updateKeyRateLimit, getKeyRateLimitUsage } from '../controllers/keys.controller.js';
 
 const keysRouter = Router();
 
@@ -18,5 +18,11 @@ keysRouter.delete('/:id', deleteKey as any);
 
 // GET /keys/:id/usage — 查看 Key 用量
 keysRouter.get('/:id/usage', getKeyUsage as any);
+
+// PUT /keys/:id/rate-limit — 更新 Key 速率限制
+keysRouter.put('/:id/rate-limit', updateKeyRateLimit as any);
+
+// GET /keys/:id/rate-limit-usage — 查看 Key 当前速率计数
+keysRouter.get('/:id/rate-limit-usage', getKeyRateLimitUsage as any);
 
 export default keysRouter;

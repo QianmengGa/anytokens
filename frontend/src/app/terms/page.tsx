@@ -366,13 +366,15 @@ OUR TOTAL AGGREGATE LIABILITY SHALL NOT EXCEED THE AMOUNTS PAID BY YOU TO ANYTOK
               {lang === 'zh' ? (<>
                 <p>如果您对本服务条款有任何疑问，请联系我们：</p>
                 <div className="mt-3 rounded-lg border border-border/60 bg-card/30 p-4">
-                  <p className="text-sm"><strong>邮箱：</strong><a href="mailto:legal@anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">legal@anytokens.net</a></p>
+                  <p className="text-sm"><strong>法律事务：</strong><a href="mailto:legal@anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">legal@anytokens.net</a></p>
+                  <p className="mt-1 text-sm"><strong>技术支持：</strong><a href="mailto:support@anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">support@anytokens.net</a></p>
                   <p className="mt-1 text-sm"><strong>网站：</strong><a href="https://anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">anytokens.net</a></p>
                 </div>
               </>) : (<>
                 <p>If you have any questions about these Terms, please contact us:</p>
                 <div className="mt-3 rounded-lg border border-border/60 bg-card/30 p-4">
-                  <p className="text-sm"><strong>Email:</strong> <a href="mailto:legal@anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">legal@anytokens.net</a></p>
+                  <p className="text-sm"><strong>Legal:</strong> <a href="mailto:legal@anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">legal@anytokens.net</a></p>
+                  <p className="mt-1 text-sm"><strong>Support:</strong> <a href="mailto:support@anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">support@anytokens.net</a></p>
                   <p className="mt-1 text-sm"><strong>Website:</strong> <a href="https://anytokens.net" className="text-indigo-600 hover:underline dark:text-indigo-400">anytokens.net</a></p>
                 </div>
               </>)}

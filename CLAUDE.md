@@ -261,6 +261,8 @@
 \- \[x] 邮件通知系统（Resend）
 \- \[x] 定价页面 + API 文档
 \- \[x] Docker 部署 + SSL + 自动备份 + Uptime Kuma 监控
+\- \[x] API Key 速率限制（per-minute/daily/monthly，Redis 计数器，Dashboard 可配置）
+\- \[x] 新增端点：PUT /api/v1/keys/:id/rate-limit，GET /api/v1/keys/:id/rate-limit-usage
 \- \[ ] 推广计划
 
 

@@ -310,7 +310,7 @@ export default function PrivacyPage() {
                     { title: '访问权', desc: '查看我们持有的您的个人数据' },
                     { title: '更正权', desc: '更正不准确或不完整的数据' },
                     { title: '删除权', desc: '请求删除您的账户和相关数据' },
-                    { title: '导出权', desc: '以机器可读格式导出您的数据' },
+                    { title: '导出权', desc: '以 CSV 格式导出您的数据' },
                   ].map((r) => (
                     <div key={r.title} className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-900 dark:bg-blue-950/30">
                       <p className="text-sm font-medium text-blue-800 dark:text-blue-300">{r.title}</p>
@@ -326,7 +326,7 @@ export default function PrivacyPage() {
                     { title: 'Access', desc: 'View personal data we hold about you' },
                     { title: 'Correction', desc: 'Correct inaccurate or incomplete data' },
                     { title: 'Deletion', desc: 'Request deletion of your account and data' },
-                    { title: 'Export', desc: 'Export your data in a machine-readable format' },
+                    { title: 'Export', desc: 'Export your data in CSV format' },
                   ].map((r) => (
                     <div key={r.title} className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-900 dark:bg-blue-950/30">
                       <p className="text-sm font-medium text-blue-800 dark:text-blue-300">{r.title}</p>

@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import { proxyService } from '../services/proxy.service.js';
+import { keysService } from '../services/keys.service.js';
+import { checkKeyRateLimit } from '../services/rateLimitService.js';
 import { Errors } from '../utils/errors.js';
 import type { RoutingStrategy } from '../config/models.js';
 
@@ -39,8 +41,30 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response, next: 
     const forwarded = req.headers['x-forwarded-for'];
     const clientIp = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : (req.ip || '');
 
-    // 交给 proxyService 处理
-    await proxyService.handleChatCompletion(apiKey, req.body, res, clientIp, strategy);
+    // 验证 API Key 并获取记录
+    const keyRecord = await keysService.verifyKey(apiKey);
+
+    // 速率限制检查（每分钟/每日/每月）
+    const rateLimitResult = await checkKeyRateLimit(
+      keyRecord.id,
+      keyRecord.rateLimit ?? null,
+      keyRecord.dailyLimit ?? null,
+      keyRecord.monthlyLimit ?? null,
+    );
+    if (!rateLimitResult.allowed) {
+      res.setHeader('Retry-After', String(rateLimitResult.retryAfter));
+      res.status(429).json({
+        error: {
+          message: `Rate limit exceeded. Retry after ${rateLimitResult.retryAfter} seconds.`,
+          type: 'rate_limit_exceeded',
+          limit_type: rateLimitResult.limitType,
+        },
+      });
+      return;
+    }
+
+    // 交给 proxyService 处理（传入已验证的 keyRecord，避免重复查询）
+    await proxyService.handleChatCompletionWithKey(keyRecord, req.body, res, clientIp, strategy);
   } catch (err) {
     if (res.headersSent) {
       res.end();
