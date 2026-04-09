@@ -359,6 +359,12 @@
    docker exec anytokens-backend-1 npx prisma migrate deploy
    ```
 6. **验证部署**：再次运行冒烟测试确认生产环境正常
-7. **更新 README.md**：同步更新已完成功能列表、版本号（vX.Y.Z）、最后更新时间
+7. **强制更新 README.md**（每次部署后必须执行，不可跳过）：
+   - `<!-- COMPLETED_FEATURES -->` 区域：更新已完成功能列表，每项带完成日期（从 git log 获取）
+   - `<!-- TODO -->` 区域：更新待完成任务列表
+   - `<!-- VERSION -->` 区域：更新当前版本号（功能新增 +minor，bugfix +patch）
+   - `<!-- LAST_UPDATED -->` 区域：更新最后部署时间
+   - 技术栈、常用命令等静态章节如有变化也一并更新
+   - 更新后将 README.md 加入同一次 commit（或追加一次 commit）
 8. **报告结果**：输出测试结果 + 部署状态 + 改动摘要
 
