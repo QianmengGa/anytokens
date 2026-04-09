@@ -53,6 +53,24 @@ export async function register(req: Request, res: Response, next: NextFunction) 
   }
 }
 
+// OAuth 登录/注册
+const oauthLoginSchema = z.object({
+  email: z.string().email('邮箱格式不正确'),
+  name: z.string().max(50).optional(),
+  provider: z.string().max(20).optional(),
+});
+
+export async function oauthLogin(req: Request, res: Response, next: NextFunction) {
+  try {
+    const body = oauthLoginSchema.parse(req.body);
+    const ip = getClientIp(req);
+    const result = await authService.oauthLogin(body.email, body.name, body.provider, ip);
+    return success(res, result, '登录成功');
+  } catch (err) {
+    next(err);
+  }
+}
+
 // 用户登录
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {

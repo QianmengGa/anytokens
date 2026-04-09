@@ -147,6 +147,84 @@ class AuthService {
     };
   }
 
+  // OAuth 登录/注册（Google、GitHub、Discord）
+  async oauthLogin(email: string, name?: string, provider?: string, ip?: string) {
+    let user = await prisma.user.findUnique({ where: { email } });
+
+    if (user) {
+      // 已有账号 → 直接登录
+      if (!user.isActive) {
+        throw Errors.forbidden('账号已被禁用');
+      }
+      const updateData: any = { lastLoginAt: new Date() };
+      if (ip) updateData.lastLoginIp = ip;
+      if (config.adminEmail && email === config.adminEmail && user.role !== 'ADMIN') {
+        updateData.role = 'ADMIN';
+      }
+      user = await prisma.user.update({ where: { id: user.id }, data: updateData });
+    } else {
+      // 新用户 → 自动创建账号
+      const finalName = name || email.split('@')[0];
+      // 随机密码（OAuth 用户不需要密码登录）
+      const passwordHash = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 12);
+
+      user = await prisma.$transaction(async (tx) => {
+        const newUser = await tx.user.create({
+          data: {
+            email,
+            passwordHash,
+            name: finalName,
+            balance: SIGNUP_BONUS,
+            registerIp: ip || null,
+            lastLoginIp: ip || null,
+            lastLoginAt: new Date(),
+          },
+        });
+
+        // 记录赠送交易
+        await tx.transaction.create({
+          data: {
+            userId: newUser.id,
+            type: 'BONUS',
+            amount: SIGNUP_BONUS,
+            balanceBefore: 0,
+            balanceAfter: SIGNUP_BONUS,
+            status: 'COMPLETED',
+            paymentMethod: 'SYSTEM',
+            description: `新用户注册赠送 (${provider || 'oauth'})`,
+          },
+        });
+
+        // 自动创建默认 API Key
+        const rawKey = 'sk-any-' + crypto.randomBytes(48).toString('base64url').slice(0, 48);
+        const keyHash = await bcrypt.hash(rawKey, 10);
+        await tx.apiKey.create({
+          data: {
+            userId: newUser.id,
+            name: '默认密钥',
+            keyHash,
+            keyPrefix: rawKey.slice(0, 12),
+          },
+        });
+
+        return newUser;
+      });
+    }
+
+    const token = this.signToken(user.id, user.email, user.role);
+
+    return {
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        balance: user.balance.toString(),
+      },
+    };
+  }
+
   // 用户登录
   async login(email: string, password: string, ip?: string) {
     let user = await prisma.user.findUnique({ where: { email } });

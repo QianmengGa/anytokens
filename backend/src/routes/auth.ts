@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { sendCode, register, login, forgotPassword, resetPassword, getMe } from '../controllers/auth.controller.js';
+import { sendCode, register, login, oauthLogin, forgotPassword, resetPassword, getMe } from '../controllers/auth.controller.js';
 import { authenticate } from '../middleware/auth.js';
 
 const router = Router();
@@ -12,6 +12,9 @@ router.post('/register', register);
 
 // POST /api/v1/auth/login — 用户登录
 router.post('/login', login);
+
+// POST /api/v1/auth/oauth-login — OAuth 社交登录
+router.post('/oauth-login', oauthLogin);
 
 // POST /api/v1/auth/forgot-password — 忘记密码（发送重置邮件）
 router.post('/forgot-password', forgotPassword);
