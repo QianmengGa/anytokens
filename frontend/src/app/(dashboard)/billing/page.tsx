@@ -25,6 +25,7 @@ import {
   Copy,
   Clock,
   ExternalLink,
+  Download,
 } from 'lucide-react';
 
 const AMOUNTS = [5, 10, 20, 50, 100, 200, 500];
@@ -75,6 +76,12 @@ export default function BillingPage() {
   const [cryptoDialogOpen, setCryptoDialogOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [cryptoStatus, setCryptoStatus] = useState<string>('waiting');
+
+  // 导出状态
+  const [exportStartDate, setExportStartDate] = useState('');
+  const [exportEndDate, setExportEndDate] = useState('');
+  const [exportingUsage, setExportingUsage] = useState(false);
+  const [exportingInvoices, setExportingInvoices] = useState(false);
 
   const finalAmount = selectedAmount ?? (customAmount ? Number(customAmount) : 0);
 
@@ -195,6 +202,28 @@ export default function BillingPage() {
     return 'text-amber-500';
   };
 
+  const handleExport = async (type: 'usage' | 'invoices') => {
+    const setter = type === 'usage' ? setExportingUsage : setExportingInvoices;
+    setter(true);
+    try {
+      const params = new URLSearchParams({ format: 'csv' });
+      if (exportStartDate) params.set('startDate', exportStartDate);
+      if (exportEndDate) params.set('endDate', exportEndDate);
+      const res = await api.get(`/user/export/${type}?${params}`, { responseType: 'blob' });
+      const blob = new Blob([res.data], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${type}-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError('Export failed');
+    } finally {
+      setter(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t.billing_title}</h1>
@@ -234,6 +263,34 @@ export default function BillingPage() {
           <div>
             <p className="text-sm text-muted-foreground">{t.billing_current_balance}</p>
             <p className="text-3xl font-bold font-mono">${Number(user?.balance || 0).toFixed(2)}</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 数据导出 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Download className="h-5 w-5" />
+            {t.export_usage}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs text-muted-foreground">{t.export_start_date}</label>
+              <Input type="date" value={exportStartDate} onChange={(e) => setExportStartDate(e.target.value)} className="h-9 w-40" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs text-muted-foreground">{t.export_end_date}</label>
+              <Input type="date" value={exportEndDate} onChange={(e) => setExportEndDate(e.target.value)} className="h-9 w-40" />
+            </div>
+            <Button size="sm" variant="outline" onClick={() => handleExport('usage')} disabled={exportingUsage}>
+              {exportingUsage ? <><Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />{t.export_downloading}</> : <><Download className="mr-1.5 h-3.5 w-3.5" />{t.export_usage} CSV</>}
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => handleExport('invoices')} disabled={exportingInvoices}>
+              {exportingInvoices ? <><Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />{t.export_downloading}</> : <><Download className="mr-1.5 h-3.5 w-3.5" />{t.export_invoices} CSV</>}
+            </Button>
           </div>
         </CardContent>
       </Card>
