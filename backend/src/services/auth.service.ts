@@ -148,6 +148,9 @@ class AuthService {
     // 签发 JWT
     const token = this.signToken(user.id, user.email, user.role);
 
+    // 异步发送欢迎邮件（不阻塞注册流程）
+    emailService.sendWelcome(user.email, user.name || email.split('@')[0]);
+
     return {
       token,
       user: {
@@ -222,6 +225,9 @@ class AuthService {
 
         return newUser;
       });
+
+      // 新 OAuth 用户 → 发送欢迎邮件
+      emailService.sendWelcome(user.email, user.name || email.split('@')[0]);
     }
 
     const token = this.signToken(user.id, user.email, user.role);

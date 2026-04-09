@@ -6,6 +6,8 @@ import {
 } from '../config/models.js';
 import { keysService } from './keys.service.js';
 import { providerHealth } from './provider-health.js';
+import { emailService } from './email.service.js';
+import { redis } from '../config/redis.js';
 import { Errors } from '../utils/errors.js';
 import { logger } from '../utils/logger.js';
 
@@ -443,9 +445,32 @@ class ProxyService {
           }
         }
       });
+
+      // 扣费后检查余额，低于 $1 发送提醒（每 24 小时最多提醒一次）
+      if (totalCost > 0 && !ctx.resellerSubAccountId) {
+        this.checkAndNotifyLowBalance(ctx.userId).catch(() => {});
+      }
     } catch (err) {
       logger.error('计费/日志记录失败:', err);
     }
+  }
+
+  // 余额不足邮件提醒（Redis 限频：每用户 24 小时最多 1 次）
+  private async checkAndNotifyLowBalance(userId: string) {
+    const LOW_BALANCE_THRESHOLD = 1.0;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, balance: true },
+    });
+    if (!user || Number(user.balance) >= LOW_BALANCE_THRESHOLD) return;
+
+    const redisKey = `low_balance_notified:${userId}`;
+    const alreadySent = await redis.get(redisKey);
+    if (alreadySent) return;
+
+    // 标记已发送（24 小时过期）
+    await redis.set(redisKey, '1', 'EX', 86400);
+    emailService.sendLowBalance(user.email, Number(user.balance));
   }
 
   // 检查用户消费限额

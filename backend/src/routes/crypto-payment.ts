@@ -7,6 +7,7 @@ import { authenticate } from '../middleware/auth.js';
 import { success } from '../utils/response.js';
 import { Errors } from '../utils/errors.js';
 import { logger } from '../utils/logger.js';
+import { emailService } from '../services/email.service.js';
 import type { AuthRequest } from '../types/index.js';
 
 const cryptoPaymentRouter = Router();
@@ -269,6 +270,17 @@ async function handlePaymentFinished(body: any) {
     });
 
     logger.info(`加密货币充值成功: userId=${transaction.userId}, +$${amount}, paymentId=${paymentId}`);
+
+    // 异步发送充值收据邮件
+    const updatedUser = await prisma.user.findUnique({ where: { id: transaction.userId }, select: { email: true, balance: true } });
+    if (updatedUser) {
+      emailService.sendTopupReceipt(updatedUser.email, {
+        amount,
+        method: 'Crypto (USDT/BTC/ETH)',
+        balanceAfter: Number(updatedUser.balance),
+        transactionId: orderId,
+      });
+    }
   } catch (err) {
     logger.error('NOWPayments webhook 充值处理失败:', err);
   }

@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { prisma } from '../config/database.js';
+import { emailService } from './email.service.js';
 import { Errors } from '../utils/errors.js';
 
 // 每个用户最多创建的团队数
@@ -165,6 +166,18 @@ class TeamService {
 
     const invite = await prisma.teamInvite.create({
       data: { teamId, email, role, token, expiresAt },
+    });
+
+    // 异步发送团队邀请邮件
+    const [inviter, team] = await Promise.all([
+      prisma.user.findUnique({ where: { id: userId }, select: { name: true, email: true } }),
+      prisma.team.findUnique({ where: { id: teamId }, select: { name: true } }),
+    ]);
+    emailService.sendTeamInvite(email, {
+      teamName: team?.name || 'Team',
+      inviterName: inviter?.name || inviter?.email || 'Someone',
+      role,
+      inviteToken: token,
     });
 
     return {
