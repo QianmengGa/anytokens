@@ -348,21 +348,22 @@ class AdminService {
   async getProviderBalances() {
     const providers = [];
 
-    // 硅基流动
+    // 硅基流动 — 使用 balanceMonitor 的实时查询 + 缓存
     if (config.siliconflowApiKey) {
       try {
-        const res = await fetch('https://api.siliconflow.cn/v1/user/info', {
-          headers: { Authorization: `Bearer ${config.siliconflowApiKey}` },
-        });
-        const data = await res.json() as any;
-        const balance = parseFloat(data.data?.balance ?? data.balance ?? '0');
+        // 主动查询一次最新余额
+        const { fetchSiliconFlowBalance, getCachedBalance } = await import('./balanceMonitor.js');
+        await fetchSiliconFlowBalance();
+        const cached = getCachedBalance();
+        const balance = cached.balance ?? 0;
         providers.push({
           name: 'SiliconFlow',
           keyPrefix: config.siliconflowApiKey.slice(0, 8) + '****' + config.siliconflowApiKey.slice(-4),
           balance: balance.toFixed(2),
-          lowBalance: balance < 5,
-          lastChecked: new Date().toISOString(),
-          status: 'ok',
+          threshold: cached.threshold,
+          lowBalance: cached.status === 'low' || cached.status === 'critical',
+          lastChecked: cached.lastCheckedAt || new Date().toISOString(),
+          status: cached.status,
         });
       } catch (err) {
         logger.error('查询 SiliconFlow 余额失败:', err);
@@ -370,6 +371,7 @@ class AdminService {
           name: 'SiliconFlow',
           keyPrefix: config.siliconflowApiKey.slice(0, 8) + '****' + config.siliconflowApiKey.slice(-4),
           balance: '0',
+          threshold: config.siliconflowBalanceAlertThreshold,
           lowBalance: true,
           lastChecked: new Date().toISOString(),
           status: 'error',

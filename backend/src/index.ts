@@ -4,6 +4,7 @@ import { app } from './app.js';
 import { prisma } from './config/database.js';
 import { redis } from './config/redis.js';
 import { auditService } from './services/audit.service.js';
+import { startBalanceMonitor } from './services/balanceMonitor.js';
 
 async function main() {
   try {
@@ -23,6 +24,9 @@ async function main() {
 
       // 每天凌晨 3 点清理过期审计日志
       setInterval(() => auditService.cleanup(), 24 * 60 * 60 * 1000);
+
+      // 启动 SiliconFlow 余额监控
+      startBalanceMonitor();
     });
 
     // 优雅关闭

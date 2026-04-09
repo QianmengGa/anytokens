@@ -266,6 +266,9 @@
 \- \[x] 用量导出：CSV 下载（用量记录 + 充值账单），日期范围筛选，最多 10000 条
 \- \[x] 新增端点：GET /api/v1/user/export/usage，GET /api/v1/user/export/invoices
 \- \[x] 移动端响应式优化（汉堡菜单、Sidebar 滑入抽屉、PublicNavbar 下拉菜单、响应式布局）
+\- \[x] SiliconFlow 余额监控：每小时自动检查，低于阈值触发邮件 + Webhook 告警
+\- \[x] 模型扩充：新增 6 个模型（llama-3.3-70b / llama-3.1-8b / qwen2.5-coder-32b / qwen3-32b / yi-lightning / mistral-7b）
+\- \[x] 注意：不直接接入 OpenAI/Anthropic API（违反其转售条款），通过 SiliconFlow 合法代理
 \- \[ ] 推广计划
 
 

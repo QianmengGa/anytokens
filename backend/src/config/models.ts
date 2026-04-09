@@ -125,6 +125,44 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
     ],
   },
 
+  // === Qwen Coder ===
+  'qwen2.5-coder-32b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-Coder-32B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
+    ],
+  },
+  'qwen3-32b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-32B', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
+    ],
+  },
+
+  // === Llama ===
+  'llama-3.3-70b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'meta-llama/Llama-3.3-70B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
+    ],
+  },
+  'llama-3.1-8b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'meta-llama/Meta-Llama-3.1-8B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 6 },
+    ],
+  },
+
+  // === Yi ===
+  'yi-lightning': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: '01-ai/Yi-Lightning', inputPrice: 0.99, outputPrice: 0.99, qualityScore: 7 },
+    ],
+  },
+
+  // === Mistral ===
+  'mistral-7b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'mistralai/Mistral-7B-Instruct-v0.3', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 6 },
+    ],
+  },
+
   // === GLM ===
   'glm-4-9b': {
     providers: [

@@ -51,4 +51,8 @@ export const config = {
 
   // 管理员邮箱
   adminEmail: process.env.ADMIN_EMAIL || '',
+
+  // SiliconFlow 余额监控
+  siliconflowBalanceAlertThreshold: parseFloat(process.env.SILICONFLOW_BALANCE_ALERT_THRESHOLD || '10'),
+  siliconflowBalanceCheckInterval: parseInt(process.env.SILICONFLOW_BALANCE_CHECK_INTERVAL || '3600000', 10),
 };

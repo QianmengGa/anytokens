@@ -104,6 +104,8 @@ console.log(r.choices[0].message.content);
 | 34 | Webhook system — CRUD + HMAC-SHA256 signing + 4 event types + delivery logs + dashboard UI | 2026-04-10 |
 | 35 | Usage export — CSV download for usage logs & invoices, date range filter, billing page UI | 2026-04-10 |
 | 36 | Mobile responsive optimization — hamburger menu, sidebar drawer, responsive layouts | 2026-04-10 |
+| 37 | SiliconFlow balance monitor — hourly check, email + Webhook alert when below threshold | 2026-04-10 |
+| 38 | Expanded model catalog — 6 new models via SiliconFlow (Llama 3.3, Qwen 2.5 Coder, Mistral 7B, Yi-Lightning etc.) | 2026-04-10 |
 <!-- /COMPLETED_FEATURES -->
 
 ---
