@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Check, AlertCircle } from 'lucide-react';
+import { Check, AlertCircle, AlertTriangle } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
@@ -46,17 +46,20 @@ export default function SettingsPage() {
     },
   });
 
-  // 获取消费限额
+  // 获取消费限额（含已消费金额）
   const { data: limits } = useQuery<{
     maxPerRequest: string | null;
     maxPerDay: string | null;
     maxPerMonth: string | null;
+    todaySpent: string;
+    monthSpent: string;
   }>({
     queryKey: ['spending-limits'],
     queryFn: async () => {
       const res = await api.get('/user/spending-limits');
       return res.data.data;
     },
+    refetchInterval: 60000, // 每分钟刷新一次
   });
 
   // === 基本资料 ===
@@ -304,7 +307,36 @@ export default function SettingsPage() {
           <CardTitle>{t.settings_spending}</CardTitle>
           <CardDescription>{t.settings_spending_desc}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5">
+          {/* 当日/当月已消费概览 */}
+          {limits && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+                <p className="text-xs text-muted-foreground">{t.settings_spent_today}</p>
+                <p className="mt-1 text-lg font-semibold">${Number(limits.todaySpent).toFixed(4)}</p>
+              </div>
+              <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+                <p className="text-xs text-muted-foreground">{t.settings_spent_month}</p>
+                <p className="mt-1 text-lg font-semibold">${Number(limits.monthSpent).toFixed(4)}</p>
+              </div>
+            </div>
+          )}
+
+          {/* 接近限额警告 */}
+          {limits && (() => {
+            const dayPct = limits.maxPerDay ? Number(limits.todaySpent) / Number(limits.maxPerDay) : 0;
+            const monthPct = limits.maxPerMonth ? Number(limits.monthSpent) / Number(limits.maxPerMonth) : 0;
+            const showWarn = dayPct > 0.8 || monthPct > 0.8;
+            if (!showWarn) return null;
+            return (
+              <div className="flex items-start gap-2 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-2.5">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-500" />
+                <p className="text-sm text-yellow-700 dark:text-yellow-400">{t.settings_spending_warn}</p>
+              </div>
+            );
+          })()}
+
+          {/* 单次调用上限 */}
           <div className="space-y-2">
             <Label>{t.settings_max_request} ($)</Label>
             <Input
@@ -317,6 +349,8 @@ export default function SettingsPage() {
               placeholder={t.settings_no_limit}
             />
           </div>
+
+          {/* 每日消费上限 + 进度条 */}
           <div className="space-y-2">
             <Label>{t.settings_max_day} ($)</Label>
             <Input
@@ -328,7 +362,12 @@ export default function SettingsPage() {
               onChange={(e) => setMaxDay(e.target.value)}
               placeholder={t.settings_no_limit}
             />
+            {limits && maxDay && Number(maxDay) > 0 && (
+              <SpendingBar spent={Number(limits.todaySpent)} limit={Number(maxDay)} label={t.settings_spent_of} />
+            )}
           </div>
+
+          {/* 每月消费上限 + 进度条 */}
           <div className="space-y-2">
             <Label>{t.settings_max_month} ($)</Label>
             <Input
@@ -340,13 +379,41 @@ export default function SettingsPage() {
               onChange={(e) => setMaxMonth(e.target.value)}
               placeholder={t.settings_no_limit}
             />
+            {limits && maxMonth && Number(maxMonth) > 0 && (
+              <SpendingBar spent={Number(limits.monthSpent)} limit={Number(maxMonth)} label={t.settings_spent_of} />
+            )}
           </div>
+
           {limitsMsg && <Msg {...limitsMsg} />}
           <Button onClick={handleSaveLimits} disabled={limitsLoading}>
             {limitsLoading ? t.settings_saving : t.settings_save}
           </Button>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+// 消费进度条组件
+function SpendingBar({ spent, limit, label }: { spent: number; limit: number; label: string }) {
+  const pct = Math.min((spent / limit) * 100, 100);
+  const isWarning = pct > 80;
+  const isDanger = pct >= 100;
+
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>${spent.toFixed(4)} {label}</span>
+        <span>{pct.toFixed(1)}%</span>
+      </div>
+      <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className={`h-full rounded-full transition-all ${
+            isDanger ? 'bg-red-500' : isWarning ? 'bg-yellow-500' : 'bg-primary'
+          }`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
     </div>
   );
 }

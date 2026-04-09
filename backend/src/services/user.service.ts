@@ -157,16 +157,33 @@ class UserService {
     };
   }
 
-  // 获取消费限额
+  // 获取消费限额（含当日/当月已消费金额）
   async getSpendingLimits(userId: string) {
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { maxPerRequest: true, maxPerDay: true, maxPerMonth: true },
-    });
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const [user, todayAgg, monthAgg] = await Promise.all([
+      prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { maxPerRequest: true, maxPerDay: true, maxPerMonth: true },
+      }),
+      prisma.usageLog.aggregate({
+        where: { userId, createdAt: { gte: todayStart }, status: 'success' },
+        _sum: { cost: true },
+      }),
+      prisma.usageLog.aggregate({
+        where: { userId, createdAt: { gte: monthStart }, status: 'success' },
+        _sum: { cost: true },
+      }),
+    ]);
+
     return {
       maxPerRequest: user.maxPerRequest?.toString() || null,
       maxPerDay: user.maxPerDay?.toString() || null,
       maxPerMonth: user.maxPerMonth?.toString() || null,
+      todaySpent: (todayAgg._sum.cost ?? 0).toString(),
+      monthSpent: (monthAgg._sum.cost ?? 0).toString(),
     };
   }
 
