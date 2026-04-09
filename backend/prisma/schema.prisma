@@ -235,3 +235,20 @@ model Commission {
   @@index([refereeId])
   @@map("commissions")
 }
+
+// 审计日志表
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  action    String                          // LOGIN, REGISTER, TOPUP, API_CALL, SETTINGS_CHANGE, TEAM_ACTION, KEY_MANAGE, ADMIN_ACTION
+  detail    String?  @db.Text              // 操作详情（JSON）
+  ip        String?
+  userAgent String?  @map("user_agent")
+  result    String   @default("success")    // success / error
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

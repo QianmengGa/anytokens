@@ -3,6 +3,7 @@ import { logger } from './utils/logger.js';
 import { app } from './app.js';
 import { prisma } from './config/database.js';
 import { redis } from './config/redis.js';
+import { auditService } from './services/audit.service.js';
 
 async function main() {
   try {
@@ -19,6 +20,9 @@ async function main() {
       logger.info(`🚀 服务启动成功: http://localhost:${config.port}`);
       logger.info(`📋 健康检查: http://localhost:${config.port}/api/v1/health`);
       logger.info(`🔧 运行环境: ${config.nodeEnv}`);
+
+      // 每天凌晨 3 点清理过期审计日志
+      setInterval(() => auditService.cleanup(), 24 * 60 * 60 * 1000);
     });
 
     // 优雅关闭

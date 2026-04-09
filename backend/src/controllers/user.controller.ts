@@ -2,6 +2,7 @@ import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { userService } from '../services/user.service.js';
 import { providerHealth } from '../services/provider-health.js';
+import { auditService } from '../services/audit.service.js';
 import { success } from '../utils/response.js';
 import type { AuthRequest } from '../types/index.js';
 
@@ -88,6 +89,7 @@ export async function updateSpendingLimits(req: AuthRequest, res: Response, next
   try {
     const body = spendingLimitsSchema.parse(req.body);
     const result = await userService.updateSpendingLimits(req.user!.id, body);
+    auditService.log({ userId: req.user!.id, action: 'SETTINGS_CHANGE', detail: { type: 'spending_limits', ...body } });
     return success(res, result, '限额设置已保存');
   } catch (err) {
     next(err);
@@ -136,6 +138,7 @@ export async function updatePassword(req: AuthRequest, res: Response, next: Next
   try {
     const body = passwordSchema.parse(req.body);
     const result = await userService.updatePassword(req.user!.id, body.oldPassword, body.newPassword);
+    auditService.log({ userId: req.user!.id, action: 'PASSWORD_CHANGE' });
     return success(res, result, '密码修改成功');
   } catch (err) {
     next(err);

@@ -9,6 +9,7 @@ import adminRouter from './admin.js';
 import paymentRouter from './payment.js';
 import cryptoPaymentRouter from './crypto-payment.js';
 import teamRouter from './team.js';
+import auditRouter from './audit.js';
 import embeddingsRouter from './embeddings.js';
 import imagesRouter from './images.js';
 import audioRouter from './audio.js';
@@ -25,6 +26,7 @@ router.use('/admin', adminRouter);
 router.use('/payment', paymentRouter);
 router.use('/crypto-payment', cryptoPaymentRouter);
 router.use('/team', teamRouter);
+router.use('/audit', auditRouter);
 router.use(embeddingsRouter);    // POST /embeddings
 router.use(imagesRouter);        // POST /images/generations
 router.use(audioRouter);         // POST /audio/speech

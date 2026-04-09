@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { authService } from '../services/auth.service.js';
+import { auditService } from '../services/audit.service.js';
 import { success } from '../utils/response.js';
 import type { AuthRequest } from '../types/index.js';
 
@@ -48,6 +49,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     const body = registerSchema.parse(req.body);
     const ip = getClientIp(req);
     const result = await authService.register(body.email, body.password, body.code, body.name, ip, body.refCode);
+    auditService.log({ userId: result.user.id, action: 'REGISTER', detail: { email: body.email }, ip, userAgent: req.headers['user-agent'] });
     return success(res, result, '注册成功', 201);
   } catch (err) {
     next(err);
@@ -78,6 +80,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const body = loginSchema.parse(req.body);
     const ip = getClientIp(req);
     const result = await authService.login(body.email, body.password, ip);
+    auditService.log({ userId: result.user.id, action: 'LOGIN', detail: { email: body.email }, ip, userAgent: req.headers['user-agent'] });
     return success(res, result, '登录成功');
   } catch (err) {
     next(err);
