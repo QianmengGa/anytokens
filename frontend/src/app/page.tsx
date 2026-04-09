@@ -68,7 +68,7 @@ export default function HomePage() {
             </div>
             <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
               <code className="text-muted-foreground">
-                <span className="text-green-400">curl</span>{' https://api.anytokens.com/v1/chat/completions \\\n'}
+                <span className="text-green-400">curl</span>{' https://api.anytokens.net/v1/chat/completions \\\n'}
                 {'  -H '}<span className="text-amber-300">{'"Authorization: Bearer sk-any-..."'}</span>{' \\\n'}
                 {'  -H '}<span className="text-amber-300">{'"Content-Type: application/json"'}</span>{' \\\n'}
                 {'  -d '}<span className="text-amber-300">{'\'{"model":"gpt-4o","messages":[{"role":"user","content":"Hello"}]}\''}</span>
@@ -180,7 +180,7 @@ export default function HomePage() {
               desc={t.pricing_ent_desc}
               features={[t.pricing_feat_ent_channel, t.pricing_feat_ent_rate, t.pricing_feat_ent_team, t.pricing_feat_ent_support]}
               cta={t.pricing_cta_contact}
-              href="mailto:contact@anytokens.com"
+              href="mailto:contact@anytokens.net"
             />
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function HomePage() {
                 <code className="text-muted-foreground">
                   <span className="text-violet-400">from</span> openai <span className="text-violet-400">import</span> OpenAI{'\n\n'}
                   client = OpenAI({'\n'}
-                  {'    '}base_url=<span className="text-amber-300">&quot;https://api.anytokens.com/v1&quot;</span>,{'\n'}
+                  {'    '}base_url=<span className="text-amber-300">&quot;https://api.anytokens.net/v1&quot;</span>,{'\n'}
                   {'    '}api_key=<span className="text-amber-300">&quot;sk-any-...&quot;</span>,{'\n'}
                   ){'\n\n'}
                   response = client.chat.completions.create({'\n'}
@@ -249,7 +249,7 @@ export default function HomePage() {
             <Link href="#" className="transition-colors hover:text-foreground">{t.footer_docs}</Link>
             <Link href="#pricing" className="transition-colors hover:text-foreground">{t.footer_pricing}</Link>
             <Link href="#" className="transition-colors hover:text-foreground">{t.footer_terms}</Link>
-            <Link href="mailto:contact@anytokens.com" className="transition-colors hover:text-foreground">{t.footer_contact}</Link>
+            <Link href="mailto:contact@anytokens.net" className="transition-colors hover:text-foreground">{t.footer_contact}</Link>
           </div>
         </div>
       </footer>

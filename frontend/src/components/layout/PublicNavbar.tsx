@@ -42,6 +42,9 @@ export function PublicNavbar() {
           <Link href="/playground">
             <Button variant="ghost" size="sm">Playground</Button>
           </Link>
+          <Link href="/pricing">
+            <Button variant="ghost" size="sm">{t.footer_pricing}</Button>
+          </Link>
           <Link href="/docs">
             <Button variant="ghost" size="sm">{t.nav_docs}</Button>
           </Link>

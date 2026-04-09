@@ -74,7 +74,7 @@ function getSectionLabel(key: SectionKey, t: any): string {
 }
 
 // 代码示例常量
-const BASE_URL = 'https://api.anytokens.com/v1';
+const BASE_URL = 'https://api.anytokens.net/v1';
 
 const CODE_CURL_BASIC = `curl ${BASE_URL}/chat/completions \\
   -H "Authorization: Bearer sk-any-..." \\
