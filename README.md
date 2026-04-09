@@ -3,7 +3,7 @@
 **One API, All AI Models** — 统一 OpenAI 格式接口，无缝接入 30+ 主流 AI 模型。
 
 <!-- VERSION -->
-[![Version](https://img.shields.io/badge/Version-v1.0.0-blue)](#changelog)
+[![Version](https://img.shields.io/badge/Version-v1.1.0-blue)](#changelog)
 <!-- /VERSION -->
 <!-- LAST_UPDATED -->
 [![Last Updated](https://img.shields.io/badge/Updated-2026--04--10-gray)](#changelog)
@@ -101,6 +101,7 @@ console.log(r.choices[0].message.content);
 | 31 | Email notifications — welcome / topup receipt / low balance / team invite (Resend) | 2026-04-10 |
 | 32 | Privacy Policy + Terms of Service — /privacy + /terms, bilingual EN/ZH, Stripe-compliant | 2026-04-10 |
 | 33 | API Key rate limiting — per-minute/daily/monthly caps, Redis counters, dashboard UI | 2026-04-10 |
+| 34 | Webhook system — CRUD + HMAC-SHA256 signing + 4 event types + delivery logs + dashboard UI | 2026-04-10 |
 <!-- /COMPLETED_FEATURES -->
 
 ---
@@ -109,7 +110,6 @@ console.log(r.choices[0].message.content);
 
 <!-- TODO -->
 - [ ] Marketing & growth plan — SEO, social media, partnerships
-- [ ] Webhook notifications for users (balance events)
 - [ ] More AI providers (Anthropic, OpenAI direct, Mistral)
 - [ ] File upload in chat (PDF / images)
 - [ ] Conversation history persistence
@@ -182,7 +182,7 @@ Base URL: `https://api.anytokens.net/api/v1`
 
 ### Platform
 
-56 endpoints total across 10 modules (keys, user, admin, payment, crypto-payment, team, reseller, audit, playground, health).
+61+ endpoints total across 11 modules (keys, user, admin, payment, crypto-payment, team, reseller, audit, webhooks, playground, health).
 
 Full endpoint list: [PROJECT_REPORT.md](./PROJECT_REPORT.md#4-api-端点列表)
 
@@ -193,7 +193,7 @@ Full endpoint list: [PROJECT_REPORT.md](./PROJECT_REPORT.md#4-api-端点列表)
 ```
 anytokens/
 ├── backend/                    # Express API server (TypeScript)
-│   ├── prisma/schema.prisma    #   14 database tables
+│   ├── prisma/schema.prisma    #   16 database tables
 │   └── src/
 │       ├── routes/             #   16 route modules (56 endpoints)
 │       ├── services/           #   10 service classes
@@ -322,6 +322,13 @@ ssh root@43.160.221.19 "certbot certificates"
 ## Changelog
 
 <!-- CHANGELOG -->
+### v1.1.0 — 2026-04-10
+
+- API Key rate limiting: per-minute / daily / monthly caps with Redis counters + dashboard UI
+- Webhook notification system: CRUD, HMAC-SHA256 signed delivery, 4 event types, delivery logs
+- Privacy Policy (/privacy) + Terms of Service (/terms) — bilingual EN/ZH, 12+15 sections
+- Webhook triggers integrated into payment, crypto-payment, and proxy routes
+
 ### v1.0.0 — 2026-04-10
 
 Full platform launch with all core features:
