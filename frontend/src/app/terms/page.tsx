@@ -138,7 +138,7 @@ export default function TermsPage() {
             {/* 1. 条款接受 */}
             <Section id="acceptance" title={labels.acceptance}>
               {lang === 'zh' ? (
-                <p>访问或使用 Anytokens（以下简称"服务"）即表示您同意受本服务条款（以下简称"条款"）的约束。如果您不同意这些条款，请勿使用本服务。</p>
+                <p>访问或使用 Anytokens（以下简称&ldquo;服务&rdquo;）即表示您同意受本服务条款（以下简称&ldquo;条款&rdquo;）的约束。如果您不同意这些条款，请勿使用本服务。</p>
               ) : (
                 <p>By accessing or using Anytokens (the &quot;Service&quot;), you agree to be bound by these Terms of Service (the &quot;Terms&quot;). If you do not agree, do not use the Service.</p>
               )}
