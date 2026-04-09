@@ -99,10 +99,67 @@ model SystemSetting {
   @@map("system_settings")
 }
 
+// 团队角色
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+// 团队表
+model Team {
+  id        String   @id @default(uuid())
+  name      String
+  balance   Decimal  @default(0) @db.Decimal(12, 6)
+  ownerId   String   @map("owner_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  members  TeamMember[]
+  invites  TeamInvite[]
+  apiKeys  ApiKey[]
+
+  @@map("teams")
+}
+
+// 团队成员表
+model TeamMember {
+  id          String   @id @default(uuid())
+  teamId      String   @map("team_id")
+  userId      String   @map("user_id")
+  role        TeamRole @default(MEMBER)
+  maxPerDay   Decimal? @db.Decimal(12, 6) @map("max_per_day")
+  maxPerMonth Decimal? @db.Decimal(12, 6) @map("max_per_month")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, userId])
+  @@map("team_members")
+}
+
+// 团队邀请表
+model TeamInvite {
+  id        String   @id @default(cuid())
+  teamId    String   @map("team_id")
+  email     String
+  role      TeamRole @default(MEMBER)
+  token     String   @unique
+  used      Boolean  @default(false)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@index([email])
+  @@map("team_invites")
+}
+
 // API 密钥表
 model ApiKey {
   id         String    @id @default(uuid())
   userId     String    @map("user_id")
+  teamId     String?   @map("team_id")
   name       String    @default("Default Key")
   keyHash    String    @unique @map("key_hash")
   keyPrefix  String    @map("key_prefix") // 明文前缀，如 "sk-any-xxxx"
@@ -113,6 +170,7 @@ model ApiKey {
   createdAt  DateTime  @default(now()) @map("created_at")
 
   user      User       @relation(fields: [userId], references: [id])
+  team      Team?      @relation(fields: [teamId], references: [id])
   usageLogs UsageLog[]
 
   @@map("api_keys")

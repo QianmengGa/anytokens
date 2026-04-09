@@ -80,6 +80,7 @@ class ProxyService {
     const ctx: RequestContext = {
       userId,
       apiKeyId: keyRecord.id,
+      teamId: (keyRecord as any).teamId || undefined,
       model: modelResult.displayName,
       modelConfig: primaryProvider,
       startTime,
@@ -331,27 +332,47 @@ class ProxyService {
     try {
       await prisma.$transaction(async (tx) => {
         if (totalCost > 0) {
-          const user = await tx.user.findUniqueOrThrow({ where: { id: ctx.userId } });
-          const balanceBefore = Number(user.balance);
-          const balanceAfter = balanceBefore - totalCost;
-
-          await tx.user.update({
-            where: { id: ctx.userId },
-            data: { balance: { decrement: totalCost } },
-          });
-
-          await tx.transaction.create({
-            data: {
-              userId: ctx.userId,
-              type: 'USAGE',
-              amount: totalCost,
-              balanceBefore,
-              balanceAfter,
-              status: 'COMPLETED',
-              paymentMethod: 'SYSTEM',
-              description: `API 调用: ${ctx.model} (${totalTokens} tokens)`,
-            },
-          });
+          if (ctx.teamId) {
+            // 团队 Key → 从团队余额扣费
+            const team = await tx.team.findUniqueOrThrow({ where: { id: ctx.teamId } });
+            const balanceBefore = Number(team.balance);
+            await tx.team.update({
+              where: { id: ctx.teamId },
+              data: { balance: { decrement: totalCost } },
+            });
+            await tx.transaction.create({
+              data: {
+                userId: ctx.userId,
+                type: 'USAGE',
+                amount: totalCost,
+                balanceBefore,
+                balanceAfter: balanceBefore - totalCost,
+                status: 'COMPLETED',
+                paymentMethod: 'SYSTEM',
+                description: `[团队] API 调用: ${ctx.model} (${totalTokens} tokens)`,
+              },
+            });
+          } else {
+            // 个人 Key → 从个人余额扣费
+            const user = await tx.user.findUniqueOrThrow({ where: { id: ctx.userId } });
+            const balanceBefore = Number(user.balance);
+            await tx.user.update({
+              where: { id: ctx.userId },
+              data: { balance: { decrement: totalCost } },
+            });
+            await tx.transaction.create({
+              data: {
+                userId: ctx.userId,
+                type: 'USAGE',
+                amount: totalCost,
+                balanceBefore,
+                balanceAfter: balanceBefore - totalCost,
+                status: 'COMPLETED',
+                paymentMethod: 'SYSTEM',
+                description: `API 调用: ${ctx.model} (${totalTokens} tokens)`,
+              },
+            });
+          }
         }
 
         const usageLog = await tx.usageLog.create({
@@ -473,6 +494,7 @@ class ProxyService {
 interface RequestContext {
   userId: string;
   apiKeyId: string;
+  teamId?: string;
   model: string;
   modelConfig: ProviderOption;
   startTime: number;

@@ -168,11 +168,15 @@ class KeysService {
 
   // 通过原始 Key 验证并返回 Key 信息（供中转路由使用）
   async verifyKey(rawKey: string) {
-    // 从前缀快速过滤候选 Key
-    const prefix = rawKey.slice(0, 12);
+    // 团队 Key 前缀 13 位（sk-team-xxxxx），个人 Key 前缀 12 位（sk-any-xxxxx）
+    const isTeamKey = rawKey.startsWith('sk-team-');
+    const prefix = rawKey.slice(0, isTeamKey ? 13 : 12);
     const candidates = await prisma.apiKey.findMany({
       where: { keyPrefix: prefix, isActive: true },
-      include: { user: { select: { id: true, balance: true, isActive: true } } },
+      include: {
+        user: { select: { id: true, balance: true, isActive: true } },
+        team: { select: { id: true, balance: true } },
+      },
     });
 
     for (const candidate of candidates) {
@@ -185,6 +189,12 @@ class KeysService {
         // 检查用户状态
         if (!candidate.user.isActive) {
           throw Errors.forbidden('账号已被禁用');
+        }
+        // 团队 Key 使用团队余额
+        if (candidate.team) {
+          (candidate.user as any).balance = candidate.team.balance;
+          (candidate as any).isTeamKey = true;
+          (candidate as any).teamId = candidate.team.id;
         }
         // 更新最后使用时间
         await prisma.apiKey.update({
