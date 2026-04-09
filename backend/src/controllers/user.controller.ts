@@ -94,6 +94,16 @@ export async function updateSpendingLimits(req: AuthRequest, res: Response, next
   }
 }
 
+// 获取邀请统计
+export async function getReferralStats(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const result = await userService.getReferralStats(req.user!.id);
+    return success(res, result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 // 获取路由策略 + 供应商实时指标
 export async function getRoutingStrategy(req: AuthRequest, res: Response, next: NextFunction) {
   try {

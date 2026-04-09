@@ -48,6 +48,8 @@ model User {
   maxPerDay      Decimal? @db.Decimal(12, 6) @map("max_per_day")
   maxPerMonth    Decimal? @db.Decimal(12, 6) @map("max_per_month")
   routingStrategy String  @default("price") @map("routing_strategy")
+  referralCode   String   @unique @default(cuid()) @map("referral_code")
+  referredBy     String?  @map("referred_by")
   isActive       Boolean  @default(true) @map("is_active")
   registerIp     String?  @map("register_ip")
   lastLoginIp    String?  @map("last_login_ip")
@@ -159,4 +161,19 @@ model UsageLog {
   @@index([userId, createdAt])
   @@index([model, createdAt])
   @@map("usage_logs")
+}
+
+// 返佣记录表
+model Commission {
+  id            String   @id @default(uuid())
+  referrerId    String   @map("referrer_id")    // 邀请人
+  refereeId     String   @map("referee_id")     // 被邀请人
+  usageLogId    String   @map("usage_log_id")   // 关联的调用日志
+  usageCost     Decimal  @db.Decimal(12, 8)     // 被邀请人本次消费
+  commission    Decimal  @db.Decimal(12, 8)     // 返佣金额（消费 × 10%）
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([referrerId, createdAt])
+  @@index([refereeId])
+  @@map("commissions")
 }

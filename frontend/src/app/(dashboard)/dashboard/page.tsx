@@ -4,7 +4,9 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Wallet, Key, Activity, DollarSign, Plus, Loader2 } from 'lucide-react';
+import { Wallet, Key, Activity, DollarSign, Plus, Loader2, Users, Copy, Check } from 'lucide-react';
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
 import { useI18n } from '@/lib/i18n';
 import { api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
@@ -17,11 +19,36 @@ interface DashboardStats {
   totalSpent: string;
 }
 
+interface ReferralStats {
+  referralCode: string;
+  refereeCount: number;
+  totalCommission: string;
+}
+
 // 仪表盘概览页
 export default function DashboardPage() {
   const { data: session } = useSession();
   const { t } = useI18n();
   const user = session?.user;
+
+  const [copied, setCopied] = useState(false);
+
+  const { data: referral } = useQuery<ReferralStats>({
+    queryKey: ['referral-stats'],
+    queryFn: async () => {
+      const res = await api.get('/user/referral');
+      return res.data.data;
+    },
+    enabled: !!session,
+  });
+
+  const referralLink = referral ? `${typeof window !== 'undefined' ? window.location.origin : 'https://anytokens.net'}/register?ref=${referral.referralCode}` : '';
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboard-stats'],
@@ -109,6 +136,45 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 邀请返佣 */}
+      {referral && (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              {t.dash_referral}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+                <p className="text-xs text-muted-foreground">{t.dash_ref_code}</p>
+                <p className="mt-1 font-mono text-lg font-semibold">{referral.referralCode}</p>
+              </div>
+              <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+                <p className="text-xs text-muted-foreground">{t.dash_ref_count}</p>
+                <p className="mt-1 text-lg font-semibold">{referral.refereeCount}</p>
+              </div>
+              <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+                <p className="text-xs text-muted-foreground">{t.dash_ref_earned}</p>
+                <p className="mt-1 text-lg font-semibold text-green-500">${Number(referral.totalCommission).toFixed(4)}</p>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <p className="text-xs text-muted-foreground">{t.dash_ref_link}</p>
+              <div className="flex gap-2">
+                <Input value={referralLink} readOnly className="font-mono text-xs" />
+                <Button variant="outline" size="sm" className="shrink-0 gap-1" onClick={() => handleCopy(referralLink)}>
+                  {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? t.dash_ref_copied : t.dash_ref_copy}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">{t.dash_ref_desc}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 快速开始 */}
       <Card>

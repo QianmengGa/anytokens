@@ -187,6 +187,27 @@ class UserService {
     };
   }
 
+  // 获取邀请统计
+  async getReferralStats(userId: string) {
+    const [user, refereeCount, totalCommission] = await Promise.all([
+      prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { referralCode: true },
+      }),
+      prisma.user.count({ where: { referredBy: userId } }),
+      prisma.commission.aggregate({
+        where: { referrerId: userId },
+        _sum: { commission: true },
+      }),
+    ]);
+
+    return {
+      referralCode: user.referralCode,
+      refereeCount,
+      totalCommission: (totalCommission._sum.commission ?? 0).toString(),
+    };
+  }
+
   // 获取路由策略
   async getRoutingStrategy(userId: string) {
     const user = await prisma.user.findUniqueOrThrow({

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth.js';
-import { getDashboardStats, updateProfile, sendEmailCode, updateEmail, updatePassword, getSpendingLimits, updateSpendingLimits, getRoutingStrategy, updateRoutingStrategy } from '../controllers/user.controller.js';
+import { getDashboardStats, updateProfile, sendEmailCode, updateEmail, updatePassword, getSpendingLimits, updateSpendingLimits, getRoutingStrategy, updateRoutingStrategy, getReferralStats } from '../controllers/user.controller.js';
 
 const userRouter = Router();
 
@@ -27,6 +27,9 @@ userRouter.get('/spending-limits', getSpendingLimits as any);
 
 // PATCH /user/spending-limits — 更新消费限额
 userRouter.patch('/spending-limits', updateSpendingLimits as any);
+
+// GET /user/referral — 获取邀请统计
+userRouter.get('/referral', getReferralStats as any);
 
 // GET /user/routing-strategy — 获取路由策略
 userRouter.get('/routing-strategy', getRoutingStrategy as any);

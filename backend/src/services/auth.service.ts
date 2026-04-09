@@ -48,8 +48,8 @@ class AuthService {
     return { message: '验证码已发送' };
   }
 
-  // 用户注册（带验证码校验）
-  async register(email: string, password: string, code: string, name?: string, ip?: string) {
+  // 用户注册（带验证码校验 + 邀请码）
+  async register(email: string, password: string, code: string, name?: string, ip?: string, refCode?: string) {
     // 校验验证码
     const verification = await prisma.emailVerification.findFirst({
       where: {
@@ -83,6 +83,18 @@ class AuthService {
     // 哈希密码
     const passwordHash = await bcrypt.hash(password, 12);
 
+    // 验证邀请码（可选）
+    let referrerId: string | null = null;
+    if (refCode) {
+      const referrer = await prisma.user.findUnique({
+        where: { referralCode: refCode },
+        select: { id: true, isActive: true },
+      });
+      if (referrer && referrer.isActive) {
+        referrerId = referrer.id;
+      }
+    }
+
     // 创建用户并赠送初始余额，同时标记验证码已使用
     const user = await prisma.$transaction(async (tx) => {
       // 标记验证码已使用
@@ -97,6 +109,7 @@ class AuthService {
           passwordHash,
           name: finalName,
           balance: SIGNUP_BONUS,
+          referredBy: referrerId,
           registerIp: ip || null,
           lastLoginIp: ip || null,
           lastLoginAt: new Date(),

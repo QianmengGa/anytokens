@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +42,8 @@ function DiscordIcon() {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const refCode = searchParams.get('ref') || '';
   const { t } = useI18n();
 
   const [name, setName] = useState('');
@@ -99,7 +101,7 @@ export default function RegisterPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, code, ...(name ? { name } : {}) }),
+        body: JSON.stringify({ email, password, code, ...(name ? { name } : {}), ...(refCode ? { refCode } : {}) }),
       });
 
       const data = await res.json();

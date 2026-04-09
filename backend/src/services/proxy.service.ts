@@ -322,7 +322,7 @@ class ProxyService {
     await this.chargeAndLog(ctx, promptTokens, completionTokens);
   }
 
-  // 计费、扣款、记录日志
+  // 计费、扣款、记录日志 + 返佣
   private async chargeAndLog(ctx: RequestContext, promptTokens: number, completionTokens: number) {
     const totalTokens = promptTokens + completionTokens;
     const { totalCost } = calculateCost(ctx.modelConfig, promptTokens, completionTokens);
@@ -354,7 +354,7 @@ class ProxyService {
           });
         }
 
-        await tx.usageLog.create({
+        const usageLog = await tx.usageLog.create({
           data: {
             userId: ctx.userId,
             apiKeyId: ctx.apiKeyId,
@@ -368,6 +368,33 @@ class ProxyService {
             clientIp: ctx.clientIp || null,
           },
         });
+
+        // 返佣：被邀请人消费后，邀请人获得 10% 返佣
+        if (totalCost > 0) {
+          const consumer = await tx.user.findUnique({
+            where: { id: ctx.userId },
+            select: { referredBy: true },
+          });
+          if (consumer?.referredBy) {
+            const commissionAmount = totalCost * 0.10;
+            // 给邀请人加余额
+            await tx.user.update({
+              where: { id: consumer.referredBy },
+              data: { balance: { increment: commissionAmount } },
+            });
+            // 记录返佣
+            await tx.commission.create({
+              data: {
+                id: crypto.randomUUID(),
+                referrerId: consumer.referredBy,
+                refereeId: ctx.userId,
+                usageLogId: usageLog.id,
+                usageCost: totalCost,
+                commission: commissionAmount,
+              },
+            });
+          }
+        }
       });
     } catch (err) {
       logger.error('计费/日志记录失败:', err);

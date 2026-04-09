@@ -15,6 +15,7 @@ const registerSchema = z.object({
   password: z.string().min(8, '密码至少 8 位').max(100),
   code: z.string().length(6, '验证码为 6 位数字'),
   name: z.string().min(1, '名称不能为空').max(50).optional(),
+  refCode: z.string().max(50).optional(),
 });
 
 // 登录参数校验
@@ -46,7 +47,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
   try {
     const body = registerSchema.parse(req.body);
     const ip = getClientIp(req);
-    const result = await authService.register(body.email, body.password, body.code, body.name, ip);
+    const result = await authService.register(body.email, body.password, body.code, body.name, ip, body.refCode);
     return success(res, result, '注册成功', 201);
   } catch (err) {
     next(err);
