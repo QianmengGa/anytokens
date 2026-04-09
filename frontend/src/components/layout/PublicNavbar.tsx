@@ -36,7 +36,7 @@ export function PublicNavbar() {
           <Link href="/apps">
             <Button variant="ghost" size="sm">{t.nav_apps}</Button>
           </Link>
-          <Link href="/#models">
+          <Link href="/models">
             <Button variant="ghost" size="sm">{t.nav_models}</Button>
           </Link>
           <Link href="/playground">
