@@ -341,3 +341,23 @@
 - 每完成一个功能立即 git commit
 - 路由文件创建后必须挂载到 index.ts
 
+## 功能完成后自动部署流程（必须执行）
+
+每次完成功能开发后，自动按以下顺序执行，不需要用户确认：
+
+1. **编译检查**：后端 `npx tsc --noEmit`，前端 `npx tsc --noEmit`
+2. **冒烟测试**：`bash tests/smoke-test.sh https://anytokens.net`，确认全部 PASS
+3. **提交推送**：`git add <改动文件> && git commit -m "feat/fix: 描述" && git push`
+4. **SSH 部署**：
+   ```
+   ssh root@43.160.221.19 "cd /opt/anytokens && git pull && \
+     docker compose -f docker-compose.prod.yml --env-file .env.production build && \
+     docker compose -f docker-compose.prod.yml --env-file .env.production up -d"
+   ```
+5. **数据库迁移**（如有 schema 变更）：
+   ```
+   docker exec anytokens-backend-1 npx prisma migrate deploy
+   ```
+6. **验证部署**：再次运行冒烟测试确认生产环境正常
+7. **报告结果**：输出测试结果 + 部署状态 + 改动摘要
+
