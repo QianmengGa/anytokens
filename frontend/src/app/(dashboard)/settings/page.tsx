@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Check, AlertCircle, AlertTriangle } from 'lucide-react';
+import { Check, AlertCircle, AlertTriangle, DollarSign, Zap, Star } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
@@ -128,6 +128,34 @@ export default function SettingsPage() {
       setEmailMsg({ type: 'error', text: getErrMsg(err) });
     } finally {
       setEmailLoading(false);
+    }
+  };
+
+  // === 路由策略 ===
+  const { data: routing, refetch: refetchRouting } = useQuery<{
+    routingStrategy: string;
+    providerMetrics: Record<string, { avgLatency: number; successRate: number; requests: number }>;
+  }>({
+    queryKey: ['routing-strategy'],
+    queryFn: async () => {
+      const res = await api.get('/user/routing-strategy');
+      return res.data.data;
+    },
+  });
+  const [routingLoading, setRoutingLoading] = useState(false);
+  const [routingMsg, setRoutingMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleSetStrategy = async (strategy: string) => {
+    setRoutingLoading(true);
+    setRoutingMsg(null);
+    try {
+      await api.patch('/user/routing-strategy', { strategy });
+      await refetchRouting();
+      setRoutingMsg({ type: 'success', text: t.settings_saved });
+    } catch (err) {
+      setRoutingMsg({ type: 'error', text: getErrMsg(err) });
+    } finally {
+      setRoutingLoading(false);
     }
   };
 
@@ -298,6 +326,65 @@ export default function SettingsPage() {
           <Button onClick={handleChangePwd} disabled={pwdLoading || !oldPwd || !newPwd || !confirmPwd || !isPasswordStrong(newPwd)}>
             {t.settings_change_password}
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* 智能路由 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t.settings_routing}</CardTitle>
+          <CardDescription>{t.settings_routing_desc}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-3 gap-3">
+            {([
+              { key: 'price', icon: DollarSign, label: t.settings_route_price, desc: t.settings_route_price_desc },
+              { key: 'speed', icon: Zap, label: t.settings_route_speed, desc: t.settings_route_speed_desc },
+              { key: 'quality', icon: Star, label: t.settings_route_quality, desc: t.settings_route_quality_desc },
+            ] as const).map((item) => {
+              const active = routing?.routingStrategy === item.key;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => handleSetStrategy(item.key)}
+                  disabled={routingLoading}
+                  className={`rounded-lg border p-3 text-left transition-colors ${
+                    active
+                      ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                      : 'border-border/60 hover:border-border hover:bg-muted/30'
+                  }`}
+                >
+                  <item.icon className={`mb-2 h-5 w-5 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <p className="text-sm font-medium">{item.label}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{item.desc}</p>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 供应商实时指标 */}
+          {routing?.providerMetrics && Object.keys(routing.providerMetrics).length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-muted-foreground">{t.settings_provider_status}</p>
+              <div className="grid gap-2">
+                {Object.entries(routing.providerMetrics).map(([name, m]) => (
+                  <div key={name} className="flex items-center justify-between rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs">
+                    <span className="font-medium capitalize">{name}</span>
+                    <div className="flex items-center gap-3 text-muted-foreground">
+                      <span>{m.avgLatency}ms</span>
+                      <span className={m.successRate >= 95 ? 'text-green-500' : m.successRate >= 80 ? 'text-yellow-500' : 'text-red-500'}>
+                        {m.successRate}%
+                      </span>
+                      <span>{m.requests} reqs</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <p className="text-xs text-muted-foreground">{t.settings_routing_header}</p>
+          {routingMsg && <Msg {...routingMsg} />}
         </CardContent>
       </Card>
 

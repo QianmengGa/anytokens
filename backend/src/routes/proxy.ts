@@ -2,8 +2,12 @@ import { Router } from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import { proxyService } from '../services/proxy.service.js';
 import { Errors } from '../utils/errors.js';
+import type { RoutingStrategy } from '../config/models.js';
 
 const proxyRouter = Router();
+
+// 合法的路由策略值
+const VALID_STRATEGIES = new Set(['price', 'speed', 'quality']);
 
 // POST /chat/completions — OpenAI 兼容中转接口
 proxyRouter.post('/chat/completions', async (req: Request, res: Response, next: NextFunction) => {
@@ -24,14 +28,20 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response, next: 
       throw Errors.badRequest('缺少 messages 参数');
     }
 
+    // 解析路由策略（X-Routing-Strategy 请求头）
+    const strategyHeader = req.headers['x-routing-strategy'] as string | undefined;
+    let strategy: RoutingStrategy | undefined;
+    if (strategyHeader && VALID_STRATEGIES.has(strategyHeader)) {
+      strategy = strategyHeader as RoutingStrategy;
+    }
+
     // 提取客户端 IP
     const forwarded = req.headers['x-forwarded-for'];
     const clientIp = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : (req.ip || '');
 
-    // 交给 proxyService 处理（流式响应由 service 直接写入 res）
-    await proxyService.handleChatCompletion(apiKey, req.body, res, clientIp);
+    // 交给 proxyService 处理
+    await proxyService.handleChatCompletion(apiKey, req.body, res, clientIp, strategy);
   } catch (err) {
-    // 流式响应已发送 header 后不能再用 errorHandler
     if (res.headersSent) {
       res.end();
       return;

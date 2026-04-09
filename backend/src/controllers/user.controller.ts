@@ -1,6 +1,7 @@
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { userService } from '../services/user.service.js';
+import { providerHealth } from '../services/provider-health.js';
 import { success } from '../utils/response.js';
 import type { AuthRequest } from '../types/index.js';
 
@@ -88,6 +89,33 @@ export async function updateSpendingLimits(req: AuthRequest, res: Response, next
     const body = spendingLimitsSchema.parse(req.body);
     const result = await userService.updateSpendingLimits(req.user!.id, body);
     return success(res, result, '限额设置已保存');
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 获取路由策略 + 供应商实时指标
+export async function getRoutingStrategy(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const result = await userService.getRoutingStrategy(req.user!.id);
+    return success(res, {
+      ...result,
+      providerMetrics: providerHealth.getAllMetrics(),
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 更新路由策略
+export async function updateRoutingStrategy(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const { strategy } = req.body;
+    if (!strategy || !['price', 'speed', 'quality'].includes(strategy)) {
+      throw new Error('strategy 必须为 price、speed 或 quality');
+    }
+    const result = await userService.updateRoutingStrategy(req.user!.id, strategy);
+    return success(res, result, '路由策略已更新');
   } catch (err) {
     next(err);
   }

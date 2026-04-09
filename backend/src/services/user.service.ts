@@ -187,6 +187,25 @@ class UserService {
     };
   }
 
+  // 获取路由策略
+  async getRoutingStrategy(userId: string) {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { routingStrategy: true },
+    });
+    return { routingStrategy: user.routingStrategy };
+  }
+
+  // 更新路由策略
+  async updateRoutingStrategy(userId: string, strategy: string) {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { routingStrategy: strategy },
+      select: { routingStrategy: true },
+    });
+    return { routingStrategy: user.routingStrategy };
+  }
+
   // 修改密码
   async updatePassword(userId: string, oldPassword: string, newPassword: string) {
     const user = await prisma.user.findUnique({ where: { id: userId } });

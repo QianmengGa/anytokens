@@ -47,6 +47,7 @@ model User {
   maxPerRequest  Decimal? @db.Decimal(12, 6) @map("max_per_request")
   maxPerDay      Decimal? @db.Decimal(12, 6) @map("max_per_day")
   maxPerMonth    Decimal? @db.Decimal(12, 6) @map("max_per_month")
+  routingStrategy String  @default("price") @map("routing_strategy")
   isActive       Boolean  @default(true) @map("is_active")
   registerIp     String?  @map("register_ip")
   lastLoginIp    String?  @map("last_login_ip")
