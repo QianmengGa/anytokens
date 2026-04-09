@@ -1,7 +1,7 @@
 import { config } from './index.js';
 
 // 支持的供应商类型
-export type Provider = 'siliconflow' | 'google' | 'groq';
+export type Provider = 'siliconflow' | 'google' | 'groq' | 'openai';
 
 // 路由策略
 export type RoutingStrategy = 'price' | 'speed' | 'quality';
@@ -21,8 +21,55 @@ export function getProviderConfig(provider: Provider): ProviderConfig {
       return { baseUrl: config.googleBaseUrl, apiKey: config.googleApiKey };
     case 'groq':
       return { baseUrl: config.groqBaseUrl, apiKey: config.groqApiKey };
+    case 'openai':
+      return { baseUrl: config.openaiBaseUrl, apiKey: config.openaiApiKey };
   }
 }
+
+// ══════════════════════════════════════════════════════
+//  非 Chat 模型定价（Embeddings / Images / TTS）
+// ══════════════════════════════════════════════════════
+
+export interface ExtraModelPricing {
+  provider: Provider;
+  upstreamModel: string;
+  // 计费单位和单价
+  billingUnit: 'token' | 'image' | 'character';
+  pricePerUnit: number; // 每单位美元价格
+}
+
+export const EMBEDDING_MODELS: Record<string, ExtraModelPricing> = {
+  'text-embedding-3-small': {
+    provider: 'openai', upstreamModel: 'text-embedding-3-small',
+    billingUnit: 'token', pricePerUnit: 0.02 / 1_000_000, // $0.02/1M tokens
+  },
+  'text-embedding-3-large': {
+    provider: 'openai', upstreamModel: 'text-embedding-3-large',
+    billingUnit: 'token', pricePerUnit: 0.13 / 1_000_000, // $0.13/1M tokens
+  },
+};
+
+export const IMAGE_MODELS: Record<string, ExtraModelPricing> = {
+  'dall-e-3': {
+    provider: 'openai', upstreamModel: 'dall-e-3',
+    billingUnit: 'image', pricePerUnit: 0.04, // $0.04/张 (1024x1024)
+  },
+  'dall-e-3-hd': {
+    provider: 'openai', upstreamModel: 'dall-e-3',
+    billingUnit: 'image', pricePerUnit: 0.08, // $0.08/张 (1024x1792 HD)
+  },
+};
+
+export const TTS_MODELS: Record<string, ExtraModelPricing> = {
+  'tts-1': {
+    provider: 'openai', upstreamModel: 'tts-1',
+    billingUnit: 'character', pricePerUnit: 15.0 / 1_000_000, // $15/1M chars
+  },
+  'tts-1-hd': {
+    provider: 'openai', upstreamModel: 'tts-1-hd',
+    billingUnit: 'character', pricePerUnit: 30.0 / 1_000_000, // $30/1M chars
+  },
+};
 
 // 单个供应商选项
 export interface ProviderOption {

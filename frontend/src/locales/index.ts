@@ -174,6 +174,7 @@ export interface Translations {
   dash_today_tokens: string;
   dash_today_tokens_unit: string;
   dash_total_spent: string;
+  dash_usage_by_type: string;
   dash_month_calls: string;
   dash_month_calls_unit: string;
   dash_referral: string;
@@ -718,6 +719,7 @@ const zhCN: Translations = {
   dash_today_tokens: '今日消耗',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: '总消费',
+  dash_usage_by_type: '本月用量分布',
   dash_month_calls: '本月调用',
   dash_month_calls_unit: '次 API 调用',
   dash_referral: '邀请返佣',
@@ -1243,6 +1245,7 @@ const zhTW: Translations = {
   dash_today_tokens: '今日消耗',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: '總消費',
+  dash_usage_by_type: '本月用量分佈',
   dash_month_calls: '本月呼叫',
   dash_month_calls_unit: '次 API 呼叫',
   dash_referral: '邀請返傭',
@@ -1768,6 +1771,7 @@ const en: Translations = {
   dash_today_tokens: 'Today Usage',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: 'Total Spent',
+  dash_usage_by_type: 'Usage by Type (This Month)',
   dash_month_calls: 'This Month',
   dash_month_calls_unit: 'API calls',
   dash_referral: 'Referral Program',
@@ -2293,6 +2297,7 @@ const ja: Translations = {
   dash_today_tokens: '今日の使用量',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: '合計消費',
+  dash_usage_by_type: '今月のタイプ別利用状況',
   dash_month_calls: '今月の呼び出し',
   dash_month_calls_unit: '回 API 呼び出し',
   dash_referral: '紹介プログラム',
@@ -2818,6 +2823,7 @@ const ko: Translations = {
   dash_today_tokens: '오늘 사용량',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: '총 소비',
+  dash_usage_by_type: '유형별 사용량 (이번 달)',
   dash_month_calls: '이번 달',
   dash_month_calls_unit: '회 API 호출',
   dash_referral: '추천 프로그램',
@@ -3343,6 +3349,7 @@ const ms: Translations = {
   dash_today_tokens: 'Penggunaan hari ini',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: 'Jumlah perbelanjaan',
+  dash_usage_by_type: 'Penggunaan mengikut jenis (Bulan ini)',
   dash_month_calls: 'Bulan ini',
   dash_month_calls_unit: 'panggilan API',
   dash_referral: 'Program Rujukan',
@@ -3868,6 +3875,7 @@ const th: Translations = {
   dash_today_tokens: 'การใช้งานวันนี้',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: 'ยอดใช้จ่ายรวม',
+  dash_usage_by_type: 'การใช้งานตามประเภท (เดือนนี้)',
   dash_month_calls: 'เดือนนี้',
   dash_month_calls_unit: 'การเรียก API',
   dash_referral: 'โปรแกรมแนะนำ',
@@ -4393,6 +4401,7 @@ const es: Translations = {
   dash_today_tokens: 'Uso de hoy',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: 'Gasto total',
+  dash_usage_by_type: 'Uso por tipo (Este mes)',
   dash_month_calls: 'Este mes',
   dash_month_calls_unit: 'llamadas API',
   dash_referral: 'Programa de Referidos',
@@ -4918,6 +4927,7 @@ const fr: Translations = {
   dash_today_tokens: "Usage aujourd'hui",
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: 'Dépenses totales',
+  dash_usage_by_type: 'Utilisation par type (Ce mois)',
   dash_month_calls: 'Ce mois',
   dash_month_calls_unit: 'appels API',
   dash_referral: 'Programme de Parrainage',
@@ -5443,6 +5453,7 @@ const de: Translations = {
   dash_today_tokens: 'Nutzung heute',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: 'Gesamtausgaben',
+  dash_usage_by_type: 'Nutzung nach Typ (Diesen Monat)',
   dash_month_calls: 'Diesen Monat',
   dash_month_calls_unit: 'API-Aufrufe',
   dash_referral: 'Empfehlungsprogramm',
@@ -5968,6 +5979,7 @@ const ru: Translations = {
   dash_today_tokens: 'Расход сегодня',
   dash_today_tokens_unit: 'Tokens',
   dash_total_spent: 'Общие расходы',
+  dash_usage_by_type: 'Использование по типу (В этом месяце)',
   dash_month_calls: 'В этом месяце',
   dash_month_calls_unit: 'вызовов API',
   dash_referral: 'Реферальная программа',

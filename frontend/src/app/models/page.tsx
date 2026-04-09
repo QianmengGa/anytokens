@@ -19,6 +19,7 @@ interface ModelInfo {
   contextLength: number;
   speed: number;       // 1-5 星
   free: boolean;
+  type?: 'chat' | 'embedding' | 'image' | 'tts';
 }
 
 const ALL_MODELS: ModelInfo[] = [
@@ -38,9 +39,18 @@ const ALL_MODELS: ModelInfo[] = [
   // Groq
   { id: 'llama3-70b', name: 'Llama3 70B', provider: 'Groq', inputPrice: 0.59, outputPrice: 0.79, contextLength: 8192, speed: 5, free: false },
   { id: 'mixtral-8x7b', name: 'Mixtral 8x7B', provider: 'Groq', inputPrice: 0.24, outputPrice: 0.24, contextLength: 32768, speed: 5, free: false },
+  // Embeddings
+  { id: 'text-embedding-3-small', name: 'Embedding 3 Small', provider: 'OpenAI', inputPrice: 0.02, outputPrice: 0, contextLength: 8191, speed: 5, free: false, type: 'embedding' },
+  { id: 'text-embedding-3-large', name: 'Embedding 3 Large', provider: 'OpenAI', inputPrice: 0.13, outputPrice: 0, contextLength: 8191, speed: 4, free: false, type: 'embedding' },
+  // Image Generation
+  { id: 'dall-e-3', name: 'DALL-E 3', provider: 'OpenAI', inputPrice: 0.04, outputPrice: 0, contextLength: 0, speed: 2, free: false, type: 'image' },
+  { id: 'dall-e-3-hd', name: 'DALL-E 3 HD', provider: 'OpenAI', inputPrice: 0.08, outputPrice: 0, contextLength: 0, speed: 2, free: false, type: 'image' },
+  // TTS
+  { id: 'tts-1', name: 'TTS-1', provider: 'OpenAI', inputPrice: 15.0, outputPrice: 0, contextLength: 4096, speed: 5, free: false, type: 'tts' },
+  { id: 'tts-1-hd', name: 'TTS-1 HD', provider: 'OpenAI', inputPrice: 30.0, outputPrice: 0, contextLength: 4096, speed: 3, free: false, type: 'tts' },
 ];
 
-const PROVIDERS = ['DeepSeek', 'Alibaba', 'Zhipu', 'Google', 'Groq'];
+const PROVIDERS = ['DeepSeek', 'Alibaba', 'Zhipu', 'Google', 'Groq', 'OpenAI'];
 
 type SortKey = 'price' | 'speed' | 'context' | 'name';
 
@@ -186,6 +196,11 @@ export default function ModelsPage() {
                 <div className="flex items-center gap-2">
                   <span className="font-medium">{m.name}</span>
                   {m.free && <Badge variant="secondary" className="text-[10px]">Free</Badge>}
+                  {m.type && m.type !== 'chat' && (
+                    <Badge variant="outline" className="text-[10px]">
+                      {m.type === 'embedding' ? 'Embedding' : m.type === 'image' ? 'Image' : 'TTS'}
+                    </Badge>
+                  )}
                 </div>
                 <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                   <span>{m.provider}</span>
@@ -199,7 +214,11 @@ export default function ModelsPage() {
                 <div className="min-w-[100px]">
                   <p className="text-[10px] text-muted-foreground">{t.models_col_price}</p>
                   <p className={`font-mono ${m.free ? 'text-green-500' : ''}`}>
-                    {m.free ? 'Free' : `$${m.inputPrice} / $${m.outputPrice}`}
+                    {m.free ? 'Free'
+                      : m.type === 'image' ? `$${m.inputPrice}/img`
+                      : m.type === 'tts' ? `$${m.inputPrice}/1M chars`
+                      : m.type === 'embedding' ? `$${m.inputPrice}/1M tok`
+                      : `$${m.inputPrice} / $${m.outputPrice}`}
                   </p>
                 </div>
 

@@ -17,7 +17,7 @@ class UserService {
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [user, apiKeyCount, todayCalls, monthCalls, totalSpent] = await Promise.all([
+    const [user, apiKeyCount, todayCalls, monthCalls, totalSpent, modelUsage] = await Promise.all([
       prisma.user.findUniqueOrThrow({
         where: { id: userId },
         select: { balance: true },
@@ -29,7 +29,29 @@ class UserService {
         where: { userId },
         _sum: { cost: true },
       }),
+      // 按模型分组统计（本月）
+      prisma.usageLog.groupBy({
+        by: ['model'],
+        where: { userId, createdAt: { gte: monthStart }, status: 'success' },
+        _sum: { cost: true },
+        _count: true,
+        orderBy: { _count: { model: 'desc' } },
+        take: 10,
+      }),
     ]);
+
+    // 按类型归类
+    const embeddingModels = ['text-embedding-3-small', 'text-embedding-3-large'];
+    const imageModels = ['dall-e-3', 'dall-e-3-hd'];
+    const ttsModels = ['tts-1', 'tts-1-hd'];
+
+    let chatCalls = 0, embeddingCalls = 0, imageCalls = 0, ttsCalls = 0;
+    for (const row of modelUsage) {
+      if (embeddingModels.includes(row.model)) embeddingCalls += row._count;
+      else if (imageModels.includes(row.model)) imageCalls += row._count;
+      else if (ttsModels.includes(row.model)) ttsCalls += row._count;
+      else chatCalls += row._count;
+    }
 
     return {
       balance: user.balance.toString(),
@@ -37,6 +59,7 @@ class UserService {
       todayCalls,
       monthCalls,
       totalSpent: (totalSpent._sum.cost ?? 0).toString(),
+      usageByType: { chat: chatCalls, embedding: embeddingCalls, image: imageCalls, tts: ttsCalls },
     };
   }
 

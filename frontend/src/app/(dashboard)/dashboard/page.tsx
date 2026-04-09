@@ -17,6 +17,7 @@ interface DashboardStats {
   todayCalls: number;
   monthCalls: number;
   totalSpent: string;
+  usageByType?: { chat: number; embedding: number; image: number; tts: number };
 }
 
 interface ReferralStats {
@@ -136,6 +137,30 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 本月用量分布 */}
+      {stats?.usageByType && (stats.usageByType.chat + stats.usageByType.embedding + stats.usageByType.image + stats.usageByType.tts) > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">{t.dash_usage_by_type}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-4 gap-4 text-center">
+              {[
+                { label: 'Chat', value: stats.usageByType.chat },
+                { label: 'Embedding', value: stats.usageByType.embedding },
+                { label: 'Image', value: stats.usageByType.image },
+                { label: 'TTS', value: stats.usageByType.tts },
+              ].map((item) => (
+                <div key={item.label} className="rounded-lg border border-border/60 bg-muted/20 p-3">
+                  <p className="text-xs text-muted-foreground">{item.label}</p>
+                  <p className="mt-1 text-lg font-semibold">{item.value}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 邀请返佣 */}
       {referral && (
