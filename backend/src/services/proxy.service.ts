@@ -7,6 +7,7 @@ import {
 import { keysService } from './keys.service.js';
 import { providerHealth } from './provider-health.js';
 import { emailService } from './email.service.js';
+import { triggerWebhook, WEBHOOK_EVENTS } from './webhookService.js';
 import { redis } from '../config/redis.js';
 import { Errors } from '../utils/errors.js';
 import { logger } from '../utils/logger.js';
@@ -470,7 +471,16 @@ class ProxyService {
 
     // 标记已发送（24 小时过期）
     await redis.set(redisKey, '1', 'EX', 86400);
-    emailService.sendLowBalance(user.email, Number(user.balance));
+    const balance = Number(user.balance);
+    emailService.sendLowBalance(user.email, balance);
+
+    // Webhook: 余额不足
+    triggerWebhook(userId, WEBHOOK_EVENTS.BALANCE_LOW, { balance, threshold: LOW_BALANCE_THRESHOLD });
+
+    // Webhook: 余额耗尽
+    if (balance <= 0) {
+      triggerWebhook(userId, WEBHOOK_EVENTS.BALANCE_DEPLETED, { balance });
+    }
   }
 
   // 检查用户消费限额

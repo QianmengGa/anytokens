@@ -8,6 +8,7 @@ import { success } from '../utils/response.js';
 import { Errors } from '../utils/errors.js';
 import { logger } from '../utils/logger.js';
 import { emailService } from '../services/email.service.js';
+import { triggerWebhook, WEBHOOK_EVENTS } from '../services/webhookService.js';
 import type { AuthRequest } from '../types/index.js';
 
 const paymentRouter = Router();
@@ -208,12 +209,28 @@ async function handleCheckoutCompleted(session: any) {
     // 异步发送充值收据邮件
     const updatedUser = await prisma.user.findUnique({ where: { id: userId }, select: { email: true, balance: true } });
     if (updatedUser) {
+      const newBalance = Number(updatedUser.balance);
       emailService.sendTopupReceipt(updatedUser.email, {
         amount,
         method: 'Stripe',
-        balanceAfter: Number(updatedUser.balance),
+        balanceAfter: newBalance,
         transactionId: transactionId || session.id,
       });
+
+      // Webhook: 充值成功
+      triggerWebhook(userId, WEBHOOK_EVENTS.BALANCE_TOPUP, {
+        amount,
+        newBalance,
+        currency: 'USD',
+      });
+
+      // Webhook: 余额不足
+      if (newBalance < 5) {
+        triggerWebhook(userId, WEBHOOK_EVENTS.BALANCE_LOW, {
+          balance: newBalance,
+          threshold: 5,
+        });
+      }
     }
   } catch (err) {
     logger.error('Stripe webhook 处理充值失败:', err);

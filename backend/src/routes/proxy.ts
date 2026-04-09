@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { proxyService } from '../services/proxy.service.js';
 import { keysService } from '../services/keys.service.js';
 import { checkKeyRateLimit } from '../services/rateLimitService.js';
+import { triggerWebhook, WEBHOOK_EVENTS } from '../services/webhookService.js';
 import { Errors } from '../utils/errors.js';
 import type { RoutingStrategy } from '../config/models.js';
 
@@ -52,6 +53,13 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response, next: 
       keyRecord.monthlyLimit ?? null,
     );
     if (!rateLimitResult.allowed) {
+      // Webhook: API Key 达到限速上限
+      triggerWebhook(keyRecord.userId, WEBHOOK_EVENTS.KEY_LIMIT_REACHED, {
+        keyId: keyRecord.id,
+        keyName: keyRecord.name,
+        limitType: rateLimitResult.limitType,
+      });
+
       res.setHeader('Retry-After', String(rateLimitResult.retryAfter));
       res.status(429).json({
         error: {

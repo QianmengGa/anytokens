@@ -61,6 +61,7 @@ model User {
   apiKeys      ApiKey[]
   transactions Transaction[]
   usageLogs    UsageLog[]
+  webhooks     Webhook[]
 
   @@map("users")
 }
@@ -312,4 +313,39 @@ model ResellerApiKey {
   subAccount ResellerSubAccount @relation(fields: [subAccountId], references: [id])
 
   @@map("reseller_api_keys")
+}
+
+// Webhook 配置表
+model Webhook {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  url         String
+  secret      String    // HMAC 签名密钥
+  events      String[]  // 订阅的事件类型数组
+  isActive    Boolean   @default(true) @map("is_active")
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries   WebhookDelivery[]
+
+  @@map("webhooks")
+}
+
+// Webhook 投递记录表
+model WebhookDelivery {
+  id          String    @id @default(uuid())
+  webhookId   String    @map("webhook_id")
+  event       String    // 事件类型
+  payload     Json      // 发送的内容
+  statusCode  Int?      @map("status_code")
+  response    String?   // 响应内容（截取前1000字符）
+  success     Boolean   @default(false)
+  attempts    Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  webhook Webhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+
+  @@map("webhook_deliveries")
 }
