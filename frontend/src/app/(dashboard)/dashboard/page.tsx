@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Wallet, Key, Activity, DollarSign, Plus, BarChart3, Loader2 } from 'lucide-react';
+import { Wallet, Key, Activity, DollarSign, Plus, Loader2 } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';

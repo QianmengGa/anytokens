@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { useI18n } from '@/lib/i18n';

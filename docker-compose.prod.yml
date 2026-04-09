@@ -3,6 +3,7 @@ services:
   postgres:
     image: postgres:16-alpine
     restart: always
+    env_file: .env.production
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-anytokens}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -21,6 +22,7 @@ services:
   redis:
     image: redis:7-alpine
     restart: always
+    env_file: .env.production
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis-data:/data
@@ -43,6 +45,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    env_file: .env.production
     environment:
       NODE_ENV: production
       BACKEND_PORT: 4000
@@ -52,14 +55,6 @@ services:
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       CORS_ORIGIN: ${CORS_ORIGIN:-https://anytokens.com}
       FRONTEND_URL: ${FRONTEND_URL:-https://anytokens.com}
-      RESEND_API_KEY: ${RESEND_API_KEY}
-      SILICONFLOW_API_KEY: ${SILICONFLOW_API_KEY}
-      SILICONFLOW_BASE_URL: ${SILICONFLOW_BASE_URL:-https://api.siliconflow.cn/v1}
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
-      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
-      NOWPAYMENTS_API_KEY: ${NOWPAYMENTS_API_KEY}
-      NOWPAYMENTS_IPN_SECRET: ${NOWPAYMENTS_IPN_SECRET}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
     networks:
       - internal
 
@@ -76,6 +71,7 @@ services:
     restart: always
     depends_on:
       - backend
+    env_file: .env.production
     environment:
       NEXTAUTH_URL: ${NEXTAUTH_URL:-https://anytokens.com}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}

@@ -428,7 +428,7 @@ function UsersTab({ toast }: { toast: ReturnType<typeof useToast> }) {
 function UsageTab() {
   const { t } = useI18n();
   const [data, setData] = useState<PaginatedData<UsageLog> | null>(null);
-  const [page, setPage] = useState(1);
+  const [, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({ userId: '', model: '', startDate: '', endDate: '' });
 
@@ -505,7 +505,7 @@ function UsageTab() {
 function TransactionsTab() {
   const { t } = useI18n();
   const [data, setData] = useState<PaginatedData<Transaction> | null>(null);
-  const [page, setPage] = useState(1);
+  const [, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({ userId: '', type: '', startDate: '', endDate: '' });
 
