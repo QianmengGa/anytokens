@@ -260,7 +260,7 @@ echo "$resp" | grep -q '"code"\|input\|无效' && record "TTS 缺少 input → �
 # ══════════════════════════════════════════════════════════
 echo -e "${BOLD}━━ 11. 公开页面 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
-for page in "/" "/login" "/register" "/models" "/docs" "/playground" "/enterprise" "/apps"; do
+for page in "/" "/login" "/register" "/models" "/docs" "/playground" "/enterprise" "/apps" "/privacy" "/terms"; do
   c=$(http_code GET "${BASE}${page}")
   [[ "$c" =~ ^(200|304)$ ]] && record "页面 ${page}" PASS "HTTP $c" || record "页面 ${page}" FAIL "HTTP $c"
 done

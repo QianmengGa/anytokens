@@ -78,6 +78,7 @@ export interface Translations {
   footer_docs: string;
   footer_pricing: string;
   footer_terms: string;
+  footer_privacy: string;
   footer_contact: string;
   // 客服
   cs_title: string;
@@ -667,6 +668,7 @@ const zhCN: Translations = {
   footer_docs: '文档',
   footer_pricing: '定价',
   footer_terms: '服务条款',
+  footer_privacy: '隐私政策',
   footer_contact: '联系我们',
   cs_title: '联系客服',
   cs_chat: '在线聊天',
@@ -1225,6 +1227,7 @@ const zhTW: Translations = {
   footer_docs: '文件',
   footer_pricing: '定價',
   footer_terms: '服務條款',
+  footer_privacy: '隱私政策',
   footer_contact: '聯繫我們',
   cs_title: '聯繫客服',
   cs_chat: '線上聊天',
@@ -1783,6 +1786,7 @@ const en: Translations = {
   footer_docs: 'Docs',
   footer_pricing: 'Pricing',
   footer_terms: 'Terms',
+  footer_privacy: 'Privacy Policy',
   footer_contact: 'Contact',
   cs_title: 'Support',
   cs_chat: 'Live Chat',
@@ -2341,6 +2345,7 @@ const ja: Translations = {
   footer_docs: 'ドキュメント',
   footer_pricing: '料金',
   footer_terms: '利用規約',
+  footer_privacy: 'プライバシーポリシー',
   footer_contact: 'お問合せ',
   cs_title: 'サポート',
   cs_chat: 'ライブチャット',
@@ -2899,6 +2904,7 @@ const ko: Translations = {
   footer_docs: '문서',
   footer_pricing: '요금',
   footer_terms: '이용약관',
+  footer_privacy: '개인정보처리방침',
   footer_contact: '문의',
   cs_title: '고객 지원',
   cs_chat: '실시간 채팅',
@@ -3457,6 +3463,7 @@ const ms: Translations = {
   footer_docs: 'Dokumen',
   footer_pricing: 'Harga',
   footer_terms: 'Syarat',
+  footer_privacy: 'Dasar Privasi',
   footer_contact: 'Hubungi',
   cs_title: 'Sokongan',
   cs_chat: 'Chat Langsung',
@@ -4015,6 +4022,7 @@ const th: Translations = {
   footer_docs: 'เอกสาร',
   footer_pricing: 'ราคา',
   footer_terms: 'ข้อกำหนด',
+  footer_privacy: 'นโยบายความเป็นส่วนตัว',
   footer_contact: 'ติดต่อ',
   cs_title: 'ฝ่ายสนับสนุน',
   cs_chat: 'แชทสด',
@@ -4573,6 +4581,7 @@ const es: Translations = {
   footer_docs: 'Docs',
   footer_pricing: 'Precios',
   footer_terms: 'Términos',
+  footer_privacy: 'Política de Privacidad',
   footer_contact: 'Contacto',
   cs_title: 'Soporte',
   cs_chat: 'Chat en vivo',
@@ -5131,6 +5140,7 @@ const fr: Translations = {
   footer_docs: 'Docs',
   footer_pricing: 'Tarifs',
   footer_terms: 'CGU',
+  footer_privacy: 'Politique de Confidentialité',
   footer_contact: 'Contact',
   cs_title: 'Support',
   cs_chat: 'Chat en direct',
@@ -5689,6 +5699,7 @@ const de: Translations = {
   footer_docs: 'Docs',
   footer_pricing: 'Preise',
   footer_terms: 'AGB',
+  footer_privacy: 'Datenschutzrichtlinie',
   footer_contact: 'Kontakt',
   cs_title: 'Support',
   cs_chat: 'Live-Chat',
@@ -6247,6 +6258,7 @@ const ru: Translations = {
   footer_docs: 'Документация',
   footer_pricing: 'Цены',
   footer_terms: 'Условия',
+  footer_privacy: 'Политика конфиденциальности',
   footer_contact: 'Контакты',
   cs_title: 'Поддержка',
   cs_chat: 'Онлайн-чат',

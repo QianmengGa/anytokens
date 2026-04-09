@@ -45,6 +45,9 @@ export function PublicNavbar() {
           <Link href="/pricing">
             <Button variant="ghost" size="sm">{t.footer_pricing}</Button>
           </Link>
+          <Link href="/privacy">
+            <Button variant="ghost" size="sm">{t.footer_privacy}</Button>
+          </Link>
           <Link href="/docs">
             <Button variant="ghost" size="sm">{t.nav_docs}</Button>
           </Link>

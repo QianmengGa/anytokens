@@ -246,9 +246,10 @@ export default function HomePage() {
             &copy; {new Date().getFullYear()} Anytokens. All rights reserved.
           </span>
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link href="#" className="transition-colors hover:text-foreground">{t.footer_docs}</Link>
-            <Link href="#pricing" className="transition-colors hover:text-foreground">{t.footer_pricing}</Link>
-            <Link href="#" className="transition-colors hover:text-foreground">{t.footer_terms}</Link>
+            <Link href="/docs" className="transition-colors hover:text-foreground">{t.footer_docs}</Link>
+            <Link href="/pricing" className="transition-colors hover:text-foreground">{t.footer_pricing}</Link>
+            <Link href="/terms" className="transition-colors hover:text-foreground">{t.footer_terms}</Link>
+            <Link href="/privacy" className="transition-colors hover:text-foreground">{t.footer_privacy}</Link>
             <Link href="mailto:contact@anytokens.net" className="transition-colors hover:text-foreground">{t.footer_contact}</Link>
           </div>
         </div>
