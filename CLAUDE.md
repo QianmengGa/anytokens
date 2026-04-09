@@ -271,6 +271,8 @@
 \- \[x] 注意：不直接接入 OpenAI/Anthropic API（违反其转售条款），通过 SiliconFlow 合法代理
 \- \[x] 定价修正：gemini-1.5-flash 修复亏损定价，OpenAI Embeddings/Images/TTS 全部迁移至 SiliconFlow（规避转售条款），Groq 模型加价 20%
 \- \[x] 注意：tts-1-hd 暂留 OpenAI，待 SiliconFlow 高清 TTS 上线后替换
+\- \[x] 对话历史持久化：Conversation + Message 两张表，6个REST端点，完整Chat页面（左侧对话列表+右侧聊天区+流式SSE+Markdown渲染+自动标题）
+\- \[x] 新增端点：GET/POST /api/v1/conversations，GET/PATCH/DELETE /api/v1/conversations/:id，POST /api/v1/conversations/:id/messages
 \- \[ ] 推广计划
 
 

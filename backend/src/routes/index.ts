@@ -15,6 +15,7 @@ import embeddingsRouter from './embeddings.js';
 import imagesRouter from './images.js';
 import audioRouter from './audio.js';
 import webhooksRouter from './webhooks.js';
+import conversationsRouter from './conversations.js';
 
 const router = Router();
 
@@ -31,6 +32,7 @@ router.use('/team', teamRouter);
 router.use('/audit', auditRouter);
 router.use('/reseller', resellerRouter);
 router.use('/webhooks', webhooksRouter);
+router.use('/conversations', conversationsRouter);
 router.use(embeddingsRouter);    // POST /embeddings
 router.use(imagesRouter);        // POST /images/generations
 router.use(audioRouter);         // POST /audio/speech
