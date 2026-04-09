@@ -69,10 +69,6 @@ services:
     depends_on:
       - backend
     env_file: .env.production
-    environment:
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://anytokens.com}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.anytokens.com/api/v1}
     networks:
       - internal
 
