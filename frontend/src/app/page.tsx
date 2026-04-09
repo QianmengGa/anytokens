@@ -42,7 +42,7 @@ export default function HomePage() {
         </div>
         <div className="relative mx-auto max-w-4xl px-6 pb-20 pt-24 text-center">
           <Badge variant="secondary" className="mb-6">{t.hero_badge}</Badge>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="text-3xl font-bold tracking-tight md:text-5xl lg:text-7xl">
             {t.hero_title_1}
             <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">{t.hero_title_2}</span>
           </h1>
@@ -51,10 +51,10 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link href={session ? '/api-keys' : '/login'}>
-              <Button size="lg" className="h-12 px-8 text-base">{t.hero_cta}</Button>
+              <Button size="lg" className="h-12 w-full px-8 text-base sm:w-auto">{t.hero_cta}</Button>
             </Link>
             <Link href="#models">
-              <Button variant="outline" size="lg" className="h-12 px-8 text-base">{t.hero_browse}</Button>
+              <Button variant="outline" size="lg" className="h-12 w-full px-8 text-base sm:w-auto">{t.hero_browse}</Button>
             </Link>
           </div>
 
@@ -80,7 +80,7 @@ export default function HomePage() {
 
       {/* 统计数据栏 */}
       <section className="border-b border-border/40 py-12">
-        <div className="mx-auto grid max-w-4xl grid-cols-3 gap-8 px-6 text-center">
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-6 text-center md:grid-cols-3 md:gap-8">
           <div>
             <div className="text-3xl font-bold sm:text-4xl">30+</div>
             <p className="mt-1 text-sm text-muted-foreground">{t.stats_models}</p>

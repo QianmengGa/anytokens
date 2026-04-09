@@ -1,9 +1,11 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
+import { create } from 'zustand';
 import {
   LayoutDashboard,
   Key,
@@ -16,7 +18,19 @@ import {
   ScrollText,
   Building2,
   Bell,
+  X,
 } from 'lucide-react';
+
+// 移动端侧边栏状态（全局共享，Navbar 中的汉堡按钮也用）
+export const useMobileSidebar = create<{
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  toggle: () => void;
+}>((set) => ({
+  open: false,
+  setOpen: (v) => set({ open: v }),
+  toggle: () => set((s) => ({ open: !s.open })),
+}));
 
 interface SidebarProps {
   role?: string;
@@ -25,6 +39,12 @@ interface SidebarProps {
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useI18n();
+  const { open, setOpen } = useMobileSidebar();
+
+  // 路由变化时关闭移动端侧边栏
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname, setOpen]);
 
   // 导航菜单项
   const navItems = [
@@ -46,17 +66,23 @@ export function Sidebar({ role }: SidebarProps) {
 
   const items = role === 'ADMIN' ? [...navItems, ...adminItems] : navItems;
 
-  return (
-    <aside className="flex h-full w-64 flex-col border-r bg-card">
-      {/* Logo */}
-      <div className="flex h-16 items-center border-b px-6">
+  const navContent = (
+    <>
+      {/* Logo + 关闭按钮（移动端） */}
+      <div className="flex h-16 items-center justify-between border-b px-6">
         <Link href="/" className="text-xl font-bold">
           Anytokens
         </Link>
+        <button
+          onClick={() => setOpen(false)}
+          className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
 
       {/* 导航 */}
-      <nav className="flex-1 space-y-1 p-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-4">
         {items.map((item) => {
           const Icon = item.icon;
           const isActive = pathname.startsWith(item.href);
@@ -78,6 +104,33 @@ export function Sidebar({ role }: SidebarProps) {
           );
         })}
       </nav>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* 桌面端固定侧边栏 */}
+      <aside className="hidden h-full w-64 flex-col border-r bg-card lg:flex">
+        {navContent}
+      </aside>
+
+      {/* 移动端遮罩 */}
+      {open && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* 移动端滑入侧边栏 */}
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-card shadow-xl transition-transform duration-300 ease-in-out lg:hidden',
+          open ? 'translate-x-0' : '-translate-x-full',
+        )}
+      >
+        {navContent}
+      </aside>
+    </>
   );
 }

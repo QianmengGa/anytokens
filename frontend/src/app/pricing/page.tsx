@@ -97,7 +97,7 @@ export default function PricingPage() {
           <p className="mt-2 text-sm text-muted-foreground">
             {t.pricing_feat_free_models} — {t.pricing_feat_free_list}
           </p>
-          <div className="mt-6 rounded-lg border">
+          <div className="mt-6 overflow-x-auto rounded-lg border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">
@@ -131,7 +131,7 @@ export default function PricingPage() {
           <p className="mt-2 text-sm text-muted-foreground">
             POST /v1/chat/completions — per 1M tokens (USD)
           </p>
-          <div className="mt-6 rounded-lg border">
+          <div className="mt-6 overflow-x-auto rounded-lg border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">
@@ -163,7 +163,7 @@ export default function PricingPage() {
           <p className="mt-2 text-sm text-muted-foreground">
             POST /v1/embeddings · /v1/images/generations · /v1/audio/speech
           </p>
-          <div className="mt-6 rounded-lg border">
+          <div className="mt-6 overflow-x-auto rounded-lg border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">

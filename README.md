@@ -103,6 +103,7 @@ console.log(r.choices[0].message.content);
 | 33 | API Key rate limiting — per-minute/daily/monthly caps, Redis counters, dashboard UI | 2026-04-10 |
 | 34 | Webhook system — CRUD + HMAC-SHA256 signing + 4 event types + delivery logs + dashboard UI | 2026-04-10 |
 | 35 | Usage export — CSV download for usage logs & invoices, date range filter, billing page UI | 2026-04-10 |
+| 36 | Mobile responsive optimization — hamburger menu, sidebar drawer, responsive layouts | 2026-04-10 |
 <!-- /COMPLETED_FEATURES -->
 
 ---
@@ -114,7 +115,6 @@ console.log(r.choices[0].message.content);
 - [ ] More AI providers (Anthropic, OpenAI direct, Mistral)
 - [ ] File upload in chat (PDF / images)
 - [ ] Conversation history persistence
-- [ ] Mobile-responsive optimization
 <!-- /TODO -->
 
 ---

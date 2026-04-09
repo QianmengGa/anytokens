@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
@@ -14,13 +15,24 @@ import {
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useI18n } from '@/lib/i18n';
-import { Wallet, Settings, Key, FlaskConical, LogOut } from 'lucide-react';
+import { Wallet, Settings, Key, FlaskConical, LogOut, Menu, X } from 'lucide-react';
 
 // 公共导航栏 — 用于首页、应用、企业、Playground 等公开页面
 export function PublicNavbar() {
   const { t } = useI18n();
   const { data: session } = useSession();
   const user = session?.user as any;
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // 导航链接数据
+  const navLinks = [
+    { href: '/apps', label: t.nav_apps },
+    { href: '/models', label: t.nav_models },
+    { href: '/playground', label: 'Playground' },
+    { href: '/pricing', label: t.footer_pricing },
+    { href: '/docs', label: t.nav_docs },
+    { href: '/enterprise', label: t.nav_enterprise },
+  ];
 
   return (
     <nav className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-sm">
@@ -32,37 +44,23 @@ export function PublicNavbar() {
         </Link>
 
         <div className="flex items-center gap-1.5">
-          {/* 导航链接 */}
-          <Link href="/apps">
-            <Button variant="ghost" size="sm">{t.nav_apps}</Button>
-          </Link>
-          <Link href="/models">
-            <Button variant="ghost" size="sm">{t.nav_models}</Button>
-          </Link>
-          <Link href="/playground">
-            <Button variant="ghost" size="sm">Playground</Button>
-          </Link>
-          <Link href="/pricing">
-            <Button variant="ghost" size="sm">{t.footer_pricing}</Button>
-          </Link>
-          <Link href="/privacy">
-            <Button variant="ghost" size="sm">{t.footer_privacy}</Button>
-          </Link>
-          <Link href="/docs">
-            <Button variant="ghost" size="sm">{t.nav_docs}</Button>
-          </Link>
-          <Link href="/enterprise">
-            <Button variant="ghost" size="sm">{t.nav_enterprise}</Button>
-          </Link>
+          {/* 桌面端导航链接 */}
+          <div className="hidden items-center gap-1 lg:flex">
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href}>
+                <Button variant="ghost" size="sm">{link.label}</Button>
+              </Link>
+            ))}
+          </div>
 
-          {/* 语言 + 主题 */}
+          {/* 语言 + 主题（桌面和移动端都显示） */}
           <LanguageSwitcher />
           <ThemeToggle />
 
           {session ? (
             <>
-              {/* 余额 — 点击跳转充值 */}
-              <Link href="/billing" className="flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm transition-colors hover:bg-accent">
+              {/* 余额 */}
+              <Link href="/billing" className="hidden items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm transition-colors hover:bg-accent sm:flex">
                 <Wallet className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="font-mono">${Number(user?.balance || 0).toFixed(2)}</span>
               </Link>
@@ -115,16 +113,68 @@ export function PublicNavbar() {
             </>
           ) : (
             <>
-              <Link href="/login">
+              <Link href="/login" className="hidden sm:block">
                 <Button variant="ghost" size="sm">{t.nav_login}</Button>
               </Link>
-              <Link href="/register">
+              <Link href="/register" className="hidden sm:block">
                 <Button size="sm">{t.nav_register}</Button>
               </Link>
             </>
           )}
+
+          {/* 汉堡按钮（移动端） */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
       </div>
+
+      {/* 移动端下拉菜单 */}
+      {mobileOpen && (
+        <div className="absolute left-0 right-0 top-full z-50 border-b border-border/40 bg-background shadow-lg lg:hidden">
+          <div className="flex flex-col p-4 space-y-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {/* 移动端登录/注册按钮 */}
+            {!session && (
+              <div className="flex gap-2 border-t border-border/40 pt-3 mt-2">
+                <Link href="/login" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Button variant="outline" className="w-full">{t.nav_login}</Button>
+                </Link>
+                <Link href="/register" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Button className="w-full">{t.nav_register}</Button>
+                </Link>
+              </div>
+            )}
+
+            {/* 移动端余额 */}
+            {session && (
+              <Link
+                href="/billing"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors hover:bg-accent mt-2"
+              >
+                <Wallet className="h-4 w-4 text-muted-foreground" />
+                <span className="font-mono">${Number(user?.balance || 0).toFixed(2)}</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

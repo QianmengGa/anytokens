@@ -11,19 +11,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { LogOut, User, Wallet } from 'lucide-react';
+import { LogOut, User, Wallet, Menu } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useMobileSidebar } from '@/components/layout/Sidebar';
 
 export function Navbar() {
   const { data: session } = useSession();
   const { t } = useI18n();
   const user = session?.user;
+  const toggleSidebar = useMobileSidebar((s) => s.toggle);
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-card px-6">
-      <div className="flex items-center gap-4">
+    <header className="flex h-16 items-center justify-between border-b bg-card px-4 sm:px-6">
+      <div className="flex items-center gap-3">
+        {/* 汉堡菜单（移动端） */}
+        <Button variant="ghost" size="icon" className="lg:hidden" onClick={toggleSidebar}>
+          <Menu className="h-5 w-5" />
+        </Button>
         <h2 className="text-lg font-semibold">{t.navbar_title}</h2>
       </div>
 

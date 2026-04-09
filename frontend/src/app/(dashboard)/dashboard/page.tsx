@@ -74,7 +74,7 @@ export default function DashboardPage() {
       <h1 className="text-2xl font-bold">{t.dash_welcome}{user?.name}</h1>
 
       {/* 统计卡片 */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t.dash_balance}</CardTitle>

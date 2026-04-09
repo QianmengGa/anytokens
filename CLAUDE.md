@@ -265,6 +265,7 @@
 \- \[x] 新增端点：PUT /api/v1/keys/:id/rate-limit，GET /api/v1/keys/:id/rate-limit-usage
 \- \[x] 用量导出：CSV 下载（用量记录 + 充值账单），日期范围筛选，最多 10000 条
 \- \[x] 新增端点：GET /api/v1/user/export/usage，GET /api/v1/user/export/invoices
+\- \[x] 移动端响应式优化（汉堡菜单、Sidebar 滑入抽屉、PublicNavbar 下拉菜单、响应式布局）
 \- \[ ] 推广计划
 
 
