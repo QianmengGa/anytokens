@@ -183,11 +183,6 @@ export default function WebhooksPage() {
     setTimeout(() => setCopied(false), 2000);
   }, []);
 
-  const formatDate = (d: string) =>
-    new Date(d).toLocaleString(undefined, {
-      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-    });
-
   return (
     <div className="space-y-6">
       {/* 错误提示 */}
