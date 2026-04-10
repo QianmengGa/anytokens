@@ -65,10 +65,6 @@ export const TTS_MODELS: Record<string, ExtraModelPricing> = {
     provider: 'siliconflow', upstreamModel: 'fishaudio/fish-speech-1.5',
     billingUnit: 'character', pricePerUnit: 0, // SiliconFlow 免费
   },
-  'tts-1-hd': {
-    provider: 'openai', upstreamModel: 'tts-1-hd',
-    billingUnit: 'character', pricePerUnit: 30.0 / 1_000_000, // $30/1M chars — TODO: 替换为 SiliconFlow（暂无高清TTS）
-  },
 };
 
 // 单个供应商选项
@@ -210,6 +206,28 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
     providers: [
       { provider: 'groq', upstreamModel: 'mixtral-8x7b-32768', inputPrice: 0.29, outputPrice: 0.29, qualityScore: 7 }, // Groq 原价 $0.24/$0.24 + 20% 加价
       { provider: 'siliconflow', upstreamModel: 'mistralai/Mixtral-8x7B-Instruct-v0.1', inputPrice: 0.42, outputPrice: 0.42, qualityScore: 7 },
+    ],
+  },
+
+  // === Qwen3 235B（旗舰大模型）===
+  'qwen3-235b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-235B-A22B-Instruct-2507', inputPrice: 2.50, outputPrice: 10.00, qualityScore: 10 },
+    ],
+  },
+
+  // === DeepSeek V3.1 ===
+  'deepseek-v3.1': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V3.1-Terminus', inputPrice: 4.00, outputPrice: 12.00, qualityScore: 10 },
+    ],
+  },
+
+  // === Qwen2.5 VL 32B（视觉多模态）===
+  'qwen2.5-vl-32b': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-VL-32B-Instruct', inputPrice: 1.89, outputPrice: 1.89, qualityScore: 8 },
     ],
   },
 };
