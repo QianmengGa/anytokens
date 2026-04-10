@@ -173,8 +173,13 @@ class ProxyService {
       };
       const upstreamHeaders: Record<string, string> = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${providerCfg.apiKey}`,
       };
+      // Azure 使用 api-key header，其他供应商使用 Authorization: Bearer
+      if (option.provider === 'azure') {
+        upstreamHeaders['api-key'] = providerCfg.apiKey;
+      } else {
+        upstreamHeaders['Authorization'] = `Bearer ${providerCfg.apiKey}`;
+      }
 
       // 更新 ctx 的 modelConfig 为当前尝试的供应商
       ctx.modelConfig = option;

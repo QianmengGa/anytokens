@@ -1,7 +1,7 @@
 import { config } from './index.js';
 
 // 支持的供应商类型
-export type Provider = 'siliconflow' | 'google' | 'groq' | 'openai';
+export type Provider = 'siliconflow' | 'google' | 'groq' | 'openai' | 'azure';
 
 // 路由策略
 export type RoutingStrategy = 'price' | 'speed' | 'quality';
@@ -23,6 +23,8 @@ export function getProviderConfig(provider: Provider): ProviderConfig {
       return { baseUrl: config.groqBaseUrl, apiKey: config.groqApiKey };
     case 'openai':
       return { baseUrl: config.openaiBaseUrl, apiKey: config.openaiApiKey };
+    case 'azure':
+      return { baseUrl: `${config.azureEndpoint}/openai/v1`, apiKey: config.azureApiKey };
   }
 }
 
@@ -141,6 +143,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
     supportsVision: true,
     providers: [
       { provider: 'siliconflow', upstreamModel: 'meta-llama/Llama-3.3-70B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
+      { provider: 'azure', upstreamModel: 'Llama-3.3-70B-Instruct', inputPrice: 0.59, outputPrice: 0.79, qualityScore: 9 },
     ],
   },
   'llama-3.1-8b': {
@@ -517,6 +520,76 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
     supportsVision: true,
     providers: [
       { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2-VL-72B-Instruct', inputPrice: 2.52, outputPrice: 2.52, qualityScore: 8 },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════
+  //  Azure AI Foundry 独占模型
+  //  注意：需要在 Azure Portal 部署后才能使用
+  // ══════════════════════════════════════════════════════
+
+  // === Azure Grok（xAI）===
+  'grok-3': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'grok-3', inputPrice: 3.00, outputPrice: 15.00, qualityScore: 9 },
+    ],
+  },
+  'grok-3-mini': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'grok-3-mini', inputPrice: 0.30, outputPrice: 0.50, qualityScore: 8 },
+    ],
+  },
+
+  // === Azure Mistral ===
+  'mistral-large': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'Mistral-Large-2411-2', inputPrice: 2.00, outputPrice: 6.00, qualityScore: 8 },
+    ],
+  },
+  'mistral-small': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'mistral-small-2503', inputPrice: 0.10, outputPrice: 0.30, qualityScore: 7 },
+    ],
+  },
+  'codestral': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'Codestral-2501-2', inputPrice: 0.20, outputPrice: 0.60, qualityScore: 8 },
+    ],
+  },
+
+  // === Azure Cohere ===
+  'command-r-plus': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'Cohere-command-r-plus-08-2024', inputPrice: 2.50, outputPrice: 10.00, qualityScore: 8 },
+    ],
+  },
+  'command-r': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'Cohere-command-r-08-2024', inputPrice: 0.15, outputPrice: 0.60, qualityScore: 7 },
+    ],
+  },
+
+  // === Azure Phi（Microsoft）===
+  'phi-4': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'Phi-4-2', inputPrice: 0.07, outputPrice: 0.14, qualityScore: 7 },
+    ],
+  },
+  'phi-4-mini': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'Phi-4-mini-instruct', inputPrice: 0.025, outputPrice: 0.05, qualityScore: 6 },
+    ],
+  },
+
+  // === Azure DeepSeek（备用通道）===
+  'deepseek-r1-azure': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'DeepSeek-R1', inputPrice: 0.55, outputPrice: 2.19, qualityScore: 9 },
+    ],
+  },
+  'deepseek-v3-azure': {
+    providers: [
+      { provider: 'azure', upstreamModel: 'DeepSeek-V3', inputPrice: 0.27, outputPrice: 1.10, qualityScore: 9 },
     ],
   },
 };

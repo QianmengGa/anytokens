@@ -49,6 +49,10 @@ export const config = {
   nowpaymentsApiKey: process.env.NOWPAYMENTS_API_KEY || '',
   nowpaymentsIpnSecret: process.env.NOWPAYMENTS_IPN_SECRET || '',
 
+  // Azure AI Foundry
+  azureApiKey: process.env.AZURE_API_KEY || '',
+  azureEndpoint: process.env.AZURE_ENDPOINT || 'https://ai-qianmeng10217558ai454334773804.services.ai.azure.com',
+
   // 管理员邮箱
   adminEmail: process.env.ADMIN_EMAIL || '',
 

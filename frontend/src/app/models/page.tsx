@@ -129,6 +129,23 @@ const ALL_MODELS: ModelInfo[] = [
   { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', inputPrice: 1.25, outputPrice: 5.00, contextLength: 1000000, speed: 3, free: false },
   { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', inputPrice: 0.075, outputPrice: 1.20, contextLength: 1000000, speed: 5, free: false },
 
+  // === Azure — xAI Grok ===
+  { id: 'grok-3', name: 'Grok 3', provider: 'Azure', inputPrice: 3.00, outputPrice: 15.00, contextLength: 131072, speed: 3, free: false },
+  { id: 'grok-3-mini', name: 'Grok 3 Mini', provider: 'Azure', inputPrice: 0.30, outputPrice: 0.50, contextLength: 131072, speed: 4, free: false },
+  // === Azure — Mistral ===
+  { id: 'mistral-large', name: 'Mistral Large', provider: 'Azure', inputPrice: 2.00, outputPrice: 6.00, contextLength: 128000, speed: 3, free: false },
+  { id: 'mistral-small', name: 'Mistral Small', provider: 'Azure', inputPrice: 0.10, outputPrice: 0.30, contextLength: 128000, speed: 4, free: false },
+  { id: 'codestral', name: 'Codestral', provider: 'Azure', inputPrice: 0.20, outputPrice: 0.60, contextLength: 256000, speed: 4, free: false },
+  // === Azure — Cohere ===
+  { id: 'command-r-plus', name: 'Command R+', provider: 'Azure', inputPrice: 2.50, outputPrice: 10.00, contextLength: 128000, speed: 3, free: false },
+  { id: 'command-r', name: 'Command R', provider: 'Azure', inputPrice: 0.15, outputPrice: 0.60, contextLength: 128000, speed: 4, free: false },
+  // === Azure — Microsoft Phi ===
+  { id: 'phi-4', name: 'Phi-4', provider: 'Azure', inputPrice: 0.07, outputPrice: 0.14, contextLength: 16384, speed: 5, free: false },
+  { id: 'phi-4-mini', name: 'Phi-4 Mini', provider: 'Azure', inputPrice: 0.025, outputPrice: 0.05, contextLength: 128000, speed: 5, free: false },
+  // === Azure — DeepSeek（备用通道）===
+  { id: 'deepseek-r1-azure', name: 'DeepSeek R1 (Azure)', provider: 'Azure', inputPrice: 0.55, outputPrice: 2.19, contextLength: 64000, speed: 3, free: false },
+  { id: 'deepseek-v3-azure', name: 'DeepSeek V3 (Azure)', provider: 'Azure', inputPrice: 0.27, outputPrice: 1.10, contextLength: 64000, speed: 4, free: false },
+
   // === Embeddings ===
   { id: 'text-embedding-3-small', name: 'Embedding 3 Small', provider: 'OpenAI', inputPrice: 0.02, outputPrice: 0, contextLength: 8191, speed: 5, free: false, type: 'embedding' },
   { id: 'text-embedding-3-large', name: 'Embedding 3 Large', provider: 'OpenAI', inputPrice: 0.13, outputPrice: 0, contextLength: 8191, speed: 4, free: false, type: 'embedding' },
@@ -139,7 +156,7 @@ const ALL_MODELS: ModelInfo[] = [
   { id: 'tts-1', name: 'TTS-1', provider: 'OpenAI', inputPrice: 15.0, outputPrice: 0, contextLength: 4096, speed: 5, free: false, type: 'tts' },
 ];
 
-const PROVIDERS = ['DeepSeek', 'Alibaba', 'Zhipu', 'Moonshot', 'MiniMax', 'Google', 'Groq', 'Meta', 'Mistral', 'Baidu', 'Tencent', 'ByteDance', 'StepFun', 'InclusionAI', '01.AI', 'InternLM', 'OpenAI'];
+const PROVIDERS = ['DeepSeek', 'Alibaba', 'Zhipu', 'Moonshot', 'MiniMax', 'Azure', 'Google', 'Groq', 'Meta', 'Mistral', 'Baidu', 'Tencent', 'ByteDance', 'StepFun', 'InclusionAI', '01.AI', 'InternLM', 'OpenAI'];
 
 type SortKey = 'price' | 'speed' | 'context' | 'name';
 
