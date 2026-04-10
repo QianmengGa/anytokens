@@ -219,7 +219,7 @@ export default function DashboardPage() {
               {t.dash_step2_desc}
             </p>
             <pre className="mt-2 rounded bg-background p-3 text-xs">
-{`curl ${process.env.NEXT_PUBLIC_API_BASE || 'https://api.anytokens.com'}/v1/chat/completions \\
+{`curl ${process.env.NEXT_PUBLIC_API_BASE || 'https://api.anytokens.net'}/v1/chat/completions \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"model":"deepseek-v3","messages":[{"role":"user","content":"Hello!"}]}'`}
