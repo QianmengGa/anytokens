@@ -279,6 +279,9 @@
 \- \[x] 客服入口重构：邮件(support@anytokens.net) + Telegram + AI 助手（即将上线）
 \- \[x] 支付方式扩充：Stripe 新增 GrabPay + Alipay（待审核），前端标注 Apple Pay / Google Pay
 \- \[x] 新增旗舰模型：qwen3-235b / deepseek-v3.1 / qwen2.5-vl-32b（视觉多模态）
+\- \[x] 企业邮箱：support@anytokens.net，Cloudflare Email Routing 转发到 qianmeng1021@gmail.com
+\- \[x] Telegram AI 客服 Bot：DeepSeek-V3 自动回复，支持语言选择（中/英/马来/日语），Token 存放在 .env.production
+\- \[ ] 待完成：网站在线 AI 客服（右下角聊天气泡，方案A自建）
 \- \[ ] 推广计划
 
 
