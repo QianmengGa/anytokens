@@ -39,7 +39,8 @@ router.post('/message', async (req: Request, res: Response) => {
       return res.status(500).json({ error: 'Widget API key not configured' });
     }
 
-    const response = await fetch('http://localhost:4000/v1/chat/completions', {
+    const backendUrl = process.env.BACKEND_INTERNAL_URL || 'http://localhost:4000';
+    const response = await fetch(`${backendUrl}/v1/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
