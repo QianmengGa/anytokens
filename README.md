@@ -109,6 +109,9 @@ console.log(r.choices[0].message.content);
 | 39 | Model pricing audit — fixed gemini-flash loss, replaced OpenAI special APIs with SiliconFlow, +20% margin on Groq models | 2026-04-10 |
 | 40 | Conversation history persistence — full chat UI, sidebar, SSE streaming, Markdown, auto-title, save to DB | 2026-04-10 |
 | 41 | File upload in chat — image & PDF attachment, base64 to multimodal API, vision model detection | 2026-04-10 |
+| 42 | OAuth login confirmation dialog + customer service widget (Email / Telegram / AI Assistant) | 2026-04-10 |
+| 43 | Payment expansion — GrabPay + Alipay (pending Stripe review), Apple Pay / Google Pay support note | 2026-04-10 |
+| 44 | Model audit — removed tts-1-hd (OpenAI TOS violation), added Qwen3-235B / DeepSeek-V3.1 / Qwen2.5-VL-32B | 2026-04-10 |
 <!-- /COMPLETED_FEATURES -->
 
 ---

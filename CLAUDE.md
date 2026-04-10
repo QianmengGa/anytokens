@@ -270,11 +270,15 @@
 \- \[x] 模型扩充：新增 6 个模型（llama-3.3-70b / llama-3.1-8b / qwen2.5-coder-32b / qwen3-32b / yi-lightning / mistral-7b）
 \- \[x] 注意：不直接接入 OpenAI/Anthropic API（违反其转售条款），通过 SiliconFlow 合法代理
 \- \[x] 定价修正：gemini-1.5-flash 修复亏损定价，OpenAI Embeddings/Images/TTS 全部迁移至 SiliconFlow（规避转售条款），Groq 模型加价 20%
-\- \[x] 注意：tts-1-hd 暂留 OpenAI，待 SiliconFlow 高清 TTS 上线后替换
+\- \[x] 已下架 tts-1-hd（违反 OpenAI 转售条款，无 SiliconFlow 替代，直接移除）
 \- \[x] 对话历史持久化：Conversation + Message 两张表，6个REST端点，完整Chat页面（左侧对话列表+右侧聊天区+流式SSE+Markdown渲染+自动标题）
 \- \[x] 新增端点：GET/POST /api/v1/conversations，GET/PATCH/DELETE /api/v1/conversations/:id，POST /api/v1/conversations/:id/messages
 \- \[x] 文件上传：图片/PDF 附件，base64 转换，多模态模型自动检测（supportsVision），保存消息时不存 base64
 \- \[x] 新增端点：POST /api/v1/upload（multer memoryStorage，图片10MB/PDF 20MB）
+\- \[x] OAuth 登录确认弹窗：Google/GitHub/Discord 登录前弹出确认 Dialog
+\- \[x] 客服入口重构：邮件(support@anytokens.net) + Telegram + AI 助手（即将上线）
+\- \[x] 支付方式扩充：Stripe 新增 GrabPay + Alipay（待审核），前端标注 Apple Pay / Google Pay
+\- \[x] 新增旗舰模型：qwen3-235b / deepseek-v3.1 / qwen2.5-vl-32b（视觉多模态）
 \- \[ ] 推广计划
 
 
