@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     default: 'Anytokens - One API, All AI Models | AI API Gateway',
     template: '%s | Anytokens',
   },
-  description: 'Anytokens is a unified AI API gateway supporting 30+ models including GPT-4, Claude, Gemini, DeepSeek with OpenAI-compatible format. One API key for all AI models. Pay-as-you-go pricing.',
+  description: 'Anytokens is a unified AI API gateway supporting 80+ models including GPT-4, Claude, Gemini, DeepSeek with OpenAI-compatible format. One API key for all AI models. Pay-as-you-go pricing.',
   keywords: [
     'AI API gateway', 'OpenAI alternative', 'DeepSeek API', 'Claude API',
     'Gemini API', 'unified AI API', 'AI API proxy', 'LLM API',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     url: 'https://anytokens.net',
     siteName: 'Anytokens',
     title: 'Anytokens - One API, All AI Models',
-    description: 'Unified AI API gateway supporting 30+ models. OpenAI-compatible format. GPT-4, Claude, Gemini, DeepSeek and more. Pay-as-you-go, no subscription.',
+    description: 'Unified AI API gateway supporting 80+ models. OpenAI-compatible format. GPT-4, Claude, Gemini, DeepSeek and more. Pay-as-you-go, no subscription.',
     images: [
       {
         url: '/og-image.png',
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     site: '@anytokens',
     creator: '@anytokens',
     title: 'Anytokens - One API, All AI Models',
-    description: 'Unified AI API gateway. 30+ models. OpenAI-compatible. GPT-4, Claude, Gemini, DeepSeek.',
+    description: 'Unified AI API gateway. 80+ models. OpenAI-compatible. GPT-4, Claude, Gemini, DeepSeek.',
     images: ['/og-image.png'],
   },
   alternates: {

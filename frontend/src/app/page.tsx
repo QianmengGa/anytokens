@@ -40,7 +40,7 @@ export default function HomePage() {
             "@type": "SoftwareApplication",
             "name": "Anytokens",
             "url": "https://anytokens.net",
-            "description": "Unified AI API gateway supporting 30+ models including GPT-4, Claude, Gemini, DeepSeek with OpenAI-compatible format.",
+            "description": "Unified AI API gateway supporting 80+ models including GPT-4, Claude, Gemini, DeepSeek with OpenAI-compatible format.",
             "applicationCategory": "DeveloperApplication",
             "operatingSystem": "Web",
             "offers": {
@@ -107,7 +107,7 @@ export default function HomePage() {
       <section className="border-b border-border/40 py-12">
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-6 text-center md:grid-cols-3 md:gap-8">
           <div>
-            <div className="text-3xl font-bold sm:text-4xl">30+</div>
+            <div className="text-3xl font-bold sm:text-4xl">80+</div>
             <p className="mt-1 text-sm text-muted-foreground">{t.stats_models}</p>
           </div>
           <div>
