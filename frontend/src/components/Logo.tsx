@@ -23,11 +23,11 @@ export function LogoIcon({ size = 32, className = '' }: LogoProps) {
       </defs>
       <circle cx="40" cy="40" r="40" fill="url(#logoGrad)" />
       {/* A - 两条斜线 + 横线，路径绘制 */}
-      <path d="M14 58 L27 22 L40 58" stroke="white" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
-      <line x1="18.5" y1="44" x2="35.5" y2="44" stroke="white" strokeWidth="4" strokeLinecap="round" />
+      <path d="M10 60 L28 16 L46 60" stroke="white" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="15" y1="45" x2="41" y2="45" stroke="white" strokeWidth="4" strokeLinecap="round" />
       {/* T - 横线 + 竖线 */}
-      <line x1="45" y1="22" x2="65" y2="22" stroke="white" strokeWidth="4.5" strokeLinecap="round" />
-      <line x1="55" y1="22" x2="55" y2="58" stroke="white" strokeWidth="4.5" strokeLinecap="round" />
+      <line x1="49" y1="16" x2="71" y2="16" stroke="white" strokeWidth="4.5" strokeLinecap="round" />
+      <line x1="60" y1="16" x2="60" y2="60" stroke="white" strokeWidth="4.5" strokeLinecap="round" />
     </svg>
   );
 }
