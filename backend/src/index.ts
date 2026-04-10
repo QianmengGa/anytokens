@@ -5,6 +5,7 @@ import { prisma } from './config/database.js';
 import { redis } from './config/redis.js';
 import { auditService } from './services/audit.service.js';
 import { startBalanceMonitor } from './services/balanceMonitor.js';
+import { startTelegramBot } from './services/telegramBot.js';
 
 async function main() {
   try {
@@ -27,6 +28,9 @@ async function main() {
 
       // 启动 SiliconFlow 余额监控
       startBalanceMonitor();
+
+      // 启动 Telegram AI 客服 Bot
+      startTelegramBot();
     });
 
     // 优雅关闭
