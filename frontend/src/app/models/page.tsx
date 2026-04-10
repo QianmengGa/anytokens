@@ -23,34 +23,123 @@ interface ModelInfo {
 }
 
 const ALL_MODELS: ModelInfo[] = [
-  // DeepSeek
+  // === DeepSeek ===
+  { id: 'deepseek-v3.2', name: 'DeepSeek V3.2', provider: 'DeepSeek', inputPrice: 1.00, outputPrice: 4.00, contextLength: 128000, speed: 4, free: false },
+  { id: 'deepseek-v3.1', name: 'DeepSeek V3.1', provider: 'DeepSeek', inputPrice: 4.00, outputPrice: 12.00, contextLength: 64000, speed: 3, free: false },
   { id: 'deepseek-v3', name: 'DeepSeek V3', provider: 'DeepSeek', inputPrice: 0.42, outputPrice: 1.68, contextLength: 64000, speed: 4, free: false },
+  { id: 'deepseek-v2.5', name: 'DeepSeek V2.5', provider: 'DeepSeek', inputPrice: 0.21, outputPrice: 0.84, contextLength: 32000, speed: 4, free: false },
   { id: 'deepseek-r1', name: 'DeepSeek R1', provider: 'DeepSeek', inputPrice: 0.66, outputPrice: 2.64, contextLength: 64000, speed: 3, free: false },
+  { id: 'deepseek-r1-32b', name: 'DeepSeek R1 32B', provider: 'DeepSeek', inputPrice: 0.56, outputPrice: 1.12, contextLength: 32000, speed: 4, free: false },
+  { id: 'deepseek-r1-14b', name: 'DeepSeek R1 14B', provider: 'DeepSeek', inputPrice: 0.35, outputPrice: 0.70, contextLength: 32000, speed: 4, free: false },
   { id: 'deepseek-r1-7b', name: 'DeepSeek R1 7B', provider: 'DeepSeek', inputPrice: 0, outputPrice: 0, contextLength: 32000, speed: 5, free: true },
-  // Qwen
-  { id: 'qwen2.5-72b', name: 'Qwen2.5 72B', provider: 'Alibaba', inputPrice: 0.84, outputPrice: 0.84, contextLength: 32000, speed: 3, free: false },
-  { id: 'qwen2.5-7b', name: 'Qwen2.5 7B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32000, speed: 5, free: true },
-  { id: 'qwen3-8b', name: 'Qwen3 8B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32000, speed: 5, free: true },
-  // GLM
+  { id: 'deepseek-r1-0528-8b', name: 'DeepSeek R1 0528 8B', provider: 'DeepSeek', inputPrice: 0, outputPrice: 0, contextLength: 32000, speed: 5, free: true },
+
+  // === Qwen3.5（最新一代）===
+  { id: 'qwen3.5-397b', name: 'Qwen3.5 397B', provider: 'Alibaba', inputPrice: 3.50, outputPrice: 14.00, contextLength: 131072, speed: 2, free: false },
+  { id: 'qwen3.5-122b', name: 'Qwen3.5 122B', provider: 'Alibaba', inputPrice: 1.50, outputPrice: 6.00, contextLength: 131072, speed: 3, free: false },
+  { id: 'qwen3.5-35b', name: 'Qwen3.5 35B', provider: 'Alibaba', inputPrice: 0.35, outputPrice: 1.40, contextLength: 131072, speed: 4, free: false },
+  { id: 'qwen3.5-27b', name: 'Qwen3.5 27B', provider: 'Alibaba', inputPrice: 0.50, outputPrice: 2.00, contextLength: 131072, speed: 4, free: false },
+  { id: 'qwen3.5-9b', name: 'Qwen3.5 9B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 131072, speed: 5, free: true },
+  { id: 'qwen3.5-4b', name: 'Qwen3.5 4B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+
+  // === Qwen3 ===
+  { id: 'qwen3-235b', name: 'Qwen3 235B', provider: 'Alibaba', inputPrice: 2.50, outputPrice: 10.00, contextLength: 131072, speed: 2, free: false },
+  { id: 'qwen3-235b-thinking', name: 'Qwen3 235B Thinking', provider: 'Alibaba', inputPrice: 2.50, outputPrice: 10.00, contextLength: 131072, speed: 2, free: false },
+  { id: 'qwen3-32b', name: 'Qwen3 32B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 4, free: true },
+  { id: 'qwen3-30b', name: 'Qwen3 30B', provider: 'Alibaba', inputPrice: 0.35, outputPrice: 1.40, contextLength: 131072, speed: 4, free: false },
+  { id: 'qwen3-14b', name: 'Qwen3 14B', provider: 'Alibaba', inputPrice: 0.35, outputPrice: 0.70, contextLength: 32768, speed: 4, free: false },
+  { id: 'qwen3-8b', name: 'Qwen3 8B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+  { id: 'qwq-32b', name: 'QwQ 32B', provider: 'Alibaba', inputPrice: 0.56, outputPrice: 1.12, contextLength: 32768, speed: 4, free: false },
+
+  // === Qwen3 视觉 ===
+  { id: 'qwen3-vl-235b', name: 'Qwen3 VL 235B', provider: 'Alibaba', inputPrice: 2.50, outputPrice: 10.00, contextLength: 131072, speed: 2, free: false },
+  { id: 'qwen3-vl-32b', name: 'Qwen3 VL 32B', provider: 'Alibaba', inputPrice: 1.89, outputPrice: 1.89, contextLength: 32768, speed: 3, free: false },
+  { id: 'qwen3-vl-30b', name: 'Qwen3 VL 30B', provider: 'Alibaba', inputPrice: 0.35, outputPrice: 1.40, contextLength: 131072, speed: 3, free: false },
+  { id: 'qwen3-vl-8b', name: 'Qwen3 VL 8B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+
+  // === Qwen3 Coder ===
+  { id: 'qwen3-coder-480b', name: 'Qwen3 Coder 480B', provider: 'Alibaba', inputPrice: 4.00, outputPrice: 16.00, contextLength: 131072, speed: 2, free: false },
+  { id: 'qwen3-coder-30b', name: 'Qwen3 Coder 30B', provider: 'Alibaba', inputPrice: 0.35, outputPrice: 1.40, contextLength: 131072, speed: 4, free: false },
+
+  // === Qwen2.5 ===
+  { id: 'qwen2.5-72b', name: 'Qwen2.5 72B', provider: 'Alibaba', inputPrice: 0.84, outputPrice: 0.84, contextLength: 32768, speed: 3, free: false },
+  { id: 'qwen2.5-72b-128k', name: 'Qwen2.5 72B 128K', provider: 'Alibaba', inputPrice: 1.05, outputPrice: 1.05, contextLength: 131072, speed: 3, free: false },
+  { id: 'qwen2.5-32b', name: 'Qwen2.5 32B', provider: 'Alibaba', inputPrice: 0.56, outputPrice: 1.12, contextLength: 32768, speed: 4, free: false },
+  { id: 'qwen2.5-14b', name: 'Qwen2.5 14B', provider: 'Alibaba', inputPrice: 0.35, outputPrice: 0.70, contextLength: 32768, speed: 4, free: false },
+  { id: 'qwen2.5-7b', name: 'Qwen2.5 7B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+  { id: 'qwen2.5-coder-32b', name: 'Qwen2.5 Coder 32B', provider: 'Alibaba', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 4, free: true },
+  { id: 'qwen2.5-vl-72b', name: 'Qwen2.5 VL 72B', provider: 'Alibaba', inputPrice: 2.52, outputPrice: 2.52, contextLength: 32768, speed: 3, free: false },
+  { id: 'qwen2.5-vl-32b', name: 'Qwen2.5 VL 32B', provider: 'Alibaba', inputPrice: 1.89, outputPrice: 1.89, contextLength: 32768, speed: 3, free: false },
+  { id: 'qwen2-vl-72b', name: 'Qwen2 VL 72B', provider: 'Alibaba', inputPrice: 2.52, outputPrice: 2.52, contextLength: 32768, speed: 3, free: false },
+
+  // === GLM 系列（智谱）===
+  { id: 'glm-5.1', name: 'GLM-5.1', provider: 'Zhipu', inputPrice: 2.00, outputPrice: 8.00, contextLength: 128000, speed: 3, free: false },
+  { id: 'glm-5', name: 'GLM-5', provider: 'Zhipu', inputPrice: 1.50, outputPrice: 6.00, contextLength: 128000, speed: 3, free: false },
+  { id: 'glm-4.7', name: 'GLM-4.7', provider: 'Zhipu', inputPrice: 0.84, outputPrice: 2.52, contextLength: 128000, speed: 3, free: false },
+  { id: 'glm-4.6', name: 'GLM-4.6', provider: 'Zhipu', inputPrice: 0.56, outputPrice: 1.68, contextLength: 128000, speed: 4, free: false },
+  { id: 'glm-4.6v', name: 'GLM-4.6V', provider: 'Zhipu', inputPrice: 0.70, outputPrice: 2.10, contextLength: 128000, speed: 3, free: false },
+  { id: 'glm-4.5v', name: 'GLM-4.5V', provider: 'Zhipu', inputPrice: 0.56, outputPrice: 1.68, contextLength: 128000, speed: 3, free: false },
+  { id: 'glm-4.5-air', name: 'GLM-4.5 Air', provider: 'Zhipu', inputPrice: 0, outputPrice: 0, contextLength: 128000, speed: 5, free: true },
+  { id: 'glm-4-32b', name: 'GLM-4 32B', provider: 'Zhipu', inputPrice: 0.56, outputPrice: 1.12, contextLength: 128000, speed: 4, free: false },
+  { id: 'glm-z1-32b', name: 'GLM-Z1 32B', provider: 'Zhipu', inputPrice: 0.56, outputPrice: 1.12, contextLength: 128000, speed: 4, free: false },
+  { id: 'glm-z1-9b', name: 'GLM-Z1 9B', provider: 'Zhipu', inputPrice: 0, outputPrice: 0, contextLength: 128000, speed: 5, free: true },
   { id: 'glm-4-9b', name: 'GLM-4 9B', provider: 'Zhipu', inputPrice: 0, outputPrice: 0, contextLength: 128000, speed: 4, free: true },
-  // Google
+
+  // === Kimi / Moonshot ===
+  { id: 'kimi-k2.5', name: 'Kimi K2.5', provider: 'Moonshot', inputPrice: 1.50, outputPrice: 6.00, contextLength: 131072, speed: 3, free: false },
+  { id: 'kimi-k2-thinking', name: 'Kimi K2 Thinking', provider: 'Moonshot', inputPrice: 1.00, outputPrice: 4.00, contextLength: 131072, speed: 3, free: false },
+  { id: 'kimi-k2', name: 'Kimi K2', provider: 'Moonshot', inputPrice: 1.00, outputPrice: 4.00, contextLength: 131072, speed: 3, free: false },
+
+  // === MiniMax ===
+  { id: 'minimax-m2.5', name: 'MiniMax M2.5', provider: 'MiniMax', inputPrice: 1.50, outputPrice: 6.00, contextLength: 131072, speed: 3, free: false },
+
+  // === Step（阶跃星辰）===
+  { id: 'step-3.5-flash', name: 'Step 3.5 Flash', provider: 'StepFun', inputPrice: 0.14, outputPrice: 0.56, contextLength: 32768, speed: 5, free: false },
+
+  // === ERNIE（百度文心）===
+  { id: 'ernie-4.5', name: 'ERNIE 4.5', provider: 'Baidu', inputPrice: 2.80, outputPrice: 11.20, contextLength: 32768, speed: 3, free: false },
+
+  // === Hunyuan（腾讯混元）===
+  { id: 'hunyuan-a13b', name: 'Hunyuan A13B', provider: 'Tencent', inputPrice: 0.35, outputPrice: 1.40, contextLength: 32768, speed: 4, free: false },
+  { id: 'hunyuan-mt-7b', name: 'Hunyuan MT 7B', provider: 'Tencent', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+
+  // === ByteDance Seed ===
+  { id: 'seed-oss-36b', name: 'Seed OSS 36B', provider: 'ByteDance', inputPrice: 0.56, outputPrice: 1.68, contextLength: 32768, speed: 4, free: false },
+
+  // === Ling（书生）===
+  { id: 'ling-flash-2.0', name: 'Ling Flash 2.0', provider: 'InclusionAI', inputPrice: 0.14, outputPrice: 0.56, contextLength: 32768, speed: 5, free: false },
+  { id: 'ling-mini-2.0', name: 'Ling Mini 2.0', provider: 'InclusionAI', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+
+  // === InternLM ===
+  { id: 'internlm2.5-7b', name: 'InternLM 2.5 7B', provider: 'InternLM', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+
+  // === Yi ===
+  { id: 'yi-lightning', name: 'Yi Lightning', provider: '01.AI', inputPrice: 0.99, outputPrice: 0.99, contextLength: 16384, speed: 4, free: false },
+
+  // === Llama ===
+  { id: 'llama-3.3-70b', name: 'Llama 3.3 70B', provider: 'Meta', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 4, free: true },
+  { id: 'llama-3.1-8b', name: 'Llama 3.1 8B', provider: 'Meta', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+  { id: 'llama3-70b', name: 'Llama3 70B', provider: 'Groq', inputPrice: 0.71, outputPrice: 0.95, contextLength: 8192, speed: 5, free: false },
+
+  // === Mistral ===
+  { id: 'mistral-7b', name: 'Mistral 7B', provider: 'Mistral', inputPrice: 0, outputPrice: 0, contextLength: 32768, speed: 5, free: true },
+  { id: 'mixtral-8x7b', name: 'Mixtral 8x7B', provider: 'Groq', inputPrice: 0.29, outputPrice: 0.29, contextLength: 32768, speed: 5, free: false },
+
+  // === Google Gemini ===
   { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', inputPrice: 1.25, outputPrice: 5.00, contextLength: 1000000, speed: 3, free: false },
-  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', inputPrice: 0, outputPrice: 0, contextLength: 1000000, speed: 5, free: true },
-  // Groq
-  { id: 'llama3-70b', name: 'Llama3 70B', provider: 'Groq', inputPrice: 0.59, outputPrice: 0.79, contextLength: 8192, speed: 5, free: false },
-  { id: 'mixtral-8x7b', name: 'Mixtral 8x7B', provider: 'Groq', inputPrice: 0.24, outputPrice: 0.24, contextLength: 32768, speed: 5, free: false },
-  // Embeddings
+  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', inputPrice: 0.075, outputPrice: 1.20, contextLength: 1000000, speed: 5, free: false },
+
+  // === Embeddings ===
   { id: 'text-embedding-3-small', name: 'Embedding 3 Small', provider: 'OpenAI', inputPrice: 0.02, outputPrice: 0, contextLength: 8191, speed: 5, free: false, type: 'embedding' },
   { id: 'text-embedding-3-large', name: 'Embedding 3 Large', provider: 'OpenAI', inputPrice: 0.13, outputPrice: 0, contextLength: 8191, speed: 4, free: false, type: 'embedding' },
-  // Image Generation
+  // === Image Generation ===
   { id: 'dall-e-3', name: 'DALL-E 3', provider: 'OpenAI', inputPrice: 0.04, outputPrice: 0, contextLength: 0, speed: 2, free: false, type: 'image' },
   { id: 'dall-e-3-hd', name: 'DALL-E 3 HD', provider: 'OpenAI', inputPrice: 0.08, outputPrice: 0, contextLength: 0, speed: 2, free: false, type: 'image' },
-  // TTS
+  // === TTS ===
   { id: 'tts-1', name: 'TTS-1', provider: 'OpenAI', inputPrice: 15.0, outputPrice: 0, contextLength: 4096, speed: 5, free: false, type: 'tts' },
-  { id: 'tts-1-hd', name: 'TTS-1 HD', provider: 'OpenAI', inputPrice: 30.0, outputPrice: 0, contextLength: 4096, speed: 3, free: false, type: 'tts' },
 ];
 
-const PROVIDERS = ['DeepSeek', 'Alibaba', 'Zhipu', 'Google', 'Groq', 'OpenAI'];
+const PROVIDERS = ['DeepSeek', 'Alibaba', 'Zhipu', 'Moonshot', 'MiniMax', 'Google', 'Groq', 'Meta', 'Mistral', 'Baidu', 'Tencent', 'ByteDance', 'StepFun', 'InclusionAI', '01.AI', 'InternLM', 'OpenAI'];
 
 type SortKey = 'price' | 'speed' | 'context' | 'name';
 
