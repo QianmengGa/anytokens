@@ -230,6 +230,295 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
       { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-VL-32B-Instruct', inputPrice: 1.89, outputPrice: 1.89, qualityScore: 8 },
     ],
   },
+
+  // ══════════════════════════════════════════════════════
+  //  新增模型 — 2026-04-11 批量扩充
+  // ══════════════════════════════════════════════════════
+
+  // === DeepSeek V3.2（最新旗舰）===
+  'deepseek-v3.2': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V3.2', inputPrice: 1.00, outputPrice: 4.00, qualityScore: 10 },
+    ],
+  },
+  // === DeepSeek V2.5 ===
+  'deepseek-v2.5': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V2.5', inputPrice: 0.21, outputPrice: 0.84, qualityScore: 7 },
+    ],
+  },
+  // === DeepSeek R1 蒸馏 14B / 32B ===
+  'deepseek-r1-14b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B', inputPrice: 0.35, outputPrice: 0.70, qualityScore: 7 },
+    ],
+  },
+  'deepseek-r1-32b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+    ],
+  },
+  // === DeepSeek R1 0528（Qwen3-8B 蒸馏）===
+  'deepseek-r1-0528-8b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 7 },
+    ],
+  },
+
+  // === Qwen3.5 系列（最新一代）===
+  'qwen3.5-397b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-397B-A17B', inputPrice: 3.50, outputPrice: 14.00, qualityScore: 10 },
+    ],
+  },
+  'qwen3.5-122b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-122B-A10B', inputPrice: 1.50, outputPrice: 6.00, qualityScore: 9 },
+    ],
+  },
+  'qwen3.5-35b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-35B-A3B', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 8 },
+    ],
+  },
+  'qwen3.5-27b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-27B', inputPrice: 0.50, outputPrice: 2.00, qualityScore: 8 },
+    ],
+  },
+  'qwen3.5-9b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-9B', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 7 },
+    ],
+  },
+  'qwen3.5-4b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-4B', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 6 },
+    ],
+  },
+
+  // === Qwen3 补充 ===
+  'qwen3-14b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-14B', inputPrice: 0.35, outputPrice: 0.70, qualityScore: 7 },
+    ],
+  },
+  'qwen3-30b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-30B-A3B-Instruct-2507', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 8 },
+    ],
+  },
+  'qwen3-235b-thinking': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-235B-A22B-Thinking-2507', inputPrice: 2.50, outputPrice: 10.00, qualityScore: 10 },
+    ],
+  },
+
+  // === QwQ（推理模型）===
+  'qwq-32b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/QwQ-32B', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+    ],
+  },
+
+  // === Qwen2.5 补充 ===
+  'qwen2.5-14b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-14B-Instruct', inputPrice: 0.35, outputPrice: 0.70, qualityScore: 7 },
+    ],
+  },
+  'qwen2.5-32b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-32B-Instruct', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+    ],
+  },
+  'qwen2.5-72b-128k': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-72B-Instruct-128K', inputPrice: 1.05, outputPrice: 1.05, qualityScore: 8 },
+    ],
+  },
+  'qwen2.5-vl-72b': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-VL-72B-Instruct', inputPrice: 2.52, outputPrice: 2.52, qualityScore: 9 },
+    ],
+  },
+
+  // === Qwen3 视觉多模态 ===
+  'qwen3-vl-8b': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-8B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 7 },
+    ],
+  },
+  'qwen3-vl-32b': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-32B-Instruct', inputPrice: 1.89, outputPrice: 1.89, qualityScore: 8 },
+    ],
+  },
+  'qwen3-vl-30b': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-30B-A3B-Instruct', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 8 },
+    ],
+  },
+  'qwen3-vl-235b': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-235B-A22B-Instruct', inputPrice: 2.50, outputPrice: 10.00, qualityScore: 10 },
+    ],
+  },
+
+  // === Qwen3 Coder ===
+  'qwen3-coder-30b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-Coder-30B-A3B-Instruct', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 8 },
+    ],
+  },
+  'qwen3-coder-480b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-Coder-480B-A35B-Instruct', inputPrice: 4.00, outputPrice: 16.00, qualityScore: 10 },
+    ],
+  },
+
+  // === GLM 系列（智谱清言）===
+  'glm-5.1': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-5.1', inputPrice: 2.00, outputPrice: 8.00, qualityScore: 9 },
+    ],
+  },
+  'glm-5': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-5', inputPrice: 1.50, outputPrice: 6.00, qualityScore: 9 },
+    ],
+  },
+  'glm-4.7': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.7', inputPrice: 0.84, outputPrice: 2.52, qualityScore: 8 },
+    ],
+  },
+  'glm-4.6': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.6', inputPrice: 0.56, outputPrice: 1.68, qualityScore: 8 },
+    ],
+  },
+  'glm-4.6v': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.6V', inputPrice: 0.70, outputPrice: 2.10, qualityScore: 8 },
+    ],
+  },
+  'glm-4.5v': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.5V', inputPrice: 0.56, outputPrice: 1.68, qualityScore: 7 },
+    ],
+  },
+  'glm-4.5-air': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.5-Air', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 7 },
+    ],
+  },
+  'glm-4-32b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'THUDM/GLM-4-32B-0414', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+    ],
+  },
+  'glm-z1-32b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'THUDM/GLM-Z1-32B-0414', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+    ],
+  },
+  'glm-z1-9b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'THUDM/GLM-Z1-9B-0414', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 6 },
+    ],
+  },
+
+  // === Kimi / Moonshot ===
+  'kimi-k2.5': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2.5', inputPrice: 1.50, outputPrice: 6.00, qualityScore: 9 },
+    ],
+  },
+  'kimi-k2-thinking': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2-Thinking', inputPrice: 1.00, outputPrice: 4.00, qualityScore: 9 },
+    ],
+  },
+  'kimi-k2': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2-Instruct-0905', inputPrice: 1.00, outputPrice: 4.00, qualityScore: 9 },
+    ],
+  },
+
+  // === MiniMax ===
+  'minimax-m2.5': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'MiniMaxAI/MiniMax-M2.5', inputPrice: 1.50, outputPrice: 6.00, qualityScore: 9 },
+    ],
+  },
+
+  // === Step（阶跃星辰）===
+  'step-3.5-flash': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'stepfun-ai/Step-3.5-Flash', inputPrice: 0.14, outputPrice: 0.56, qualityScore: 7 },
+    ],
+  },
+
+  // === ERNIE（百度文心）===
+  'ernie-4.5': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'baidu/ERNIE-4.5-300B-A47B', inputPrice: 2.80, outputPrice: 11.20, qualityScore: 9 },
+    ],
+  },
+
+  // === Hunyuan（腾讯混元）===
+  'hunyuan-a13b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'tencent/Hunyuan-A13B-Instruct', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 7 },
+    ],
+  },
+  'hunyuan-mt-7b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'tencent/Hunyuan-MT-7B', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 6 },
+    ],
+  },
+
+  // === ByteDance Seed ===
+  'seed-oss-36b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'ByteDance-Seed/Seed-OSS-36B-Instruct', inputPrice: 0.56, outputPrice: 1.68, qualityScore: 7 },
+    ],
+  },
+
+  // === Ling（影刀 AI）===
+  'ling-flash-2.0': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'inclusionAI/Ling-flash-2.0', inputPrice: 0.14, outputPrice: 0.56, qualityScore: 7 },
+    ],
+  },
+  'ling-mini-2.0': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'inclusionAI/Ling-mini-2.0', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 6 },
+    ],
+  },
+
+  // === InternLM ===
+  'internlm2.5-7b': {
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'internlm/internlm2_5-7b-chat', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 6 },
+    ],
+  },
+
+  // === Qwen2 VL ===
+  'qwen2-vl-72b': {
+    supportsVision: true,
+    providers: [
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2-VL-72B-Instruct', inputPrice: 2.52, outputPrice: 2.52, qualityScore: 8 },
+    ],
+  },
 };
 
 // 根据模型名查找配置（返回完整的 ModelConfig）
