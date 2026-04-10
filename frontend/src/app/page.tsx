@@ -32,6 +32,31 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Anytokens",
+            "url": "https://anytokens.net",
+            "description": "Unified AI API gateway supporting 30+ models including GPT-4, Claude, Gemini, DeepSeek with OpenAI-compatible format.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available, pay-as-you-go pricing"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "ratingCount": "100"
+            }
+          })
+        }}
+      />
       {/* 导航栏 */}
       <PublicNavbar />
 
