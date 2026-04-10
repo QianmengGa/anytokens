@@ -4,6 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import { I18nProvider } from '@/components/providers/I18nProvider';
+import ChatWidget from '@/components/ChatWidget';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
         <AuthProvider>
           <QueryProvider>
             <I18nProvider>{children}</I18nProvider>
+            <ChatWidget />
           </QueryProvider>
         </AuthProvider>
       </body>
