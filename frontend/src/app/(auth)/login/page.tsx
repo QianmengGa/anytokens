@@ -9,6 +9,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { useI18n } from '@/lib/i18n';
 
 // SVG 图标
@@ -47,6 +55,15 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
+  const [oauthConfirmOpen, setOauthConfirmOpen] = useState(false);
+  const [pendingProvider, setPendingProvider] = useState<string | null>(null);
+
+  // 提供商显示名称
+  const providerLabel: Record<string, string> = {
+    google: 'Google',
+    github: 'GitHub',
+    discord: 'Discord',
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,8 +90,15 @@ export default function LoginPage() {
   };
 
   const handleSocialLogin = (provider: string) => {
-    setSocialLoading(provider);
-    signIn(provider, { callbackUrl: '/' });
+    setPendingProvider(provider);
+    setOauthConfirmOpen(true);
+  };
+
+  const confirmSocialLogin = () => {
+    if (!pendingProvider) return;
+    setOauthConfirmOpen(false);
+    setSocialLoading(pendingProvider);
+    signIn(pendingProvider, { callbackUrl: '/' });
   };
 
   return (
@@ -178,6 +202,29 @@ export default function LoginPage() {
           </CardFooter>
         </form>
       </Card>
+      {/* OAuth 确认弹窗 */}
+      <Dialog open={oauthConfirmOpen} onOpenChange={setOauthConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              继续使用 {providerLabel[pendingProvider || ''] || pendingProvider} 登录 / Continue with {providerLabel[pendingProvider || ''] || pendingProvider}
+            </DialogTitle>
+            <DialogDescription>
+              你将使用 {providerLabel[pendingProvider || ''] || pendingProvider} 账号登录 Anytokens，我们将获取你的公开信息（姓名、邮箱、头像）。
+              <br />
+              You will sign in to Anytokens with your {providerLabel[pendingProvider || ''] || pendingProvider} account. We will access your public profile (name, email, avatar).
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOauthConfirmOpen(false)}>
+              取消
+            </Button>
+            <Button onClick={confirmSocialLogin}>
+              确认登录
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
