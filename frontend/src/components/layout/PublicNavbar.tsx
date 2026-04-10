@@ -16,6 +16,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useI18n } from '@/lib/i18n';
 import { Wallet, Settings, Key, FlaskConical, LogOut, Menu, X } from 'lucide-react';
+import { LogoFull } from '@/components/Logo';
 
 // 公共导航栏 — 用于首页、应用、企业、Playground 等公开页面
 export function PublicNavbar() {
@@ -38,9 +39,8 @@ export function PublicNavbar() {
     <nav className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-sm">
       <div className="flex h-16 w-full items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="text-primary">Any</span>
-          <span className="text-muted-foreground">tokens</span>
+        <Link href="/" className="flex items-center">
+          <LogoFull size={28} />
         </Link>
 
         <div className="flex items-center gap-1.5">

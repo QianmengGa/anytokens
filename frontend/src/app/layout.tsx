@@ -10,6 +10,12 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://anytokens.net'),
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/favicon.svg',
+  },
   title: {
     default: 'Anytokens - One API, All AI Models | AI API Gateway',
     template: '%s | Anytokens',

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import { create } from 'zustand';
+import { LogoFull } from '@/components/Logo';
 import {
   LayoutDashboard,
   Key,
@@ -70,8 +71,8 @@ export function Sidebar({ role }: SidebarProps) {
     <>
       {/* Logo + 关闭按钮（移动端） */}
       <div className="flex h-16 items-center justify-between border-b px-6">
-        <Link href="/" className="text-xl font-bold">
-          Anytokens
+        <Link href="/" className="flex items-center">
+          <LogoFull size={26} />
         </Link>
         <button
           onClick={() => setOpen(false)}
