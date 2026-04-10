@@ -413,7 +413,7 @@ export default function BillingPage() {
             </Button>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            Visa / Mastercard / GrabPay / USDT · Alipay coming soon
+            Visa / Mastercard / Apple Pay / Google Pay / GrabPay / USDT · Alipay coming soon
           </p>
         </CardContent>
       </Card>
