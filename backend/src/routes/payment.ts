@@ -67,7 +67,7 @@ paymentRouter.post(
       // 创建 Stripe Checkout Session
       const session = await stripe.checkout.sessions.create({
         mode: 'payment',
-        payment_method_types: ['card'],
+        payment_method_types: ['card', 'grabpay', 'alipay'],
         customer_email: userEmail,
         line_items: [
           {

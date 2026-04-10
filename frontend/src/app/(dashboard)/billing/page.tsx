@@ -34,7 +34,7 @@ const PAYMENT_METHODS = [
   {
     id: 'stripe',
     icon: CreditCard,
-    sublabel: 'Visa / MasterCard',
+    sublabel: 'Visa / MasterCard / GrabPay',
   },
   {
     id: 'usdt',
@@ -412,6 +412,9 @@ export default function BillingPage() {
               )}
             </Button>
           </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Visa / Mastercard / GrabPay / USDT · Alipay coming soon
+          </p>
         </CardContent>
       </Card>
 
