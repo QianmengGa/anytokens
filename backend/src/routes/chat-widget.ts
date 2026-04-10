@@ -40,7 +40,7 @@ router.post('/message', async (req: Request, res: Response) => {
     }
 
     const backendUrl = process.env.BACKEND_INTERNAL_URL || 'http://localhost:4000';
-    const response = await fetch(`${backendUrl}/v1/chat/completions`, {
+    const response = await fetch(`${backendUrl}/api/v1/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
