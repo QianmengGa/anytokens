@@ -35,9 +35,24 @@ import {
   Trash2,
   Menu,
   X,
+  Paperclip,
+  FileText,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { api } from '@/lib/api';
+
+// 支持视觉/PDF 的模型
+const VISION_MODELS = new Set(['gemini-1.5-pro', 'gemini-1.5-flash', 'qwen2.5-72b', 'llama-3.3-70b']);
+const PDF_MODELS = new Set(['gemini-1.5-pro', 'gemini-1.5-flash']);
+
+// 附件信息
+interface Attachment {
+  type: 'image' | 'pdf';
+  mimeType: string;
+  base64: string;
+  filename: string;
+  size: number;
+}
 
 // 可用模型列表
 const AVAILABLE_MODELS = [
@@ -115,11 +130,53 @@ export default function ChatPage() {
   // 流式回复内容
   const [streamContent, setStreamContent] = useState('');
 
+  // 文件附件
+  const [attachment, setAttachment] = useState<Attachment | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // 当前对话
   const activeConversation = conversations.find((c) => c.id === activeId) || null;
+  const currentModel = activeConversation?.model || 'deepseek-v3';
+  const supportsVision = VISION_MODELS.has(currentModel);
+
+  // 文件上传处理
+  const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // 重置 input 以允许重复选择同一文件
+    e.target.value = '';
+
+    setUploading(true);
+    setUploadError('');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setAttachment(res.data.data);
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || '上传失败';
+      setUploadError(msg);
+      setTimeout(() => setUploadError(''), 3000);
+    } finally {
+      setUploading(false);
+    }
+  }, []);
+
+  // 切换模型时清除不兼容的附件
+  const clearAttachmentIfNeeded = useCallback((model: string) => {
+    if (!VISION_MODELS.has(model)) {
+      setAttachment(null);
+    } else if (attachment?.type === 'pdf' && !PDF_MODELS.has(model)) {
+      setAttachment(null);
+    }
+  }, [attachment?.type]);
 
   // 自动滚动到底部
   const scrollToBottom = useCallback(() => {
@@ -233,29 +290,39 @@ export default function ChatPage() {
   // 切换模型
   const changeModel = useCallback(async (model: string) => {
     if (!activeId) return;
+    clearAttachmentIfNeeded(model);
     try {
       await api.patch(`/conversations/${activeId}`, { model });
       setConversations((prev) =>
         prev.map((c) => (c.id === activeId ? { ...c, model } : c)),
       );
     } catch { /* ignore */ }
-  }, [activeId]);
+  }, [activeId, clearAttachmentIfNeeded]);
 
   // 发送消息（流式）
   const sendMessage = useCallback(async () => {
     if (!inputText.trim() || !activeId || !token || sending) return;
 
     const userContent = inputText.trim();
+    const currentAttachment = attachment;
     setInputText('');
+    setAttachment(null);
     setSending(true);
     setStreamContent('');
+
+    // 显示给用户的消息文本（含附件提示）
+    const displayContent = currentAttachment
+      ? (currentAttachment.type === 'pdf'
+          ? `[附件: ${currentAttachment.filename}]\n\n${userContent}`
+          : `[图片: ${currentAttachment.filename}]\n\n${userContent}`)
+      : userContent;
 
     // 乐观添加用户消息
     const userMsg: Message = {
       id: `temp-${Date.now()}`,
       conversationId: activeId,
       role: 'user',
-      content: userContent,
+      content: displayContent,
       inputTokens: null,
       outputTokens: null,
       cost: null,
@@ -273,14 +340,31 @@ export default function ChatPage() {
       );
     }
 
+    // 构建发送给 API 的用户消息 content
+    let apiUserContent: any = userContent;
+    if (currentAttachment) {
+      if (currentAttachment.type === 'image') {
+        // 图片：多模态数组格式
+        apiUserContent = [
+          { type: 'image_url', image_url: { url: `data:${currentAttachment.mimeType};base64,${currentAttachment.base64}` } },
+          { type: 'text', text: userContent },
+        ];
+      } else {
+        // PDF：作为 image_url 发送（Gemini 支持）+ 文字提示
+        apiUserContent = [
+          { type: 'image_url', image_url: { url: `data:${currentAttachment.mimeType};base64,${currentAttachment.base64}` } },
+          { type: 'text', text: `[附件: ${currentAttachment.filename}]\n\n${userContent}` },
+        ];
+      }
+    }
+
     // 构建发送的消息历史
     const sendMessages = [
       ...messages.map((m) => ({ role: m.role, content: m.content })),
-      { role: 'user', content: userContent },
+      { role: 'user', content: apiUserContent },
     ];
 
     let fullResponse = '';
-    const currentModel = activeConversation?.model || 'deepseek-v3';
 
     try {
       // 流式请求
@@ -334,12 +418,18 @@ export default function ChatPage() {
         }
       }
 
-      // 保存用户消息和 AI 回复到数据库
+      // 保存到数据库（只保存文字，不保存 base64）
       const convId = activeId;
+      const dbUserContent = currentAttachment
+        ? (currentAttachment.type === 'pdf'
+            ? `[附件: ${currentAttachment.filename}]\n\n${userContent}`
+            : `[图片: ${currentAttachment.filename}]\n\n${userContent}`)
+        : userContent;
+
       await Promise.all([
         api.post(`/conversations/${convId}/messages`, {
           role: 'user',
-          content: userContent,
+          content: dbUserContent,
         }),
         api.post(`/conversations/${convId}/messages`, {
           role: 'assistant',
@@ -350,7 +440,6 @@ export default function ChatPage() {
       // 更新本地消息列表
       setStreamContent('');
       setMessages((prev) => {
-        // 移除临时用户消息，加入数据库版本
         const withoutTemp = prev.filter((m) => m.id !== userMsg.id);
         return [
           ...withoutTemp,
@@ -377,7 +466,6 @@ export default function ChatPage() {
         ),
       );
     } catch (err: any) {
-      // 错误时显示为 AI 消息
       const errorContent = `⚠️ ${err.message || '发送失败，请重试'}`;
       setStreamContent('');
       setMessages((prev) => [
@@ -396,7 +484,7 @@ export default function ChatPage() {
     } finally {
       setSending(false);
     }
-  }, [inputText, activeId, token, sending, messages, activeConversation?.model]);
+  }, [inputText, activeId, token, sending, messages, currentModel, attachment]);
 
   // 键盘事件：Enter 发送，Shift+Enter 换行
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -636,37 +724,104 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* 底部输���区域 */}
+        {/* 底部输入区域 */}
         <div className="border-t px-4 py-3">
-          <div className="max-w-3xl mx-auto flex gap-2 items-end">
-            <textarea
-              ref={textareaRef}
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="输入消息... (Shift+Enter 换行)"
-              disabled={sending || !activeId}
-              rows={1}
-              className="flex-1 resize-none rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 max-h-32 min-h-[40px]"
-              style={{ height: 'auto', overflow: 'auto' }}
-              onInput={(e) => {
-                const target = e.target as HTMLTextAreaElement;
-                target.style.height = 'auto';
-                target.style.height = Math.min(target.scrollHeight, 128) + 'px';
-              }}
-            />
-            <Button
-              size="icon"
-              onClick={sendMessage}
-              disabled={!inputText.trim() || sending || !activeId}
-              className="flex-shrink-0 h-10 w-10"
-            >
-              {sending ? (
+          <div className="max-w-3xl mx-auto">
+            {/* 附件预览 */}
+            {attachment && (
+              <div className="mb-2 flex items-center gap-2 rounded-lg border bg-muted/50 p-2">
+                {attachment.type === 'image' ? (
+                  <img
+                    src={`data:${attachment.mimeType};base64,${attachment.base64}`}
+                    alt={attachment.filename}
+                    className="h-12 w-12 rounded object-cover"
+                  />
+                ) : (
+                  <div className="flex h-12 w-12 items-center justify-center rounded bg-red-100 dark:bg-red-900/30">
+                    <FileText className="h-6 w-6 text-red-600 dark:text-red-400" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{attachment.filename}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {attachment.type === 'image' ? '图片' : 'PDF'} · {(attachment.size / 1024).toFixed(0)} KB
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 flex-shrink-0"
+                  onClick={() => setAttachment(null)}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            )}
+
+            {/* 上传中 / 错误提示 */}
+            {uploading && (
+              <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
+                上传中...
+              </div>
+            )}
+            {uploadError && (
+              <div className="mb-2 text-sm text-destructive">{uploadError}</div>
+            )}
+
+            <div className="flex gap-2 items-end">
+              {/* 隐藏的文件选择器 */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={handleFileSelect}
+              />
+
+              {/* 附件按钮：仅支持视觉的模型显示 */}
+              {supportsVision && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="flex-shrink-0 h-10 w-10"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={sending || uploading || !activeId}
+                  title="上传图片或 PDF"
+                >
+                  <Paperclip className="h-4 w-4" />
+                </Button>
               )}
-            </Button>
+
+              <textarea
+                ref={textareaRef}
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="输入消息... (Shift+Enter 换行)"
+                disabled={sending || !activeId}
+                rows={1}
+                className="flex-1 resize-none rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 max-h-32 min-h-[40px]"
+                style={{ height: 'auto', overflow: 'auto' }}
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = 'auto';
+                  target.style.height = Math.min(target.scrollHeight, 128) + 'px';
+                }}
+              />
+              <Button
+                size="icon"
+                onClick={sendMessage}
+                disabled={!inputText.trim() || sending || !activeId}
+                className="flex-shrink-0 h-10 w-10"
+              >
+                {sending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

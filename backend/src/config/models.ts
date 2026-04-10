@@ -85,6 +85,8 @@ export interface ProviderOption {
 // 模型配置（支持多供应商）
 export interface ModelConfig {
   providers: ProviderOption[];
+  supportsVision?: boolean;  // 支持图片输入
+  supportsPdf?: boolean;     // 支持 PDF 输入
 }
 
 // 兼容旧接口的类型（单个供应商选中后的结果）
@@ -110,6 +112,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
 
   // === Qwen ===
   'qwen2.5-72b': {
+    supportsVision: true,
     providers: [
       { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-72B-Instruct', inputPrice: 0.84, outputPrice: 0.84, qualityScore: 8 },
     ],
@@ -139,6 +142,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
 
   // === Llama ===
   'llama-3.3-70b': {
+    supportsVision: true,
     providers: [
       { provider: 'siliconflow', upstreamModel: 'meta-llama/Llama-3.3-70B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
     ],
@@ -179,11 +183,15 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
 
   // === Gemini ===
   'gemini-1.5-pro': {
+    supportsVision: true,
+    supportsPdf: true,
     providers: [
       { provider: 'google', upstreamModel: 'gemini-1.5-pro', inputPrice: 1.25, outputPrice: 5.00, qualityScore: 9 },
     ],
   },
   'gemini-1.5-flash': {
+    supportsVision: true,
+    supportsPdf: true,
     providers: [
       { provider: 'google', upstreamModel: 'gemini-1.5-flash', inputPrice: 0.075, outputPrice: 1.20, qualityScore: 7 },
     ],

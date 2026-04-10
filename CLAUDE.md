@@ -273,6 +273,8 @@
 \- \[x] 注意：tts-1-hd 暂留 OpenAI，待 SiliconFlow 高清 TTS 上线后替换
 \- \[x] 对话历史持久化：Conversation + Message 两张表，6个REST端点，完整Chat页面（左侧对话列表+右侧聊天区+流式SSE+Markdown渲染+自动标题）
 \- \[x] 新增端点：GET/POST /api/v1/conversations，GET/PATCH/DELETE /api/v1/conversations/:id，POST /api/v1/conversations/:id/messages
+\- \[x] 文件上传：图片/PDF 附件，base64 转换，多模态模型自动检测（supportsVision），保存消息时不存 base64
+\- \[x] 新增端点：POST /api/v1/upload（multer memoryStorage，图片10MB/PDF 20MB）
 \- \[ ] 推广计划
 
 

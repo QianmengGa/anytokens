@@ -16,6 +16,7 @@ import imagesRouter from './images.js';
 import audioRouter from './audio.js';
 import webhooksRouter from './webhooks.js';
 import conversationsRouter from './conversations.js';
+import uploadRouter from './upload.js';
 
 const router = Router();
 
@@ -33,6 +34,7 @@ router.use('/audit', auditRouter);
 router.use('/reseller', resellerRouter);
 router.use('/webhooks', webhooksRouter);
 router.use('/conversations', conversationsRouter);
+router.use('/upload', uploadRouter);
 router.use(embeddingsRouter);    // POST /embeddings
 router.use(imagesRouter);        // POST /images/generations
 router.use(audioRouter);         // POST /audio/speech

@@ -108,6 +108,7 @@ console.log(r.choices[0].message.content);
 | 38 | Expanded model catalog — 6 new models via SiliconFlow (Llama 3.3, Qwen 2.5 Coder, Mistral 7B, Yi-Lightning etc.) | 2026-04-10 |
 | 39 | Model pricing audit — fixed gemini-flash loss, replaced OpenAI special APIs with SiliconFlow, +20% margin on Groq models | 2026-04-10 |
 | 40 | Conversation history persistence — full chat UI, sidebar, SSE streaming, Markdown, auto-title, save to DB | 2026-04-10 |
+| 41 | File upload in chat — image & PDF attachment, base64 to multimodal API, vision model detection | 2026-04-10 |
 <!-- /COMPLETED_FEATURES -->
 
 ---
@@ -117,7 +118,6 @@ console.log(r.choices[0].message.content);
 <!-- TODO -->
 - [ ] Marketing & growth plan — SEO, social media, partnerships
 - [ ] More AI providers (Anthropic, OpenAI direct, Mistral)
-- [ ] File upload in chat (PDF / images)
 <!-- /TODO -->
 
 ---
