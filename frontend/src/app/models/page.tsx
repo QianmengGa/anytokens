@@ -133,9 +133,7 @@ const ALL_MODELS: ModelInfo[] = [
   { id: 'grok-3', name: 'Grok 3', provider: 'Azure', inputPrice: 3.00, outputPrice: 15.00, contextLength: 131072, speed: 3, free: false },
   { id: 'grok-3-mini', name: 'Grok 3 Mini', provider: 'Azure', inputPrice: 0.30, outputPrice: 0.50, contextLength: 131072, speed: 4, free: false },
   // === Azure — Mistral ===
-  { id: 'mistral-large', name: 'Mistral Large', provider: 'Azure', inputPrice: 2.00, outputPrice: 6.00, contextLength: 128000, speed: 3, free: false },
-  { id: 'mistral-small', name: 'Mistral Small', provider: 'Azure', inputPrice: 0.10, outputPrice: 0.30, contextLength: 128000, speed: 4, free: false },
-  { id: 'codestral', name: 'Codestral', provider: 'Azure', inputPrice: 0.20, outputPrice: 0.60, contextLength: 256000, speed: 4, free: false },
+  { id: 'mistral-large', name: 'Mistral Large 3', provider: 'Azure', inputPrice: 2.00, outputPrice: 6.00, contextLength: 128000, speed: 3, free: false },
   // === Azure — Cohere ===
   { id: 'command-r-plus', name: 'Command R+', provider: 'Azure', inputPrice: 2.50, outputPrice: 10.00, contextLength: 128000, speed: 3, free: false },
   { id: 'command-r', name: 'Command R', provider: 'Azure', inputPrice: 0.15, outputPrice: 0.60, contextLength: 128000, speed: 4, free: false },

@@ -100,11 +100,13 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   'deepseek-v3': {
     providers: [
       { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V3', inputPrice: 0.42, outputPrice: 1.68, qualityScore: 9 },
+      { provider: 'azure', upstreamModel: 'DeepSeek-V3-0324', inputPrice: 0.27, outputPrice: 1.10, qualityScore: 9 },
     ],
   },
   'deepseek-r1': {
     providers: [
       { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1', inputPrice: 0.66, outputPrice: 2.64, qualityScore: 9 },
+      { provider: 'azure', upstreamModel: 'DeepSeek-R1', inputPrice: 0.55, outputPrice: 2.19, qualityScore: 9 },
     ],
   },
 
@@ -543,7 +545,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === Azure Mistral ===
   'mistral-large': {
     providers: [
-      { provider: 'azure', upstreamModel: 'Mistral-Large-2411-2', inputPrice: 2.00, outputPrice: 6.00, qualityScore: 8 },
+      { provider: 'azure', upstreamModel: 'Mistral-Large-3', inputPrice: 2.00, outputPrice: 6.00, qualityScore: 8 },
     ],
   },
   'mistral-small': {
@@ -589,7 +591,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   },
   'deepseek-v3-azure': {
     providers: [
-      { provider: 'azure', upstreamModel: 'DeepSeek-V3', inputPrice: 0.27, outputPrice: 1.10, qualityScore: 9 },
+      { provider: 'azure', upstreamModel: 'DeepSeek-V3-0324', inputPrice: 0.27, outputPrice: 1.10, qualityScore: 9 },
     ],
   },
 };
