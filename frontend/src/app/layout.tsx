@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     description: 'Unified AI API gateway supporting 80+ models. OpenAI-compatible format. GPT-4, Claude, Gemini, DeepSeek and more. Pay-as-you-go, no subscription.',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.png?v=2',
         width: 1200,
         height: 630,
         alt: 'Anytokens - One API, All AI Models',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     creator: '@anytokens',
     title: 'Anytokens - One API, All AI Models',
     description: 'Unified AI API gateway. 80+ models. OpenAI-compatible. GPT-4, Claude, Gemini, DeepSeek.',
-    images: ['/og-image.png'],
+    images: ['/og-image.png?v=2'],
   },
   alternates: {
     canonical: 'https://anytokens.net',
