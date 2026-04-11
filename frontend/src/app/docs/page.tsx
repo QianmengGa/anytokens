@@ -164,14 +164,15 @@ const FREE_MODELS = [
 ];
 
 const PAID_MODELS = [
-  { name: 'deepseek-r1', provider: 'DeepSeek', price: '$0.66/M' },
-  { name: 'gemini-2.5-pro', provider: 'Google', price: '$1.25/M' },
-  { name: 'grok-3', provider: 'xAI', price: '$3.00/M' },
-  { name: 'grok-3-mini', provider: 'xAI', price: '$0.30/M' },
-  { name: 'mistral-large', provider: 'Mistral', price: '$2.00/M' },
-  { name: 'llama-3.3-70b', provider: 'Meta', price: '$0.59/M' },
-  { name: 'phi-4', provider: 'Microsoft', price: '$0.07/M' },
-  { name: 'qwen2.5-72b', provider: 'Alibaba', price: '$0.84/M' },
+  { name: 'deepseek-v3',     provider: 'DeepSeek',   price: '$0.30/M' },
+  { name: 'deepseek-r1',     provider: 'DeepSeek',   price: '$0.61/M' },
+  { name: 'gemini-2.5-pro',  provider: 'Google',     price: '$1.50/M' },
+  { name: 'grok-3',          provider: 'xAI',        price: '$3.60/M' },
+  { name: 'grok-3-mini',     provider: 'xAI',        price: '$0.36/M' },
+  { name: 'mistral-large',   provider: 'Mistral',    price: '$2.40/M' },
+  { name: 'llama-3.3-70b',   provider: 'Meta',       price: '$0.11/M' },
+  { name: 'phi-4',           provider: 'Microsoft',  price: '$0.077/M' },
+  { name: 'qwen2.5-72b',     provider: 'Alibaba',    price: '$0.70/M' },
 ];
 
 const ERROR_RESPONSE = `{

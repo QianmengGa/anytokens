@@ -536,53 +536,53 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === Azure Grok（xAI）===
   'grok-3': {
     providers: [
-      { provider: 'azure', upstreamModel: 'grok-3', inputPrice: 3.00, outputPrice: 15.00, qualityScore: 9 },
+      { provider: 'azure', upstreamModel: 'grok-3', inputPrice: 3.00, outputPrice: 15.00, qualityScore: 10 },
     ],
   },
   'grok-3-mini': {
     providers: [
-      { provider: 'azure', upstreamModel: 'grok-3-mini', inputPrice: 0.30, outputPrice: 0.50, qualityScore: 8 },
+      { provider: 'azure', upstreamModel: 'grok-3-mini', inputPrice: 0.30, outputPrice: 0.50, qualityScore: 10 },
     ],
   },
 
   // === Azure Mistral ===
   'mistral-large': {
     providers: [
-      { provider: 'azure', upstreamModel: 'Mistral-Large-3', inputPrice: 2.00, outputPrice: 6.00, qualityScore: 8 },
+      { provider: 'azure', upstreamModel: 'Mistral-Large-3', inputPrice: 2.00, outputPrice: 6.00, qualityScore: 10 },
     ],
   },
   'mistral-small': {
     providers: [
-      { provider: 'azure', upstreamModel: 'mistral-small-2503', inputPrice: 0.10, outputPrice: 0.30, qualityScore: 7 },
+      { provider: 'azure', upstreamModel: 'mistral-small-2503', inputPrice: 0.10, outputPrice: 0.30, qualityScore: 10 },
     ],
   },
   'codestral': {
     providers: [
-      { provider: 'azure', upstreamModel: 'Codestral-2501-2', inputPrice: 0.20, outputPrice: 0.60, qualityScore: 8 },
+      { provider: 'azure', upstreamModel: 'Codestral-2501-2', inputPrice: 0.20, outputPrice: 0.60, qualityScore: 10 },
     ],
   },
 
   // === Azure Cohere ===
   'command-r-plus': {
     providers: [
-      { provider: 'azure', upstreamModel: 'Cohere-command-r-plus-08-2024', inputPrice: 2.50, outputPrice: 10.00, qualityScore: 8 },
+      { provider: 'azure', upstreamModel: 'Cohere-command-r-plus-08-2024', inputPrice: 2.50, outputPrice: 10.00, qualityScore: 10 },
     ],
   },
   'command-r': {
     providers: [
-      { provider: 'azure', upstreamModel: 'Cohere-command-r-08-2024', inputPrice: 0.15, outputPrice: 0.60, qualityScore: 7 },
+      { provider: 'azure', upstreamModel: 'Cohere-command-r-08-2024', inputPrice: 0.15, outputPrice: 0.60, qualityScore: 10 },
     ],
   },
 
   // === Azure Phi（Microsoft）===
   'phi-4': {
     providers: [
-      { provider: 'azure', upstreamModel: 'Phi-4-2', inputPrice: 0.07, outputPrice: 0.14, qualityScore: 7 },
+      { provider: 'azure', upstreamModel: 'Phi-4-2', inputPrice: 0.07, outputPrice: 0.14, qualityScore: 10 },
     ],
   },
   'phi-4-mini': {
     providers: [
-      { provider: 'azure', upstreamModel: 'Phi-4-mini-instruct', inputPrice: 0.025, outputPrice: 0.05, qualityScore: 6 },
+      { provider: 'azure', upstreamModel: 'Phi-4-mini-instruct', inputPrice: 0.025, outputPrice: 0.05, qualityScore: 10 },
     ],
   },
 

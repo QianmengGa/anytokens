@@ -124,6 +124,10 @@ async function main() {
     }
   }
 
+  // Azure 免费额度提醒（每次运行都提醒剩余额度需要手动检查）
+  const azureAlertThreshold = parseFloat(process.env.AZURE_CREDIT_ALERT || '50');
+  msg += '\n\n💰 <b>Azure 免费额度提醒</b>\n请定期登录 Azure 检查剩余额度（初始 $200）\n当余额 < $' + azureAlertThreshold + ' 时请关闭 Azure 优先路由';
+
   await sendTelegram(msg);
 }
 
