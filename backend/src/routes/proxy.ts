@@ -51,6 +51,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response, next: 
       keyRecord.rateLimit ?? null,
       keyRecord.dailyLimit ?? null,
       keyRecord.monthlyLimit ?? null,
+      keyRecord.userId,
     );
     if (!rateLimitResult.allowed) {
       // Webhook: API Key 达到限速上限

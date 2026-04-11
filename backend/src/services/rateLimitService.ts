@@ -1,4 +1,5 @@
 import { redis } from '../config/redis.js';
+import { prisma } from '../config/database.js';
 
 interface RateLimitResult {
   allowed: boolean;
@@ -30,10 +31,22 @@ export async function checkKeyRateLimit(
   rateLimit: number | null,
   dailyLimit: number | null,
   monthlyLimit: number | null,
+  userId?: string,
 ): Promise<RateLimitResult> {
-  // 三个限制都为 null → 不限制
+  // 三个限制都为 null → 根据用户类型应用默认限制
   if (rateLimit === null && dailyLimit === null && monthlyLimit === null) {
-    return { allowed: true };
+    if (userId) {
+      const hasPaid = await prisma.transaction.findFirst({
+        where: {
+          userId,
+          type: 'TOPUP',
+          status: 'COMPLETED',
+        },
+      });
+      rateLimit = hasPaid ? 60 : 20;
+    } else {
+      rateLimit = 20;
+    }
   }
 
   // 每分钟限流
