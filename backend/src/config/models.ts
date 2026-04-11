@@ -1,7 +1,7 @@
 import { config } from './index.js';
 
 // 支持的供应商类型
-export type Provider = 'siliconflow' | 'google' | 'groq' | 'openai' | 'azure';
+export type Provider = 'siliconflow' | 'deepseek' | 'google' | 'groq' | 'openai' | 'azure';
 
 // 路由策略
 export type RoutingStrategy = 'price' | 'speed' | 'quality';
@@ -17,6 +17,8 @@ export function getProviderConfig(provider: Provider): ProviderConfig {
   switch (provider) {
     case 'siliconflow':
       return { baseUrl: config.siliconflowBaseUrl, apiKey: config.siliconflowApiKey };
+    case 'deepseek':
+      return { baseUrl: config.deepseekBaseUrl, apiKey: config.deepseekApiKey };
     case 'google':
       return { baseUrl: config.googleBaseUrl, apiKey: config.googleApiKey };
     case 'groq':
@@ -99,6 +101,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === DeepSeek ===
   'deepseek-v3': {
     providers: [
+      { provider: 'deepseek', upstreamModel: 'deepseek-chat', inputPrice: 0.27, outputPrice: 0.42, qualityScore: 10 },
       { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V3', inputPrice: 0.27, outputPrice: 1.10, qualityScore: 9 },
       { provider: 'azure', upstreamModel: 'DeepSeek-V3-0324', inputPrice: 0.27, outputPrice: 1.10, qualityScore: 9 },
     ],

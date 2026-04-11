@@ -29,6 +29,10 @@ export const config = {
   siliconflowApiKey: process.env.SILICONFLOW_API_KEY || '',
   siliconflowBaseUrl: process.env.SILICONFLOW_BASE_URL || 'https://api.siliconflow.cn/v1',
 
+  // DeepSeek 官方
+  deepseekApiKey: process.env.DEEPSEEK_API_KEY || '',
+  deepseekBaseUrl: process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com/v1',
+
   // Google Gemini（OpenAI 兼容端点）
   googleApiKey: process.env.GOOGLE_API_KEY || '',
   googleBaseUrl: process.env.GOOGLE_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta/openai',
