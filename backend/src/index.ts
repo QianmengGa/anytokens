@@ -6,6 +6,7 @@ import { redis } from './config/redis.js';
 import { auditService } from './services/audit.service.js';
 import { startBalanceMonitor } from './services/balanceMonitor.js';
 import { startTelegramBot } from './services/telegramBot.js';
+import { expireSignupBonus } from './services/expireBonus.js';
 
 async function main() {
   try {
@@ -25,6 +26,10 @@ async function main() {
 
       // 每天凌晨 3 点清理过期审计日志
       setInterval(() => auditService.cleanup(), 24 * 60 * 60 * 1000);
+
+      // 每天检查并过期注册赠送余额（7天未充值则清零）
+      expireSignupBonus(); // 启动时先跑一次
+      setInterval(() => expireSignupBonus(), 24 * 60 * 60 * 1000);
 
       // 启动 SiliconFlow 余额监控
       startBalanceMonitor();
