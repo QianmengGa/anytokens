@@ -9,14 +9,15 @@ import { CustomerService } from '@/components/CustomerService';
 import { useI18n } from '@/lib/i18n';
 import { Check, Zap, Shield, Headphones } from 'lucide-react';
 
-// 免费模型列表
-const FREE_MODELS = [
-  { name: 'deepseek-v3', provider: 'DeepSeek', desc: 'Flagship free' },
-  { name: 'qwen2.5-7b', provider: 'Alibaba', desc: 'Lightweight' },
-  { name: 'qwen3-8b', provider: 'Alibaba', desc: 'Latest gen' },
-  { name: 'glm-4-9b', provider: 'Zhipu', desc: 'Tsinghua AI' },
-  { name: 'deepseek-r1-7b', provider: 'DeepSeek', desc: 'Reasoning distill' },
-  { name: 'gemini-2.0-flash', provider: 'Google', desc: 'Fast & free' },
+// 免费模型列表（desc 使用 i18n key 名）
+type FreeModelKey = 'flagship' | 'lightweight' | 'latest_gen' | 'tsinghua' | 'reasoning' | 'fast_free';
+const FREE_MODELS: { name: string; provider: string; descKey: FreeModelKey }[] = [
+  { name: 'deepseek-v3', provider: 'DeepSeek', descKey: 'flagship' },
+  { name: 'qwen2.5-7b', provider: 'Alibaba', descKey: 'lightweight' },
+  { name: 'qwen3-8b', provider: 'Alibaba', descKey: 'latest_gen' },
+  { name: 'glm-4-9b', provider: 'Zhipu', descKey: 'tsinghua' },
+  { name: 'deepseek-r1-7b', provider: 'DeepSeek', descKey: 'reasoning' },
+  { name: 'gemini-2.0-flash', provider: 'Google', descKey: 'fast_free' },
 ];
 
 // 付费模型定价表
@@ -115,7 +116,7 @@ export default function PricingPage() {
                   <tr key={m.name} className="border-b last:border-0">
                     <td className="px-4 py-3 font-mono text-xs">{m.name}</td>
                     <td className="px-4 py-3 text-muted-foreground">{m.provider}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{m.desc}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{(t as any)[`model_desc_${m.descKey}`]}</td>
                     <td className="px-4 py-3 text-right">
                       <Badge variant="secondary" className="text-green-600">Free</Badge>
                     </td>
