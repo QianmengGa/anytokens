@@ -124,7 +124,8 @@ export default function EnterprisePage() {
                   className="resize-none"
                 />
               </div>
-              <Button type="submit" className="w-full">{t.ent_form_submit}</Button>
+              {submitError && <p className="text-sm text-red-500">{submitError}</p>}
+              <Button type="submit" className="w-full" disabled={submitting}>{submitting ? '...' : t.ent_form_submit}</Button>
             </form>
           )}
         </div>

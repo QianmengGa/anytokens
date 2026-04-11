@@ -10,7 +10,7 @@ const FROM = config.resendApiKey ? 'Anytokens <noreply@anytokens.net>' : 'Anytok
 
 router.post('/inquiry', async (req: Request, res: Response) => {
   try {
-    const { company, name, email, requirements } = req.body;
+    const { company, name, email, message: requirements } = req.body;
 
     if (!company || !name || !email || !requirements) {
       return res.status(400).json({ code: 40000, message: '请填写完整信息' });
