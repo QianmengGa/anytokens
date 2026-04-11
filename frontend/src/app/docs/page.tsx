@@ -260,9 +260,9 @@ export default function DocsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">
-                      <th className="px-4 py-2.5 text-left font-medium">Model</th>
-                      <th className="px-4 py-2.5 text-left font-medium">Provider</th>
-                      <th className="px-4 py-2.5 text-right font-medium">Price</th>
+                      <th className="px-4 py-2.5 text-left font-medium">{t.pricing_col_model}</th>
+                      <th className="px-4 py-2.5 text-left font-medium">{t.pricing_col_provider}</th>
+                      <th className="px-4 py-2.5 text-right font-medium">{t.pricing_col_price}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -284,9 +284,9 @@ export default function DocsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">
-                      <th className="px-4 py-2.5 text-left font-medium">Model</th>
-                      <th className="px-4 py-2.5 text-left font-medium">Provider</th>
-                      <th className="px-4 py-2.5 text-right font-medium">Price / 1M tokens</th>
+                      <th className="px-4 py-2.5 text-left font-medium">{t.pricing_col_model}</th>
+                      <th className="px-4 py-2.5 text-left font-medium">{t.pricing_col_provider}</th>
+                      <th className="px-4 py-2.5 text-right font-medium">{t.pricing_col_price_per_m}</th>
                     </tr>
                   </thead>
                   <tbody>

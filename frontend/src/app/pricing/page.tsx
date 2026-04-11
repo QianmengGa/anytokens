@@ -105,10 +105,10 @@ export default function PricingPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium">Model</th>
-                  <th className="px-4 py-3 text-left font-medium">Provider</th>
-                  <th className="px-4 py-3 text-left font-medium">Description</th>
-                  <th className="px-4 py-3 text-right font-medium">Price</th>
+                  <th className="px-4 py-3 text-left font-medium">{t.pricing_col_model}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t.pricing_col_provider}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t.pricing_col_desc}</th>
+                  <th className="px-4 py-3 text-right font-medium">{t.pricing_col_price}</th>
                 </tr>
               </thead>
               <tbody>
@@ -131,18 +131,18 @@ export default function PricingPage() {
       {/* 付费 Chat 模型定价 */}
       <section className="border-b border-border/40 py-16">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="text-2xl font-bold tracking-tight">Chat Completions</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{t.pricing_chat_title}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            POST /v1/chat/completions — per 1M tokens (USD)
+            {t.pricing_chat_subtitle}
           </p>
           <div className="mt-6 overflow-x-auto rounded-lg border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium">Model</th>
-                  <th className="px-4 py-3 text-left font-medium">Provider</th>
-                  <th className="px-4 py-3 text-right font-medium">Input / 1M</th>
-                  <th className="px-4 py-3 text-right font-medium">Output / 1M</th>
+                  <th className="px-4 py-3 text-left font-medium">{t.pricing_col_model}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t.pricing_col_provider}</th>
+                  <th className="px-4 py-3 text-right font-medium">{t.pricing_col_input}</th>
+                  <th className="px-4 py-3 text-right font-medium">{t.pricing_col_output}</th>
                 </tr>
               </thead>
               <tbody>
@@ -163,17 +163,17 @@ export default function PricingPage() {
       {/* Embeddings / Images / TTS */}
       <section className="border-b border-border/40 py-16">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="text-2xl font-bold tracking-tight">Embeddings / Images / TTS</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{t.pricing_extra_title}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            POST /v1/embeddings · /v1/images/generations · /v1/audio/speech
+            {t.pricing_extra_subtitle}
           </p>
           <div className="mt-6 overflow-x-auto rounded-lg border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium">Model</th>
-                  <th className="px-4 py-3 text-left font-medium">Type</th>
-                  <th className="px-4 py-3 text-right font-medium">Price</th>
+                  <th className="px-4 py-3 text-left font-medium">{t.pricing_col_model}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t.pricing_col_type}</th>
+                  <th className="px-4 py-3 text-right font-medium">{t.pricing_col_price}</th>
                 </tr>
               </thead>
               <tbody>
