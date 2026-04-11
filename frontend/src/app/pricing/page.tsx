@@ -22,16 +22,16 @@ const FREE_MODELS: { name: string; provider: string; descKey: FreeModelKey }[] =
 
 // 付费模型定价表
 const PAID_MODELS = [
-  { name: 'deepseek-v3', provider: 'DeepSeek', input: 0.42, output: 1.68, quality: 9 },
-  { name: 'deepseek-r1', provider: 'DeepSeek', input: 0.66, output: 2.64, quality: 9 },
-  { name: 'gemini-2.5-pro', provider: 'Google', input: 1.25, output: 5.00, quality: 9 },
-  { name: 'gemini-2.0-flash', provider: 'Google', input: 0.10, output: 0.40, quality: 7 },
-  { name: 'grok-3', provider: 'xAI', input: 3.00, output: 15.00, quality: 9 },
-  { name: 'grok-3-mini', provider: 'xAI', input: 0.30, output: 0.50, quality: 8 },
-  { name: 'mistral-large', provider: 'Mistral', input: 2.00, output: 6.00, quality: 8 },
-  { name: 'llama-3.3-70b', provider: 'Meta', input: 0.59, output: 0.79, quality: 8 },
-  { name: 'phi-4', provider: 'Microsoft', input: 0.07, output: 0.14, quality: 7 },
-  { name: 'qwen2.5-72b', provider: 'Alibaba', input: 0.84, output: 0.84, quality: 8 },
+  { name: 'deepseek-v3',      provider: 'DeepSeek', input: 0.30,  output: 0.46,  quality: 9 },
+  { name: 'deepseek-r1',      provider: 'DeepSeek', input: 0.61,  output: 2.42,  quality: 9 },
+  { name: 'gemini-2.5-pro',   provider: 'Google',   input: 1.50,  output: 12.00, quality: 9 },
+  { name: 'gemini-2.0-flash', provider: 'Google',   input: 0.12,  output: 0.48,  quality: 7 },
+  { name: 'grok-3',           provider: 'xAI',      input: 3.60,  output: 18.00, quality: 9 },
+  { name: 'grok-3-mini',      provider: 'xAI',      input: 0.36,  output: 0.60,  quality: 8 },
+  { name: 'mistral-large',    provider: 'Mistral',  input: 2.40,  output: 7.20,  quality: 8 },
+  { name: 'llama-3.3-70b',    provider: 'Meta',     input: 0.11,  output: 0.33,  quality: 8 },
+  { name: 'phi-4',            provider: 'Microsoft',input: 0.077, output: 0.154, quality: 7 },
+  { name: 'qwen2.5-72b',      provider: 'Alibaba',  input: 0.70,  output: 2.80,  quality: 8 },
 ];
 
 // Embeddings / Images / TTS 定价
