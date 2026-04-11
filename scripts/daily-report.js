@@ -116,6 +116,27 @@ ${topModelsStr}
 ━━━━━━━━━━━━━━━━
 <i>数据范围：${dateStr} 00:00 - 23:59 (UTC)</i>`;
 
+    // 检查未回复询盘（最近7天）
+    try {
+      const unrepliedInquiries = (await queryDB(
+        `SELECT detail FROM audit_logs WHERE action='ENTERPRISE_INQUIRY' AND created_at > NOW() - INTERVAL '7 days' ORDER BY created_at DESC LIMIT 5`
+      )).trim();
+
+      if (unrepliedInquiries && unrepliedInquiries !== '') {
+        const lines = unrepliedInquiries.split('\n').filter(l => l.trim());
+        if (lines.length > 0) {
+          msg += '\n\n📬 <b>未回复询盘提醒（7天内）</b>\n';
+          lines.forEach(line => {
+            try {
+              const d = JSON.parse(line.trim());
+              msg += `  • ${d.company} - ${d.email}\n`;
+            } catch(e) {}
+          });
+          msg += '  ⚠️ 请及时回复！';
+        }
+      }
+    } catch(e) { /* 无询盘数据，忽略 */ }
+
     await sendTelegram(msg);
     console.log('✅ 报表发送成功');
     console.log(`新用户:${newUsers} 活跃:${activeUsers} 请求:${totalRequests} 收入:$${revenueNum.toFixed(4)}`);

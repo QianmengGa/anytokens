@@ -18,6 +18,7 @@ import webhooksRouter from './webhooks.js';
 import conversationsRouter from './conversations.js';
 import uploadRouter from './upload.js';
 import chatWidgetRouter from './chat-widget.js';
+import enterpriseRouter from './enterprise.js';
 
 const router = Router();
 
@@ -40,6 +41,7 @@ router.use(embeddingsRouter);    // POST /embeddings
 router.use(imagesRouter);        // POST /images/generations
 router.use(audioRouter);         // POST /audio/speech
 router.use('/chat-widget', chatWidgetRouter);
+router.use('/enterprise', enterpriseRouter);
 router.use(proxyRouter);
 
 export default router;

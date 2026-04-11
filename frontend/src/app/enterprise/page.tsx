@@ -26,11 +26,28 @@ export default function EnterprisePage() {
     { icon: Activity, title: t.ent_feat_sla, desc: t.ent_feat_sla_desc },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 发送到 enterprise@anytokens.com（暂用 console.log）
-    console.log('[Enterprise] Form submitted:', formData);
-    setFormSent(true);
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+      const res = await fetch(`${apiBase}/enterprise/inquiry`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.code !== 0) throw new Error(data.message);
+      setFormSent(true);
+    } catch (err: any) {
+      setSubmitError(err.message || '提交失败，请发邮件至 support@anytokens.net');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
