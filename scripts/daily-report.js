@@ -24,8 +24,9 @@ function sendTelegram(message) {
 }
 
 async function queryDB(sql) {
-  const dbUrl = process.env.DATABASE_URL;
-  const result = execSync(`psql "${dbUrl}" -t -c "${sql}" 2>/dev/null`).toString().trim();
+  // 通过 docker exec 调用 postgres 容器的 psql（宿主机和 backend 容器都没有 psql）
+  const cmd = `docker exec anytokens-postgres-1 psql -U anytokens -d anytokens -t -A -c "${sql}" 2>/dev/null`;
+  const result = execSync(cmd).toString().trim();
   return result;
 }
 
