@@ -18,7 +18,7 @@ const models = [
   { name: 'GLM-4 Flash', provider: 'Zhipu', price: 'Free', free: true, tag: 'Free' },
   // 付费模型
   { name: 'Gemini 2.5 Pro', provider: 'Google', price: '$1.25/M', free: false, tag: 'Long ctx' },
-  { name: 'DeepSeek R1', provider: 'DeepSeek', price: '$0.55/M', free: false, tag: 'Reasoning' },
+  { name: 'DeepSeek R1', provider: 'DeepSeek', price: '$0.66/M', free: false, tag: 'Reasoning' },
   { name: 'Grok 3', provider: 'xAI', price: '$3.00/M', free: false, tag: 'New' },
   { name: 'Grok 3 Mini', provider: 'xAI', price: '$0.30/M', free: false, tag: 'Fast' },
   { name: 'Mistral Large', provider: 'Mistral', price: '$2.00/M', free: false, tag: 'Code' },

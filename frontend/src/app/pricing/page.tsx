@@ -22,7 +22,7 @@ const FREE_MODELS = [
 // 付费模型定价表
 const PAID_MODELS = [
   { name: 'deepseek-v3', provider: 'DeepSeek', input: 0.42, output: 1.68, quality: 9 },
-  { name: 'deepseek-r1', provider: 'DeepSeek', input: 0.55, output: 2.19, quality: 9 },
+  { name: 'deepseek-r1', provider: 'DeepSeek', input: 0.66, output: 2.64, quality: 9 },
   { name: 'gemini-2.5-pro', provider: 'Google', input: 1.25, output: 5.00, quality: 9 },
   { name: 'gemini-2.0-flash', provider: 'Google', input: 0.10, output: 0.40, quality: 7 },
   { name: 'grok-3', provider: 'xAI', input: 3.00, output: 15.00, quality: 9 },

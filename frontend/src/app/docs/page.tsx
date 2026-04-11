@@ -164,7 +164,7 @@ const FREE_MODELS = [
 ];
 
 const PAID_MODELS = [
-  { name: 'deepseek-r1', provider: 'DeepSeek', price: '$0.55/M' },
+  { name: 'deepseek-r1', provider: 'DeepSeek', price: '$0.66/M' },
   { name: 'gemini-2.5-pro', provider: 'Google', price: '$1.25/M' },
   { name: 'grok-3', provider: 'xAI', price: '$3.00/M' },
   { name: 'grok-3-mini', provider: 'xAI', price: '$0.30/M' },
