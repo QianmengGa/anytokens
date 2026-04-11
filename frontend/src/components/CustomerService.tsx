@@ -64,7 +64,7 @@ export function CustomerService() {
         {open ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
       </Button>
 
-      {/* AI 助手即将上线弹窗 */}
+      {/* AI 客服引导弹窗 */}
       <Dialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -72,11 +72,8 @@ export function CustomerService() {
             <DialogDescription>{t.cs_ai_coming}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAiDialogOpen(false)}>
+            <Button onClick={() => setAiDialogOpen(false)}>
               OK
-            </Button>
-            <Button asChild>
-              <a href="mailto:support@anytokens.net">{t.cs_email}</a>
             </Button>
           </DialogFooter>
         </DialogContent>
