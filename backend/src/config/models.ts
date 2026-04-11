@@ -105,7 +105,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   },
   'deepseek-r1': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1', inputPrice: 0.66, outputPrice: 2.64, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1', inputPrice: 0.55, outputPrice: 2.20, qualityScore: 9 },
       { provider: 'azure', upstreamModel: 'DeepSeek-R1', inputPrice: 0.55, outputPrice: 2.19, qualityScore: 9 },
     ],
   },
@@ -114,7 +114,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   'qwen2.5-72b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-72B-Instruct', inputPrice: 0.57, outputPrice: 0.57, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-72B-Instruct', inputPrice: 0.567, outputPrice: 0.567, qualityScore: 8 },
     ],
   },
   'qwen2.5-7b': {
@@ -131,12 +131,12 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === Qwen Coder ===
   'qwen2.5-coder-32b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-Coder-32B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-Coder-32B-Instruct', inputPrice: 0.173, outputPrice: 0.173, qualityScore: 8 },
     ],
   },
   'qwen3-32b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-32B', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-32B', inputPrice: 0.137, outputPrice: 0.549, qualityScore: 8 },
     ],
   },
 
@@ -144,7 +144,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   'llama-3.3-70b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'meta-llama/Llama-3.3-70B-Instruct', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'meta-llama/Llama-3.3-70B-Instruct', inputPrice: 0.096, outputPrice: 0.275, qualityScore: 8 },
       { provider: 'azure', upstreamModel: 'Llama-3.3-70B-Instruct', inputPrice: 0.59, outputPrice: 0.79, qualityScore: 9 },
     ],
   },
@@ -217,14 +217,14 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === Qwen3 235B（旗舰大模型）===
   'qwen3-235b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-235B-A22B-Instruct-2507', inputPrice: 0.50, outputPrice: 2.00, qualityScore: 10 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-235B-A22B-Instruct-2507', inputPrice: 0.344, outputPrice: 1.374, qualityScore: 10 },
     ],
   },
 
   // === DeepSeek V3.1 ===
   'deepseek-v3.1': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V3.1-Terminus', inputPrice: 0.27, outputPrice: 0.41, qualityScore: 10 },
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V3.1-Terminus', inputPrice: 0.55, outputPrice: 1.65, qualityScore: 10 },
     ],
   },
 
@@ -232,7 +232,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   'qwen2.5-vl-32b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-VL-32B-Instruct', inputPrice: 1.89, outputPrice: 1.89, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-VL-32B-Instruct', inputPrice: 0.260, outputPrice: 0.260, qualityScore: 8 },
     ],
   },
 
@@ -249,18 +249,18 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === DeepSeek V2.5 ===
   'deepseek-v2.5': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V2.5', inputPrice: 0.21, outputPrice: 0.84, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-V2.5', inputPrice: 0.183, outputPrice: 0.183, qualityScore: 7 },
     ],
   },
   // === DeepSeek R1 蒸馏 14B / 32B ===
   'deepseek-r1-14b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B', inputPrice: 0.35, outputPrice: 0.70, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B', inputPrice: 0.096, outputPrice: 0.096, qualityScore: 7 },
     ],
   },
   'deepseek-r1-32b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B', inputPrice: 0.173, outputPrice: 0.173, qualityScore: 8 },
     ],
   },
   // === DeepSeek R1 0528（Qwen3-8B 蒸馏）===
@@ -293,7 +293,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   },
   'qwen3.5-9b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-9B', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3.5-9B', inputPrice: 0.206, outputPrice: 1.648, qualityScore: 7 },
     ],
   },
   'qwen3.5-4b': {
@@ -305,47 +305,47 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === Qwen3 补充 ===
   'qwen3-14b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-14B', inputPrice: 0.35, outputPrice: 0.70, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-14B', inputPrice: 0.069, outputPrice: 0.275, qualityScore: 7 },
     ],
   },
   'qwen3-30b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-30B-A3B-Instruct-2507', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-30B-A3B-Instruct-2507', inputPrice: 0.096, outputPrice: 0.385, qualityScore: 8 },
     ],
   },
   'qwen3-235b-thinking': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-235B-A22B-Thinking-2507', inputPrice: 0.50, outputPrice: 2.00, qualityScore: 10 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-235B-A22B-Thinking-2507', inputPrice: 0.344, outputPrice: 1.374, qualityScore: 10 },
     ],
   },
 
   // === QwQ（推理模型）===
   'qwq-32b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/QwQ-32B', inputPrice: 0.14, outputPrice: 0.55, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/QwQ-32B', inputPrice: 0.137, outputPrice: 0.549, qualityScore: 8 },
     ],
   },
 
   // === Qwen2.5 补充 ===
   'qwen2.5-14b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-14B-Instruct', inputPrice: 0.35, outputPrice: 0.70, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-14B-Instruct', inputPrice: 0.096, outputPrice: 0.096, qualityScore: 7 },
     ],
   },
   'qwen2.5-32b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-32B-Instruct', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-32B-Instruct', inputPrice: 0.173, outputPrice: 0.173, qualityScore: 8 },
     ],
   },
   'qwen2.5-72b-128k': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-72B-Instruct-128K', inputPrice: 0.57, outputPrice: 0.57, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-72B-Instruct-128K', inputPrice: 0.567, outputPrice: 0.567, qualityScore: 8 },
     ],
   },
   'qwen2.5-vl-72b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-VL-72B-Instruct', inputPrice: 2.52, outputPrice: 2.52, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2.5-VL-72B-Instruct', inputPrice: 0.567, outputPrice: 0.567, qualityScore: 9 },
     ],
   },
 
@@ -359,80 +359,80 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   'qwen3-vl-32b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-32B-Instruct', inputPrice: 1.89, outputPrice: 1.89, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-32B-Instruct', inputPrice: 0.137, outputPrice: 0.549, qualityScore: 8 },
     ],
   },
   'qwen3-vl-30b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-30B-A3B-Instruct', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-30B-A3B-Instruct', inputPrice: 0.096, outputPrice: 0.385, qualityScore: 8 },
     ],
   },
   'qwen3-vl-235b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-235B-A22B-Instruct', inputPrice: 2.50, outputPrice: 10.00, qualityScore: 10 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-VL-235B-A22B-Instruct', inputPrice: 0.344, outputPrice: 1.374, qualityScore: 10 },
     ],
   },
 
   // === Qwen3 Coder ===
   'qwen3-coder-30b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-Coder-30B-A3B-Instruct', inputPrice: 0.35, outputPrice: 1.40, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-Coder-30B-A3B-Instruct', inputPrice: 0.096, outputPrice: 0.385, qualityScore: 8 },
     ],
   },
   'qwen3-coder-480b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-Coder-480B-A35B-Instruct', inputPrice: 4.00, outputPrice: 16.00, qualityScore: 10 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen3-Coder-480B-A35B-Instruct', inputPrice: 1.099, outputPrice: 2.198, qualityScore: 10 },
     ],
   },
 
   // === GLM 系列（智谱清言）===
   'glm-5.1': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-5.1', inputPrice: 2.00, outputPrice: 8.00, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-5.1', inputPrice: 0.824, outputPrice: 3.846, qualityScore: 9 },
     ],
   },
   'glm-5': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-5', inputPrice: 1.50, outputPrice: 6.00, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-5', inputPrice: 0.549, outputPrice: 3.022, qualityScore: 9 },
     ],
   },
   'glm-4.7': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.7', inputPrice: 0.55, outputPrice: 1.65, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.7', inputPrice: 0.549, outputPrice: 2.198, qualityScore: 8 },
     ],
   },
   'glm-4.6': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.6', inputPrice: 0.56, outputPrice: 1.68, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.6', inputPrice: 0.481, outputPrice: 1.923, qualityScore: 8 },
     ],
   },
   'glm-4.6v': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.6V', inputPrice: 0.70, outputPrice: 2.10, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.6V', inputPrice: 0.137, outputPrice: 0.412, qualityScore: 8 },
     ],
   },
   'glm-4.5v': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.5V', inputPrice: 0.56, outputPrice: 1.68, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.5V', inputPrice: 0.137, outputPrice: 0.824, qualityScore: 7 },
     ],
   },
   'glm-4.5-air': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.5-Air', inputPrice: 0, outputPrice: 0, free: true, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'zai-org/GLM-4.5-Air', inputPrice: 0.137, outputPrice: 0.824, qualityScore: 7 },
     ],
   },
   'glm-4-32b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'THUDM/GLM-4-32B-0414', inputPrice: 0.56, outputPrice: 1.12, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'THUDM/GLM-4-32B-0414', inputPrice: 0.260, outputPrice: 0.260, qualityScore: 8 },
     ],
   },
   'glm-z1-32b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'THUDM/GLM-Z1-32B-0414', inputPrice: 0.14, outputPrice: 0.55, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'THUDM/GLM-Z1-32B-0414', inputPrice: 0.137, outputPrice: 0.549, qualityScore: 8 },
     ],
   },
   'glm-z1-9b': {
@@ -444,45 +444,45 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === Kimi / Moonshot ===
   'kimi-k2.5': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2.5', inputPrice: 0.21, outputPrice: 0.82, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2.5', inputPrice: 0.549, outputPrice: 2.885, qualityScore: 9 },
     ],
   },
   'kimi-k2-thinking': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2-Thinking', inputPrice: 1.00, outputPrice: 4.00, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2-Thinking', inputPrice: 0.549, outputPrice: 2.198, qualityScore: 9 },
     ],
   },
   'kimi-k2': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2-Instruct-0905', inputPrice: 0.14, outputPrice: 0.55, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'moonshotai/Kimi-K2-Instruct-0905', inputPrice: 0.549, outputPrice: 2.198, qualityScore: 9 },
     ],
   },
 
   // === MiniMax ===
   'minimax-m2.5': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'MiniMaxAI/MiniMax-M2.5', inputPrice: 0.29, outputPrice: 1.15, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'MiniMaxAI/MiniMax-M2.5', inputPrice: 0.288, outputPrice: 1.154, qualityScore: 9 },
     ],
   },
 
   // === Step（阶跃星辰）===
   'step-3.5-flash': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'stepfun-ai/Step-3.5-Flash', inputPrice: 0.10, outputPrice: 0.41, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'stepfun-ai/Step-3.5-Flash', inputPrice: 0.096, outputPrice: 0.288, qualityScore: 7 },
     ],
   },
 
   // === ERNIE（百度文心）===
   'ernie-4.5': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'baidu/ERNIE-4.5-300B-A47B', inputPrice: 2.80, outputPrice: 11.20, qualityScore: 9 },
+      { provider: 'siliconflow', upstreamModel: 'baidu/ERNIE-4.5-300B-A47B', inputPrice: 0.275, outputPrice: 1.099, qualityScore: 9 },
     ],
   },
 
   // === Hunyuan（腾讯混元）===
   'hunyuan-a13b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'tencent/Hunyuan-A13B-Instruct', inputPrice: 0.14, outputPrice: 0.55, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'tencent/Hunyuan-A13B-Instruct', inputPrice: 0.137, outputPrice: 0.549, qualityScore: 7 },
     ],
   },
   'hunyuan-mt-7b': {
@@ -494,14 +494,14 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   // === ByteDance Seed ===
   'seed-oss-36b': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'ByteDance-Seed/Seed-OSS-36B-Instruct', inputPrice: 0.21, outputPrice: 0.55, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'ByteDance-Seed/Seed-OSS-36B-Instruct', inputPrice: 0.206, outputPrice: 0.549, qualityScore: 7 },
     ],
   },
 
   // === Ling（影刀 AI）===
   'ling-flash-2.0': {
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'inclusionAI/Ling-flash-2.0', inputPrice: 0.14, outputPrice: 0.55, qualityScore: 7 },
+      { provider: 'siliconflow', upstreamModel: 'inclusionAI/Ling-flash-2.0', inputPrice: 0.137, outputPrice: 0.549, qualityScore: 7 },
     ],
   },
   'ling-mini-2.0': {
@@ -521,7 +521,7 @@ export const MODEL_MAP: Record<string, ModelConfig> = {
   'qwen2-vl-72b': {
     supportsVision: true,
     providers: [
-      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2-VL-72B-Instruct', inputPrice: 2.52, outputPrice: 2.52, qualityScore: 8 },
+      { provider: 'siliconflow', upstreamModel: 'Qwen/Qwen2-VL-72B-Instruct', inputPrice: 0.567, outputPrice: 0.567, qualityScore: 8 },
     ],
   },
 
