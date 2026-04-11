@@ -42,7 +42,7 @@ import ReactMarkdown from 'react-markdown';
 import { api } from '@/lib/api';
 
 // 支持视觉/PDF 的模型
-const VISION_MODELS = new Set(['gemini-1.5-pro', 'gemini-1.5-flash', 'qwen2.5-72b', 'llama-3.3-70b']);
+const VISION_MODELS = new Set(['gemini-1.5-pro', 'gemini-1.5-flash', 'qwen2.5-72b', 'qwen2.5-vl-72b', 'qwen2.5-vl-32b', 'qwen3-vl-8b', 'qwen3-vl-32b', 'qwen3-vl-30b', 'qwen3-vl-235b', 'llama-3.3-70b']);
 const PDF_MODELS = new Set(['gemini-1.5-pro', 'gemini-1.5-flash']);
 
 // 附件信息
@@ -56,18 +56,25 @@ interface Attachment {
 
 // 可用模型列表
 const AVAILABLE_MODELS = [
+  // 免费模型
   { value: 'deepseek-v3', label: 'DeepSeek V3', free: true },
-  { value: 'deepseek-r1', label: 'DeepSeek R1' },
-  { value: 'qwen2.5-72b', label: 'Qwen 2.5 72B' },
-  { value: 'qwen2.5-7b', label: 'Qwen 2.5 7B', free: true },
-  { value: 'qwen3-8b', label: 'Qwen 3 8B', free: true },
-  { value: 'qwen3-32b', label: 'Qwen 3 32B', free: true },
-  { value: 'qwen2.5-coder-32b', label: 'Qwen 2.5 Coder 32B', free: true },
+  { value: 'qwen3-32b', label: 'Qwen3 32B', free: true },
+  { value: 'qwen2.5-coder-32b', label: 'Qwen2.5 Coder 32B', free: true },
   { value: 'llama-3.3-70b', label: 'Llama 3.3 70B', free: true },
+  { value: 'qwen3-8b', label: 'Qwen3 8B', free: true },
+  { value: 'qwen2.5-7b', label: 'Qwen2.5 7B', free: true },
   { value: 'llama-3.1-8b', label: 'Llama 3.1 8B', free: true },
   { value: 'glm-4-9b', label: 'GLM-4 9B', free: true },
+  { value: 'glm-4.5-air', label: 'GLM-4.5 Air', free: true },
   { value: 'deepseek-r1-7b', label: 'DeepSeek R1 7B', free: true },
   { value: 'mistral-7b', label: 'Mistral 7B', free: true },
+  // 付费模型
+  { value: 'deepseek-r1', label: 'DeepSeek R1' },
+  { value: 'grok-3', label: 'Grok 3' },
+  { value: 'grok-3-mini', label: 'Grok 3 Mini' },
+  { value: 'mistral-large', label: 'Mistral Large' },
+  { value: 'phi-4', label: 'Phi-4' },
+  { value: 'qwen2.5-72b', label: 'Qwen2.5 72B' },
   { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro' },
   { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
   { value: 'llama3-70b', label: 'Llama3 70B (Groq)' },

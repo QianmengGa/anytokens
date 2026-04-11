@@ -97,7 +97,7 @@ export default function HomePage() {
                 <span className="text-green-400">curl</span>{' https://api.anytokens.net/v1/chat/completions \\\n'}
                 {'  -H '}<span className="text-amber-300">{'"Authorization: Bearer sk-any-..."'}</span>{' \\\n'}
                 {'  -H '}<span className="text-amber-300">{'"Content-Type: application/json"'}</span>{' \\\n'}
-                {'  -d '}<span className="text-amber-300">{'\'{"model":"gpt-4o","messages":[{"role":"user","content":"Hello"}]}\''}</span>
+                {'  -d '}<span className="text-amber-300">{'\'{"model":"deepseek-v3","messages":[{"role":"user","content":"Hello"}]}\''}</span>
               </code>
             </pre>
           </div>
@@ -112,7 +112,7 @@ export default function HomePage() {
             <p className="mt-1 text-sm text-muted-foreground">{t.stats_models}</p>
           </div>
           <div>
-            <div className="text-3xl font-bold sm:text-4xl">1,200+</div>
+            <div className="text-3xl font-bold sm:text-4xl">500+</div>
             <p className="mt-1 text-sm text-muted-foreground">{t.stats_users}</p>
           </div>
           <div>
