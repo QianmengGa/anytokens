@@ -11,12 +11,12 @@ import { Check, Zap, Shield, Headphones } from 'lucide-react';
 
 // 免费模型列表
 const FREE_MODELS = [
-  { name: 'deepseek-v3', provider: 'DeepSeek', desc: '国产旗舰' },
-  { name: 'qwen2.5-7b', provider: 'Alibaba', desc: '轻量快速' },
-  { name: 'qwen3-8b', provider: 'Alibaba', desc: '最新一代' },
-  { name: 'glm-4-9b', provider: 'Zhipu', desc: '清华智谱' },
-  { name: 'deepseek-r1-7b', provider: 'DeepSeek', desc: '推理蒸馏' },
-  { name: 'gemini-2.0-flash', provider: 'Google', desc: '快速免费' },
+  { name: 'deepseek-v3', provider: 'DeepSeek', desc: 'Flagship free' },
+  { name: 'qwen2.5-7b', provider: 'Alibaba', desc: 'Lightweight' },
+  { name: 'qwen3-8b', provider: 'Alibaba', desc: 'Latest gen' },
+  { name: 'glm-4-9b', provider: 'Zhipu', desc: 'Tsinghua AI' },
+  { name: 'deepseek-r1-7b', provider: 'DeepSeek', desc: 'Reasoning distill' },
+  { name: 'gemini-2.0-flash', provider: 'Google', desc: 'Fast & free' },
 ];
 
 // 付费模型定价表
