@@ -159,7 +159,8 @@ export default function ChatWidget() {
     setInput('');
     setLoading(true);
     try {
-      const res = await fetch('/api/v1/chat-widget/message', {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+      const res = await fetch(`${apiBase}/chat-widget/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: newMessages }),
