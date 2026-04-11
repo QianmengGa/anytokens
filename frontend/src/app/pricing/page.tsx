@@ -16,17 +16,21 @@ const FREE_MODELS = [
   { name: 'qwen3-8b', provider: 'Alibaba', desc: '最新一代' },
   { name: 'glm-4-9b', provider: 'Zhipu', desc: '清华智谱' },
   { name: 'deepseek-r1-7b', provider: 'DeepSeek', desc: '推理蒸馏' },
-  { name: 'gemini-1.5-flash', provider: 'Google', desc: '长上下文' },
+  { name: 'gemini-2.0-flash', provider: 'Google', desc: '快速免费' },
 ];
 
 // 付费模型定价表
 const PAID_MODELS = [
   { name: 'deepseek-v3', provider: 'DeepSeek', input: 0.42, output: 1.68, quality: 9 },
-  { name: 'deepseek-r1', provider: 'DeepSeek', input: 0.66, output: 2.64, quality: 9 },
+  { name: 'deepseek-r1', provider: 'DeepSeek', input: 0.55, output: 2.19, quality: 9 },
+  { name: 'gemini-2.5-pro', provider: 'Google', input: 1.25, output: 5.00, quality: 9 },
+  { name: 'gemini-2.0-flash', provider: 'Google', input: 0.10, output: 0.40, quality: 7 },
+  { name: 'grok-3', provider: 'xAI', input: 3.00, output: 15.00, quality: 9 },
+  { name: 'grok-3-mini', provider: 'xAI', input: 0.30, output: 0.50, quality: 8 },
+  { name: 'mistral-large', provider: 'Mistral', input: 2.00, output: 6.00, quality: 8 },
+  { name: 'llama-3.3-70b', provider: 'Meta', input: 0.59, output: 0.79, quality: 8 },
+  { name: 'phi-4', provider: 'Microsoft', input: 0.07, output: 0.14, quality: 7 },
   { name: 'qwen2.5-72b', provider: 'Alibaba', input: 0.84, output: 0.84, quality: 8 },
-  { name: 'gemini-1.5-pro', provider: 'Google', input: 1.25, output: 5.00, quality: 9 },
-  { name: 'llama3-70b', provider: 'Meta/Groq', input: 0.59, output: 0.79, quality: 8 },
-  { name: 'mixtral-8x7b', provider: 'Mistral/Groq', input: 0.24, output: 0.24, quality: 7 },
 ];
 
 // Embeddings / Images / TTS 定价
@@ -36,7 +40,6 @@ const EXTRA_MODELS = [
   { name: 'dall-e-3', type: 'Images', price: '$0.04 / image' },
   { name: 'dall-e-3-hd', type: 'Images', price: '$0.08 / image' },
   { name: 'tts-1', type: 'TTS', price: '$15.00 / 1M chars' },
-  { name: 'tts-1-hd', type: 'TTS', price: '$30.00 / 1M chars' },
 ];
 
 export default function PricingPage() {

@@ -11,19 +11,20 @@ import { Blocks, Zap, BarChart3 } from 'lucide-react';
 
 // 模型数据（不随语言变化的静态数据）
 const models = [
-  { name: 'Gemini 1.5 Flash', provider: 'Google', price: 'Free', free: true, tag: 'Fast' },
+  // 免费模型
+  { name: 'Gemini 2.0 Flash', provider: 'Google', price: 'Free', free: true, tag: 'Fast' },
   { name: 'DeepSeek V3', provider: 'DeepSeek', price: 'Free', free: true, tag: 'Flagship' },
   { name: 'Llama 3.3 70B', provider: 'Meta', price: 'Free', free: true, tag: 'Open' },
   { name: 'GLM-4 Flash', provider: 'Zhipu', price: 'Free', free: true, tag: 'Free' },
-  { name: 'Gemini 1.5 Pro', provider: 'Google', price: '$1.25/M', free: false, tag: 'Long ctx' },
+  // 付费模型
+  { name: 'Gemini 2.5 Pro', provider: 'Google', price: '$1.25/M', free: false, tag: 'Long ctx' },
   { name: 'DeepSeek R1', provider: 'DeepSeek', price: '$0.55/M', free: false, tag: 'Reasoning' },
-  { name: 'Llama3 70B', provider: 'Groq', price: '$0.59/M', free: false, tag: 'Fast' },
-  { name: 'Mixtral 8x7B', provider: 'Groq', price: '$0.24/M', free: false, tag: 'MoE' },
-  { name: 'Qwen Max', provider: 'Alibaba', price: '$1.60/M', free: false, tag: 'Flagship' },
-  { name: 'GPT-4o', provider: 'OpenAI', price: '$2.50/M', free: false, tag: 'Multimodal' },
-  { name: 'Claude Sonnet 4', provider: 'Anthropic', price: '$3.00/M', free: false, tag: 'Balanced' },
-  { name: 'Claude Opus 4', provider: 'Anthropic', price: '$15.0/M', free: false, tag: 'Strongest' },
   { name: 'Grok 3', provider: 'xAI', price: '$3.00/M', free: false, tag: 'New' },
+  { name: 'Grok 3 Mini', provider: 'xAI', price: '$0.30/M', free: false, tag: 'Fast' },
+  { name: 'Mistral Large', provider: 'Mistral', price: '$2.00/M', free: false, tag: 'Code' },
+  { name: 'Llama 3.3 70B', provider: 'Meta/Azure', price: '$0.59/M', free: false, tag: 'Azure' },
+  { name: 'Phi-4', provider: 'Microsoft', price: '$0.07/M', free: false, tag: 'Efficient' },
+  { name: 'Qwen 2.5 72B', provider: 'Alibaba', price: '$0.84/M', free: false, tag: 'Flagship' },
 ];
 
 export default function HomePage() {
