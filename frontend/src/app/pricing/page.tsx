@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
-import { CustomerService } from '@/components/CustomerService';
 import { useI18n } from '@/lib/i18n';
 import { Check, Zap, Shield, Headphones } from 'lucide-react';
 
@@ -240,7 +239,6 @@ export default function PricingPage() {
         </div>
       </footer>
 
-      <CustomerService />
     </div>
   );
 }
