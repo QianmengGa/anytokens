@@ -11,9 +11,6 @@ if [ ! -f .env.production ]; then
   exit 1
 fi
 
-# 加载环境变量
-export $(grep -v '^#' .env.production | grep -v '^\s*$' | xargs)
-
 # 构建并启动
 echo ">>> 构建镜像..."
 docker compose -f docker-compose.prod.yml --env-file .env.production build
@@ -30,8 +27,8 @@ echo ">>> 运行数据库迁移..."
 docker compose -f docker-compose.prod.yml --env-file .env.production exec backend npx prisma migrate deploy
 
 echo "=== 部署完成 ==="
-echo "前端: http://anytokens.com"
-echo "API:  http://api.anytokens.com"
+echo "前端: https://anytokens.net"
+echo "API:  https://api.anytokens.net"
 echo ""
 echo "查看日志: docker compose -f docker-compose.prod.yml logs -f"
 echo "停止服务: docker compose -f docker-compose.prod.yml down"
